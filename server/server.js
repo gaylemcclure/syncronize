@@ -1,9 +1,22 @@
+require("dotenv").config();
 const express = require('express');
 const app = express();
-const port = 5001;
+const path = require("path");
+const PORT = process.env.PORT || 5001;
+const routes = require('./routes');
 
-app.get("/api", (req, res) => {
-  res.json({ "users": ["userOne", "userTwo", "userThree"] })
-});
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(port, () => console.log("server started on port 5001"));
+// Routes
+app.use(routes);
+
+// app.get("/api", (req, res) => {
+//   res.json({ "users": ["userOne", "userTwo", "userThree"] })
+// });
+
+
+app.listen(PORT, () => console.log("server started on port 5001"));
+
