@@ -2,6 +2,14 @@ html {
   height: 100vh;
 }
 
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+:root {
+  --gray-text: #BEC4CF;
+}
+
 body {
   margin: 0;
   font-size: 16px;
@@ -12,11 +20,48 @@ body {
   height: 100%;
 }
 
+ul {
+  margin-top: 0;
+}
+
 #root > div {
   height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+/*-----------------GENERAL--------------------*/
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/*-----------------FONTS ---------------------*/
+.roboto-light {
+  font-weight: 300;
+}
+
+.roboto-regular {
+  font-weight: 400;
+}
+
+.roboto-medium {
+  font-weight: 500;
+}
+
+.roboto-bold {
+  font-weight: 700;
+}
+
+
+/*----------ANIMATIONS-------------*/
+
+.transition {
+  transition-duration: 1000ms;
+  transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
+
 }

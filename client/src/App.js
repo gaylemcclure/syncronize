@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Outlet, Link } from "react-router-dom";
 import WelcomePage from './pages/welcomePage';
 import ProductPage from './pages/productPage';
-import ServicePage from './pages/servicePage';
+import SolutionsPage from './pages/solutionsPage';
 import LoginPage from './pages/loginPage';
 import SignupPage from './pages/signupPage';
 import PricingPage from './pages/pricingPage';
@@ -25,16 +25,15 @@ const App = () => {
   return (
 
     <Routes>
-    <Route path="/" element={<WelcomePage />}>
+    <Route path="/" element={<WelcomePage />} />
       <Route index element={<WelcomePage />} />
       <Route path="product" element={<ProductPage />} />
-      <Route path="service" element={<ServicePage />} />
+      <Route path="solutions" element={<SolutionsPage />} />
       <Route path="pricing" element={<PricingPage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="signup" element={<SignupPage />} />
-
       <Route path="*" element={<NoMatch />} />
-    </Route>
+
   </Routes>
 
   );
