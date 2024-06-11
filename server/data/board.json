@@ -1,0 +1,14 @@
+{
+    "name": "My workspace",
+    "user": {
+        "name": "Gayle",
+        "email": "gaylekdennison@gmail.com",
+        "role": "admin"
+    },
+    "projects": [
+        {
+            "project_name": "My first project",
+            "description": "This is your first starter project. See here for more information"
+        }
+    ]
+}
