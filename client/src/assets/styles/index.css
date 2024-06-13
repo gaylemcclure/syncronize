@@ -3,13 +3,14 @@ html {
 }
 
 * {
-  font-family: "Roboto", sans-serif;
+  font-family: "Figtree", sans-serif;
 }
 
 :root {
-  --gray-text: #BEC4CF;
-  --main-green: #06866E;
-  --gray-border: #D9D9D9;
+  --gray-text: #bec4cf;
+  --main-green: #06866e;
+  --gray-border: #d9d9d9;
+  --ws-gray-text: #d5d8df;
 }
 
 body {
@@ -38,7 +39,6 @@ input {
   margin: 0.5rem 0;
 }
 
-
 /*-----------------GENERAL--------------------*/
 .flex-row {
   display: flex;
@@ -50,14 +50,79 @@ input {
   flex-direction: column;
 }
 
+.open {
+  width: 19rem;
+  padding: 6rem 1rem 2rem 2rem;
+}
+
+.closed {
+  width: 3rem;
+  padding: 6rem 0.5rem 0.5rem;
+}
+
+.open-menu {
+  left: 19rem;
+  width: calc(100vw - 19rem);
+}
+
+.close-menu {
+  left: 2.8rem;
+  width: calc(100vw - 3rem);
+}
+
+.material-symbols-outlined {
+  font-weight: 300;
+  font-size: 22px;
+}
+
+.move-back {
+  z-index: -2;
+  position: fixed;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.space {
+  margin-right: 1rem;
+}
+
+.space-left {
+  margin-left: 1rem;
+}
+
+.align {
+  align-items: center;
+}
+
+
+
+
+/*---------------BUTTON----------------------*/
 .signup-button {
   width: 45%;
   height: 2.4rem;
   border: none;
-  background-color:var(--main-green);
+  background-color: var(--main-green);
   color: white;
   border-radius: 12px;
   margin-top: 1rem;
+}
+
+.add-button-icon {
+  background-color: var(--main-green);
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: var(--ws-gray-text);
+  border-radius: 8px;
+  display: flex;
 }
 
 /*-----------------FONTS ---------------------*/
@@ -77,11 +142,9 @@ input {
   font-weight: 700;
 }
 
-
 /*----------ANIMATIONS-------------*/
 
 .transition {
   transition-duration: 1000ms;
   transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
-
 }

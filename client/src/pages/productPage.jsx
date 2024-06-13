@@ -1,5 +1,5 @@
 import React from 'react';
-import WelcomeNav from '../components/welcomeNav';
+import WelcomeNav from '../components/nav/welcomeNav';
 import styled from 'styled-components';
 import ScrollAnimation from '../utils/scrollAnimation';
 

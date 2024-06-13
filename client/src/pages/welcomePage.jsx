@@ -1,12 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import ScrollAnimation from '../utils/scrollAnimation';
-import WelcomeNav from "../components/welcomeNav";
+import WelcomeNav from "../components/nav/welcomeNav";
 import icon from "../assets/images/sync-icon.png";
 import text from "../assets/images/sync-text.png";
 import eg from "../assets/images/welcome-eg.png";
 import teamEg from "../assets/images/team-eg.png";
-import docEg from '../assets/images/doc-eg.png';
+import docEg from "../assets/images/doc-eg.png";
 
 const WelcomePage = () => {
   return (
@@ -14,41 +13,47 @@ const WelcomePage = () => {
       <WelcomeNav />
 
       <WelcomeBG>
-      <div className="main">
-        {/* Display the navbar */}
-        
-        {/* Welcome page desktop */}
-        <PageWrapper>
-          <div className="flex-row">
-            <div className="logos left flex-col">
-              <img className="logo-icon" src={icon} alt="sycronize icon logo" />
-              <img src={text} className="logo-text" alt="sycronize text logo" />
-              <h1 className="slogan roboto-bold">Where every project finds its perfect rhythm</h1>
+        <div className="main">
+          <PageWrapper>
+            <div className="flex-row">
+              <div className="logos left flex-col">
+                <img className="logo-icon" src={icon} alt="sycronize icon logo" />
+                <img src={text} className="logo-text" alt="sycronize text logo" />
+                <h1 className="slogan roboto-bold">Where every project finds its perfect rhythm</h1>
+              </div>
+              <div className="right">
+                <img src={eg} alt="syncronize eg homepage" />
+                </div>
             </div>
-            <div className="right">
-              <img src={eg} alt="syncronize eg homepage" />
+            <div className="welcome-icons flex-row">
+              <WelcomeIcon>
+                <i className="fa-solid fa-house"></i>
+              </WelcomeIcon>
+              <WelcomeIcon>
+                <i className="fa-solid fa-list-check"></i>
+              </WelcomeIcon>
+              <WelcomeIcon>
+                <i className="fa-solid fa-stopwatch"></i>
+              </WelcomeIcon>
+              <WelcomeIcon>
+                <i className="fa-solid fa-flag"></i>
+              </WelcomeIcon>
+              <WelcomeIcon>
+                <i className="fa-solid fa-chart-line"></i>
+              </WelcomeIcon>
+              <WelcomeIcon>
+                <i className="fa-solid fa-file"></i>
+              </WelcomeIcon>
             </div>
-          </div>
-          <div className="welcome-icons flex-row">
-            <WelcomeIcon><i className="fa-solid fa-house"></i></WelcomeIcon>
-            <WelcomeIcon><i className="fa-solid fa-list-check"></i></WelcomeIcon>
-            <WelcomeIcon><i className="fa-solid fa-stopwatch"></i></WelcomeIcon>
-            <WelcomeIcon><i className="fa-solid fa-flag"></i></WelcomeIcon>
-            <WelcomeIcon><i className="fa-solid fa-chart-line"></i></WelcomeIcon>
-            <WelcomeIcon><i className="fa-solid fa-file"></i></WelcomeIcon>
-          </div>
-        </PageWrapper>
+          </PageWrapper>
         </div>
       </WelcomeBG>
 
-      {/* Scroll down - Collab section */}
-      <WelcomeBGRev>
+      {/* <WelcomeBGRev>
         <PageWrapper>
           <div className="flex-row">
             <div className="left-alt">
-              {/* <ScrollAnimation reappear> */}
               <img src={teamEg} alt="syncronize eg homepage" className="slide-in-blurred-left" />
-              {/* </ScrollAnimation> */}
             </div>
             <div className="right-alt flex-col">
               <h2 className="team-text roboto-medium">Experience the synergy of seamless project management with Syncronize. Our intuitive platform synchronizes every aspect of your projects, from planning to execution, keeping your team in perfect harmony.</h2>
@@ -61,7 +66,6 @@ const WelcomePage = () => {
         </PageWrapper>
       </WelcomeBGRev>
 
-      {/* Scroll down - doc section */}
       <WelcomeBGAlt>
         <PageWrapper>
           <div className="flex-row padding-top">
@@ -84,8 +88,7 @@ const WelcomePage = () => {
           </div>
         </PageWrapper>
       </WelcomeBGAlt>
-
-    
+ */}
     </WelcomeContainer>
   );
 };
@@ -96,6 +99,12 @@ const WelcomeContainer = styled.div`
   height: 100%;
   .main {
     padding-top: 7rem;
+  }
+
+  @media screen and (max-width: 568px) {
+    .main {
+      padding-top: 5rem;
+    }
   }
 `;
 
@@ -114,7 +123,6 @@ const WelcomeBGAlt = styled.div`
 
 //Page inner
 const PageWrapper = styled.div`
-
   .left {
     width: 35%;
     padding: 5rem 3rem;
@@ -143,56 +151,95 @@ const PageWrapper = styled.div`
     justify-content: center;
   }
 
-
-  }
-
   .right-alt {
     display: flex;
     padding: 13rem;
   }
-    .flex-end {
-        justify-content: flex-end;}
+  .flex-end {
+    justify-content: flex-end;
+  }
 
   .doc-img {
-  height: 35rem;
+    height: 35rem;
   }
 
-     @keyframes slide-in-blurred-left {
-  0% {
-    -webkit-transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
-            transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
-    -webkit-transform-origin: 100% 50%;
-            transform-origin: 100% 50%;
-    -webkit-filter: blur(40px);
-            filter: blur(40px);
-    opacity: 0;
+  @keyframes slide-in-blurred-left {
+    0% {
+      -webkit-transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
+      transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
+      -webkit-transform-origin: 100% 50%;
+      transform-origin: 100% 50%;
+      -webkit-filter: blur(40px);
+      filter: blur(40px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateX(0) scaleY(1) scaleX(1);
+      transform: translateX(0) scaleY(1) scaleX(1);
+      -webkit-transform-origin: 50% 50%;
+      transform-origin: 50% 50%;
+      -webkit-filter: blur(0);
+      filter: blur(0);
+      opacity: 1;
+    }
   }
-  100% {
-    -webkit-transform: translateX(0) scaleY(1) scaleX(1);
-            transform: translateX(0) scaleY(1) scaleX(1);
-    -webkit-transform-origin: 50% 50%;
-            transform-origin: 50% 50%;
-    -webkit-filter: blur(0);
-            filter: blur(0);
-    opacity: 1;
+
+  .slide-in-blurred-left {
+    -webkit-animation: slide-in-blurred-left 1.2s ease-in both;
+    animation: slide-in-blurred-left 1.2s ease-in both;
   }
-}
 
-.slide-in-blurred-left {
-	-webkit-animation: slide-in-blurred-left 1.2s ease-in both;
-	        animation: slide-in-blurred-left 1.2s ease-in both;
-}
-
-/* The element to apply the animation to */
-.left-alt {
+  /* The element to apply the animation to */
+  .left-alt {
     width: 65%;
     padding: 9rem 5rem;
     img {
       border-radius: 12px;
 
       overflow: hidden;
-    
-}
+    }
+  }
+
+  @media screen and (max-width: 568px) {
+    .flex-row {
+      flex-direction: column;
+    }
+    .left {
+      width: 100%;
+      padding: 1rem 2rem;
+      .logo-icon {
+      width: 4rem;
+    }
+    .logo-text {
+      width: 15rem;
+    }
+    .slogan {
+      width: 17rem;
+    }
+    }
+    .right {
+      padding-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .welcome-icons.flex-row {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+  }
+
+  @media screen and (min-width: 768px) {
+  }
+
+  @media screen and (min-width: 1024px) {
+  }
+
+  @media screen and (min-width: 1300px) {
+  }
+  @media screen and (min-width: 1800px) {
+  }
 `;
 
 //First page icon background

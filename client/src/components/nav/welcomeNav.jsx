@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import logo from "../assets/images/sync.png";
+import logo from "../../assets/images/sync.png";
+import WelcomeMenu from "../menus/welcomeMenu";
 
 const WelcomeNav = () => {
   return (
@@ -20,16 +21,19 @@ const WelcomeNav = () => {
         <Link to="/login" className="nav-link roboto-medium">Log in</Link>
         <Link to="/signup" ><button className="nav-button roboto-medium">Sign up</button></Link>
       </ul>
+      <WelcomeMenu />
     </Navbar>
   );
 };
 
 const Navbar = styled.nav`
+  width: 100vw;
   padding: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   position: fixed;
+  box-sizing: border-box;
   .logo {
     width: 14rem;
     padding-top: 2px;
@@ -57,7 +61,47 @@ const Navbar = styled.nav`
     margin-left: auto;
     padding-right: 2rem;
   }
-  .
+  /* @media only screen and (max-width: 360px) {
+
+  } */
+
+  @media screen and (max-width: 568px) {
+    .logo {
+      width: 10rem;
+    }
+    ul {
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+    .link-wrapper, .nav-link {
+      display: none;
+    }
+    .nav-button {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.8rem;
+    }
+    .nav-signup {
+      padding-right: 0;
+    }
+  }
+
+
+@media screen and (min-width: 768px) {
+
+}
+
+@media screen and (min-width: 1024px) {
+
+}
+
+@media screen and (min-width: 1300px) {
+
+}
+@media screen and (min-width: 1800px) {
+
+}
+    
+ 
 `;
 
 export default WelcomeNav;

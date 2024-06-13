@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
-
+import pageImg from '../assets/images/management.png';
 const SignupPage = () => {
 
     const [firstName, setFirstName] = useState("");
@@ -57,7 +57,7 @@ const SignupPage = () => {
         
       </InputContainer>
       <ImageContainer>
-        <h1>image</h1>
+        <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
       </ImageContainer>
     </div>
   );
@@ -88,6 +88,12 @@ const InputContainer = styled.div`
 const ImageContainer = styled.div`
   width: 45%;
   background-color: var(--main-green);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+  border-radius: 50%;}
 `;
 
 const Icon = styled.img`
