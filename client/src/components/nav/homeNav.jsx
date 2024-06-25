@@ -1,65 +1,94 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../../assets/images/sync-icon.png";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure
-} from '@chakra-ui/react'
-import { ChakraProvider } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import DropdownMenu from "../menus/dropdownMenu";
-
-
+import { SubmitButton, CancelButton } from "../popupButtons";
 
 const AddTask = () => {
+
+  const [projectName, setProjectName] = useState("")
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const NavButton = () => {
-
     const pathName = window.location.pathname;
-  
+
     if (pathName === "/home") {
-      return <ButtonNav onClick={onOpen}>Add board</ButtonNav>;
+      return (
+        <ButtonNav onClick={onOpen}>
+          <span className="material-symbols-outlined">add</span> Add project
+        </ButtonNav>
+      );
     } else if (pathName === "/home/board") {
-      return <ButtonNav onClick={onOpen}>Add task</ButtonNav>;
+      return (
+        <ButtonNav onClick={onOpen}>
+          <span className="material-symbols-outlined">add</span> Add task
+        </ButtonNav>
+      );
     }
   };
 
+  const handleAddProject = () => {
+    console.log("add project")
+  };
+  
+  const handleAddTask = () => {
+
+  };
+
   return (
-    <>
+    <AddContainer>
       <NavButton />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {/* <Lorem count={2} /> */}
-          </ModalBody>
+        {window.location.pathname === "/home" && (
+          <ModalContent>
+            <ModalHeader>Add project</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="input-container flex-col">
+                <label>Project name</label>
+                <input className="full-input" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
+              </div>
 
-          <ModalFooter>
-            <button  onClick={onClose}>
-              Close
-            </button>
-            <button >Secondary Action</button>
-          </ModalFooter>
-        </ModalContent>
+            </ModalBody>
+
+            <ModalFooter>
+              <CancelButton cancelText="Cancel" cancelFunction={onClose} />
+            {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
+            <SubmitButton submitText="Add project" submitFunction={handleAddProject} />
+            </ModalFooter>
+          </ModalContent>
+        )}
+
+        {window.location.pathname === "/home/board" && (
+          <ModalContent>
+            <ModalHeader>Add task</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
+
+            <ModalFooter>
+              <button className="cancel-button" onClick={onClose}>Cancel</button>
+              <button className="submit-button">Add task</button>
+            </ModalFooter>
+          </ModalContent>
+        )}
       </Modal>
-    </>
-  )
+    </AddContainer>
+  );
 };
 
+
+const AddContainer = styled.div`
+
+
+`
+
 const HomeNav = () => {
-    //TODO - set user initials
+  //TODO - set user initials
   const [userInitials, setUserInitials] = useState("GM");
-
-
 
   return (
     <ChakraProvider>
@@ -71,10 +100,11 @@ const HomeNav = () => {
         <AddTask />
         <DropdownMenu userInitials={userInitials} />
       </NavWrapper>
-
     </ChakraProvider>
   );
 };
+
+
 
 const NavWrapper = styled.nav`
   padding: 0.5rem 2rem;
@@ -106,7 +136,7 @@ const NavWrapper = styled.nav`
   }
 
   .search-bar {
-    background-color: #D9D9D9;
+    background-color: #d9d9d9;
     border: none;
     color: white;
     padding-left: 0.5rem;
@@ -117,6 +147,7 @@ const NavWrapper = styled.nav`
   .search-bar:focus {
     border: none;
   }
+
 `;
 
 const ButtonNav = styled.button`
@@ -131,8 +162,9 @@ const ButtonNav = styled.button`
   transition-timing-function: ease-in;
   transition-duration: 0.2s;
   font-size: 1rem;
-  width: 9rem;
-
+  width: 10rem;
+  display: flex;
+  justify-content: center;
   &:hover {
     opacity: 0.5;
   }

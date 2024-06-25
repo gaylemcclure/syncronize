@@ -25,9 +25,28 @@ const SignupPage = () => {
     );
   };
 
-  const handleSignup = () => {
+  const handleSignup = async (e) => {
     //Call api to save new user to the db
-  }
+
+      e.preventDefault();
+    
+      //Get the values from the inputs - trim whitespace
+    
+
+        const response = await fetch('/signup/api/users', {
+          method: 'POST',
+          body: JSON.stringify({ firstName, lastName, email, password }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+    
+        if (response.ok) {
+          document.location.replace('/');
+        } else {
+          alert(response.statusText);
+        }
+      
+    };
+  
 
   return (
     <div className="flex-row">

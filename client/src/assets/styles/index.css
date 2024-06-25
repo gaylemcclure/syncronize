@@ -11,6 +11,8 @@ html {
   --main-green: #06866e;
   --gray-border: #d9d9d9;
   --ws-gray-text: #d5d8df;
+  --black: #101010;
+  --main-gray: #bfbcbc;
 }
 
 body {
@@ -49,7 +51,20 @@ input {
   display: flex;
   flex-direction: column;
 }
+.flex-end {
+  justify-content: flex-end;
+}
 
+.flex-start {
+  justify-content: flex-start;
+}
+
+input.full-input {
+  width: 100%;
+}
+.no-padding {
+  padding: 0;
+}
 .open {
   width: 19rem;
   padding: 6rem 1rem 2rem 2rem;
@@ -98,6 +113,13 @@ input {
   align-items: center;
 }
 
+.submit-button {
+  background-color: var(--main-green);
+  color: white;
+}
+.cancel-button {
+  background-color: var(--main-gray);
+}
 
 
 

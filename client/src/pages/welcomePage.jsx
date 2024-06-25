@@ -6,12 +6,14 @@ import text from "../assets/images/sync-text.png";
 import eg from "../assets/images/welcome-eg.png";
 import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
+import WelcomeFooter from "../components/nav/welcomeFooter";
+import AccordionComponent from "../components/accordion";
+import accordionData from "../assets/data/welcomeAccordion";
 
 const WelcomePage = () => {
   return (
     <WelcomeContainer className="welcome-bg">
       <WelcomeNav />
-
       <WelcomeBG>
         <div className="main">
           <PageWrapper>
@@ -23,33 +25,51 @@ const WelcomePage = () => {
               </div>
               <div className="right">
                 <img src={eg} alt="syncronize eg homepage" />
-                </div>
+              </div>
             </div>
             <div className="welcome-icons flex-row">
-              <WelcomeIcon>
-                <i className="fa-solid fa-house"></i>
-              </WelcomeIcon>
-              <WelcomeIcon>
-                <i className="fa-solid fa-list-check"></i>
-              </WelcomeIcon>
-              <WelcomeIcon>
-                <i className="fa-solid fa-stopwatch"></i>
-              </WelcomeIcon>
-              <WelcomeIcon>
-                <i className="fa-solid fa-flag"></i>
-              </WelcomeIcon>
-              <WelcomeIcon>
-                <i className="fa-solid fa-chart-line"></i>
-              </WelcomeIcon>
-              <WelcomeIcon>
-                <i className="fa-solid fa-file"></i>
-              </WelcomeIcon>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-house"></i>
+                </WelcomeIcon>
+                <p>Projects</p>
+              </div>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-list-check"></i>
+                </WelcomeIcon>
+                <p>Tasks</p>
+              </div>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-stopwatch"></i>
+                </WelcomeIcon>
+                <p>Time tracking</p>
+              </div>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-flag"></i>
+                </WelcomeIcon>
+                <p>Milestones</p>
+              </div>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-chart-line"></i>
+                </WelcomeIcon>
+                <p>Dashboards</p>
+              </div>
+              <div className="flex-col center">
+                <WelcomeIcon>
+                  <i className="fa-solid fa-file"></i>
+                </WelcomeIcon>
+                <p>Docs</p>
+              </div>
             </div>
           </PageWrapper>
         </div>
       </WelcomeBG>
 
-      {/* <WelcomeBGRev>
+      <WelcomeBGRev>
         <PageWrapper>
           <div className="flex-row">
             <div className="left-alt">
@@ -57,7 +77,7 @@ const WelcomePage = () => {
             </div>
             <div className="right-alt flex-col">
               <h2 className="team-text roboto-medium">Experience the synergy of seamless project management with Syncronize. Our intuitive platform synchronizes every aspect of your projects, from planning to execution, keeping your team in perfect harmony.</h2>
-              <div className="flex-row">
+              <div className="flex-row feature-container top">
                 <FeatureIcon>Comments</FeatureIcon>
                 <FeatureIcon>Docs</FeatureIcon>
               </div>
@@ -69,26 +89,31 @@ const WelcomePage = () => {
       <WelcomeBGAlt>
         <PageWrapper>
           <div className="flex-row padding-top">
-          <div className="left flex-end flex-col">
+            <div className="left flex-start flex-col">
               <h2 className="task-text roboto-medium">With real-time updates, effortless collaboration, and streamlined workflows, Syncronize ensures that every project moves forward with precision and purpose.</h2>
-              <div className="flex-col">
-                <div className="flex-row">
-                <FeatureIcon>Tasks</FeatureIcon>
-                <FeatureIcon>Subtasks</FeatureIcon>
+              <div className="flex-col task-text">
+                <div className="flex-row feature-container">
+                  <FeatureIcon className="feature-alt">Tasks</FeatureIcon>
+                  <FeatureIcon className="feature-alt">Subtasks</FeatureIcon>
                 </div>
-                <div className="flex-row">
-                <FeatureIcon>Forms</FeatureIcon>
-                <FeatureIcon>Templates</FeatureIcon>
+                <div className="flex-row feature-container">
+                  <FeatureIcon className="feature-alt">Forms</FeatureIcon>
+                  <FeatureIcon className="feature-alt">Templates</FeatureIcon>
                 </div>
               </div>
             </div>
-            <div className="right">
+            <div className="right no-padding">
               <img src={docEg} className="doc-img" alt="syncronize eg homepage" />
             </div>
           </div>
         </PageWrapper>
       </WelcomeBGAlt>
- */}
+      <WelcomeBGLast>
+        <PageWrapper>
+          <AccordionComponent data={accordionData} />
+        </PageWrapper>
+      </WelcomeBGLast>
+      <WelcomeFooter />
     </WelcomeContainer>
   );
 };
@@ -101,11 +126,6 @@ const WelcomeContainer = styled.div`
     padding-top: 7rem;
   }
 
-  @media screen and (max-width: 568px) {
-    .main {
-      padding-top: 5rem;
-    }
-  }
 `;
 
 //Black slanted background variations
@@ -115,10 +135,28 @@ const WelcomeBG = styled.div`
 
 const WelcomeBGRev = styled.div`
   background-image: linear-gradient(175deg, #d9d9d9 70%, #101010 calc(70% + 2px));
+  padding-bottom: 4rem;
+  /* @media screen and (max-width: 568px) {
+    margin-bottom: -1rem;
+  } */
 `;
 
 const WelcomeBGAlt = styled.div`
   background-image: linear-gradient(4deg, #d9d9d9 45%, #101010 calc(45% + 2px));
+  padding-bottom: 13rem;
+
+  @media screen and (max-width: 768px) {
+    padding-bottom: 5rem;
+  }
+`;
+
+const WelcomeBGLast = styled.div`
+  background-color: #d9d9d9;
+  padding: 1rem 10rem 22rem;
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem 5rem 10rem;
+  }
 `;
 
 //Page inner
@@ -136,31 +174,62 @@ const PageWrapper = styled.div`
       color: white;
       font-size: 42px;
       width: 24rem;
+      line-height: 1.2;
+    }
+    .task-text {
+      padding: 0 4rem;
+      color: white;
     }
   }
 
   .right {
-    padding-top: 6rem;
+    padding-top: 3rem;
     padding-bottom: 2rem;
+    width: 65%;
     img {
       border-radius: 12px;
+      width: 100%;
+      max-width: 60vw;
     }
-  }
-
-  .welcome-icons {
-    justify-content: center;
   }
 
   .right-alt {
     display: flex;
-    padding: 13rem;
-  }
-  .flex-end {
-    justify-content: flex-end;
+    padding: 20rem 3rem 0 0;
+    width: 35%;
+    img {
+      border-radius: 12px;
+      max-width: 90vw;
+    }
   }
 
-  .doc-img {
-    height: 35rem;
+  .left-alt {
+    width: 65%;
+    padding: 11rem 0 11rem 5rem;
+
+    img {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  }
+  .right.no-padding {
+    padding-top: 0;
+  }
+  .welcome-icons {
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100vw;
+
+  }
+
+  .feature-alt {
+    color: white;
+  }
+
+  .team-text,
+  .left h2.task-text {
+    font-size: 28px;
+    padding-bottom: 1rem;
   }
 
   @keyframes slide-in-blurred-left {
@@ -189,24 +258,47 @@ const PageWrapper = styled.div`
     animation: slide-in-blurred-left 1.2s ease-in both;
   }
 
-  /* The element to apply the animation to */
-  .left-alt {
-    width: 65%;
-    padding: 9rem 5rem;
-    img {
-      border-radius: 12px;
-
-      overflow: hidden;
+  .chakra-accordion__item {
+    border-color: var(--main-green);
+    h2 {
+      border-color: var(--main-green);
+      
+      button {
+        height: 5rem;
+        span {
+          font-weight: 700;
+        }
+      }
+    }
+    .chakra-collapse {
+      background-color: #b9b7b7;
+      border-radius: 4px;
+      padding: 1rem;
     }
   }
 
+
   @media screen and (max-width: 568px) {
+    .flex-row.feature-container.top {
+      padding: 0 2rem;
+    }
+    .left .task-text {
+      padding-bottom: 4rem;
+    }
+
+  }
+
+  @media screen and  (max-width: 768px) {
+    padding-bottom: 3rem;
     .flex-row {
       flex-direction: column;
     }
+    
     .left {
       width: 100%;
       padding: 1rem 2rem;
+      justify-content: center;
+      align-items: center;
       .logo-icon {
       width: 4rem;
     }
@@ -214,32 +306,159 @@ const PageWrapper = styled.div`
       width: 15rem;
     }
     .slogan {
-      width: 17rem;
+      width: 100%;
+      padding: 0 3rem;
+      text-align: center;
+
     }
+    h2 {
+      width: 100%;
+      margin-top: -12rem;
+      color: white;
+    }
+    .task-text {
+
+    width: 100%;
+  }
     }
     .right {
+      width: 100%;
       padding-top: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
+      img {
+        max-width: 90vw;
+      }
     }
     .welcome-icons.flex-row {
       flex-direction: row;
       flex-wrap: wrap;
     }
+    .left-alt {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      img {
+        width: 90vw;
+      }
+    }
+    .right-alt {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 17rem;
+    }
+    .team-text,
+  .left h2.task-text {
+    font-size: 20px;
+  }
+  .team-text {
+    padding: 1rem 3rem;
+  }
+  .flex-row.feature-container {
+    flex-direction: row;
+  }
+  .left.flex-start {
+    padding: 0;
+  }
+
+  }
+
+  @media screen and (min-width: 769px) and (max-width: 1023px) {
+    .link-wrapper {
+    margin-left: 2rem;
+  }
+  .left {
+    width: 45%;
+    .logo-text {
+      width: 22rem;
+    }
+    .logo-icon {
+      width: 5rem;
+    }
+    .task-text {
+      padding: 0;
+    }
+  }
+  .right {
+    width: 52%;
+    padding-top: 5rem;
+  }
+  .left-alt {
+    width: 55%;
+    padding: 6rem 0 11rem 2rem;
+  }
+  .right-alt {
+    width: 45%;
+    padding: 6rem 3rem 0 3rem;
+  }
+  .team-text,
+  .left h2.task-text {
+    font-size: 20px;
+  }
+  .left.flex-start {
+    padding-top: 2rem;
+  }
+  }
+
+
+
+  @media screen and (min-width: 1024px) and (max-width: 1300px) {
+    .right {
+      img {
+        width: 60vw;
+      }
+    }
+    .left-alt {
+      padding: 11rem 2rem 11rem 5rem;
+      img {
+        max-width: 50vw;
+      }
+    }
+    .right-alt {
+      padding: 12rem 3rem 0 2rem;
+    }
+    .team-text,
+  .left h2.task-text {
+    font-size: 20px;
+  }
+  .left.flex-start {
+    padding: 0 1rem;
+  }
+  .left {
+    .slogan {
+      font-size: 30px;
+      padding-right: 7rem;
+    }
+    .task-text {
+      padding: 0 2rem;
+    }
+  }
+  .link-wrapper {
+    margin-left: 2rem;
+  }
+
+  } 
+
+  @media screen and (min-width: 1301px) and (max-width: 1800px) {
+    .left.flex-start {
+      padding: 0 1rem;
+    }
+    .right-alt {
+      padding: 20rem 3rem 0 3rem;
+    }
+    .team-text,
+  .left h2.task-text {
+    font-size: 24px;
+  }
 
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1801px) {
   }
 
-  @media screen and (min-width: 1024px) {
-  }
-
-  @media screen and (min-width: 1300px) {
-  }
-  @media screen and (min-width: 1800px) {
-  }
 `;
 
 //First page icon background
@@ -249,13 +468,17 @@ const WelcomeIcon = styled.div`
   background-color: #464545;
   border-radius: 12px;
   padding: 0.5rem;
-  margin: 2rem 3rem;
+  margin: 2rem 3rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
   .fa-solid {
     font-size: 2rem;
     color: var(--gray-text);
+  }
+
+  @media screen and (max-width: 1023px) {
+    margin: 2rem 2rem 0;
   }
 `;
 
@@ -266,6 +489,10 @@ const FeatureIcon = styled.div`
   padding: 0.5rem 1rem;
   margin-right: 2rem;
   margin-bottom: 0.5rem;
+
+  @media screen and (min-width: 569px) and (max-width: 1023px) {
+    max-width: 10rem;
+  }
 `;
 
 export default WelcomePage;
