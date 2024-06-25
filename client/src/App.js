@@ -5,6 +5,7 @@ import ProductPage from './pages/productPage';
 import SolutionsPage from './pages/solutionsPage';
 import SignupPage from './pages/signupPage';
 import PricingPage from './pages/pricingPage';
+import HomePage from './pages/homePage';
 
 
 const App = () => {
@@ -22,7 +23,6 @@ const App = () => {
   }, [])
 
   return (
-
     <Routes>
     <Route path="/" element={<WelcomePage />} />
       <Route index element={<WelcomePage />} />
@@ -31,6 +31,10 @@ const App = () => {
       <Route path="pricing" element={<PricingPage />} />
       <Route path="login" element={<SignupPage />} />
       <Route path="signup" element={<SignupPage />} />
+
+      {/* TODO - These routes are only if auth is true */}
+      <Route path="home" element={<HomePage />} />
+      <Route path="home/board" element={<HomePage />} />
       <Route path="*" element={<NoMatch />} />
 
   </Routes>
