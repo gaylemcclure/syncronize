@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useOutletContext } from "react-router";
 import styled from "styled-components";
 import logo from "../../assets/images/sync-icon.png";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
@@ -8,7 +9,9 @@ import { SubmitButton, CancelButton } from "../popupButtons";
 
 const AddTask = () => {
 
-  const [projectName, setProjectName] = useState("")
+  const [projectName, setProjectName] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [description, setDescription] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const NavButton = () => {
@@ -20,7 +23,7 @@ const AddTask = () => {
           <span className="material-symbols-outlined">add</span> Add project
         </ButtonNav>
       );
-    } else if (pathName === "/home/board") {
+    } else {
       return (
         <ButtonNav onClick={onOpen}>
           <span className="material-symbols-outlined">add</span> Add task
@@ -29,12 +32,28 @@ const AddTask = () => {
     }
   };
 
-  const handleAddProject = () => {
-    console.log("add project")
+  const handleAddProject = async () => {
+    const testUrl = `http://localhost:5001/api/project`;
+    await fetch(testUrl, {
+      method: 'POST',
+      body: JSON.stringify({ projectName, description, dueDate }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(function(response) {
+      if (!response.ok) {
+        alert ('Error message')
+      } else {
+        return response.json()
+      }
+    }).then(function(data) {
+      window.location.reload()
+      return data
+      
+    })
   };
   
   const handleAddTask = () => {
-
+    console.log("something")
   };
 
   return (
@@ -52,6 +71,14 @@ const AddTask = () => {
                 <label>Project name</label>
                 <input className="full-input" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
               </div>
+              <div className="input-container flex-col">
+                <label>Project description</label>
+                <textarea className="full-input" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+              </div>
+              <div className="input-container flex-col">
+                <label>Due Date</label>
+                <input type="date" className="full-input" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+              </div>
 
             </ModalBody>
 
@@ -63,7 +90,7 @@ const AddTask = () => {
           </ModalContent>
         )}
 
-        {window.location.pathname === "/home/board" && (
+        {window.location.pathname !== "/home" && (
           <ModalContent>
             <ModalHeader>Add task</ModalHeader>
             <ModalCloseButton />
@@ -71,7 +98,7 @@ const AddTask = () => {
 
             <ModalFooter>
               <button className="cancel-button" onClick={onClose}>Cancel</button>
-              <button className="submit-button">Add task</button>
+              <SubmitButton submitText="Add task" submitFunction={handleAddTask} />
             </ModalFooter>
           </ModalContent>
         )}
@@ -81,14 +108,11 @@ const AddTask = () => {
 };
 
 
-const AddContainer = styled.div`
 
-
-`
 
 const HomeNav = () => {
-  //TODO - set user initials
-  const [userInitials, setUserInitials] = useState("GM");
+  //Use outlet context to get the user details from main App component
+  const [user] = useOutletContext();
 
   return (
     <ChakraProvider>
@@ -98,12 +122,16 @@ const HomeNav = () => {
           <input className="search-bar" placeholder="Search..." />
         </div>
         <AddTask />
-        <DropdownMenu userInitials={userInitials} />
+        {user && (<DropdownMenu user={user}/>)}
       </NavWrapper>
     </ChakraProvider>
   );
 };
 
+const AddContainer = styled.div`
+
+
+`
 
 
 const NavWrapper = styled.nav`
@@ -125,7 +153,7 @@ const NavWrapper = styled.nav`
     height: 3rem;
   }
 
-  input {
+  input, textarea {
     width: 20rem;
     align-self: center;
   }

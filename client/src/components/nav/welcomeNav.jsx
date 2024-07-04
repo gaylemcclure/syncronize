@@ -1,12 +1,13 @@
-import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/sync.png";
 import WelcomeMenu from "../menus/welcomeMenu";
 
 const WelcomeNav = () => {
+  const path = window.location.pathname;
+  console.log(path)
   return (
-    <Navbar>
+    <Navbar className={path === "/" ? "transparent" : "black"}>
       <ul className="nav-links flex-row">
         <Link to="/">
           <img className="logo" src={logo} alt="logo" />
@@ -65,6 +66,9 @@ const Navbar = styled.nav`
 
   .mobile {
     display: none;
+  }
+  ul {
+    margin-bottom: 0;
   }
 
   @media screen and (max-width: 768px) {

@@ -13,6 +13,7 @@ html {
   --ws-gray-text: #d5d8df;
   --black: #101010;
   --main-gray: #bfbcbc;
+  --light-gray: #f3f4f9;
 }
 
 body {
@@ -23,23 +24,39 @@ body {
 
 #root {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 ul {
   margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
 }
 
 #root > div {
   height: 100%;
 }
 
-input {
-  height: 40px;
+input, textarea {
   border-radius: 12px;
   border: 1px solid var(--gray-border);
   width: 45%;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0 1rem;
 }
+
+input {
+  height: 40px;
+  min-height: 40px;
+
+}
+
+textarea {
+height: 80px;
+min-height: 60px;
+}
+
+
 
 /*-----------------GENERAL--------------------*/
 .flex-row {
@@ -59,7 +76,7 @@ input {
   justify-content: flex-start;
 }
 
-input.full-input {
+input.full-input, textarea.full-input {
   width: 100%;
 }
 .no-padding {
@@ -68,21 +85,25 @@ input.full-input {
 .open {
   width: 19rem;
   padding: 6rem 1rem 2rem 2rem;
+  transition: 0.5s;
 }
 
 .closed {
   width: 3rem;
   padding: 6rem 0.5rem 0.5rem;
+  transition: 0.5s;
 }
 
 .open-menu {
   left: 19rem;
   width: calc(100vw - 19rem);
+  transition: 0.5s;
 }
 
 .close-menu {
-  left: 2.8rem;
+  left: 3rem;
   width: calc(100vw - 3rem);
+  transition: 0.5s;
 }
 
 .material-symbols-outlined {
@@ -93,6 +114,7 @@ input.full-input {
 .move-back {
   z-index: -2;
   position: fixed;
+  transition: 0.5s;
 }
 
 .center {
@@ -121,7 +143,25 @@ input.full-input {
   background-color: var(--main-gray);
 }
 
+.nav-underline {
+  border-bottom: 2px solid var(--main-green);
+}
 
+.third {
+  width: 33%;
+}
+
+.full {
+  width: 98%;
+}
+
+.black {
+  background-color: var(--black);
+}
+
+.transparent {
+  background-color: transparent;
+}
 
 /*---------------BUTTON----------------------*/
 .signup-button {

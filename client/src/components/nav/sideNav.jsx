@@ -1,11 +1,52 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import WorkspaceMenu from '../menus/workspaceMenu';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
-//TODO - render the projects from the DB
 
-const SideNav = ({ workspaceInitials, openMenu, menuFunction }) => {
+
+
+const SideNav = ({ user, menu, setMenu }) => {
+
+  const [projects, setProjects] = useState([]);
+
+  //Sets the workspace name and initials
+  let workspaceInitial = "G";
+  let workspaceName = "G"
+  if (user) {
+    workspaceInitial = user.workspaceName.charAt(0);
+    workspaceName = user.workspaceName;
+  }
+
+
+  //Get the project data from db
+  useEffect(() => {
+    const getProjects = async () => {
+      const testUrl = `http://localhost:5001/api/project`;
+      await fetch(testUrl)  
+      .then(function(response) {
+        if (!response.ok) {
+          alert ('Error message')
+        } else {
+          return response.json()
+        }
+      }).then(function(data) {
+        setProjects(data)
+      })
+    } 
+    getProjects()
+  }, [])
+
+  const handleOpenMenu = () => {
+    setMenu(true)
+  }
+
+  const handleCloseMenu = () => {
+    setMenu(false)
+  }
+
+  //Modal to add a new project
   const AddBoardModal = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -34,40 +75,43 @@ const SideNav = ({ workspaceInitials, openMenu, menuFunction }) => {
 
   return (
     <ChakraProvider>
-      <Sidebar className={openMenu ? "sidebar open" : "sidebar closed"}>
-        <div className="flex-col sidenav-header">
-          <button className="sidebar-button" onClick={menuFunction}>
-            <i className={openMenu ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"}></i>
+
+      <Sidebar className={menu ? "sidebar open" : "sidebar closed"}>
+         <div className="flex-col sidenav-header">
+          <button className="sidebar-button" onClick={menu ? handleCloseMenu : handleOpenMenu}>
+            <i className="fa-solid fa-chevron-left"></i>
           </button>
           <MenuItem href="/home">
-            <span className="material-symbols-outlined space">home</span> {openMenu ? "Home" : ""}
+            <span className="material-symbols-outlined space">home</span> {menu ? "Home" : ""}
           </MenuItem>
           <MenuItem href="/home">
-            <span className="material-symbols-outlined space">inventory</span> {openMenu ? "My work" : ""}
+            <span className="material-symbols-outlined space">inventory</span> {menu ? "My work" : ""}
           </MenuItem>
         </div>
         <div className="flex-col sidenav-main">
           <div className="flex-row workspace-main">
-            <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>M</div>
-            <h4 className="workspace-name">{openMenu ? "Main workspace" : ""}</h4>
-           {openMenu && (<WorkspaceMenu />)} 
-           {openMenu && (<AddBoardModal />)}
+            <div className={menu ? "workspace-icon space" : "workspace-icon"}>{workspaceInitial}</div>
+            <h4 className="workspace-name">{menu ? workspaceName : ""}</h4>
+           {menu && (<WorkspaceMenu />)} 
+           {menu && (<AddBoardModal />)}
            
           </div>
-          <MenuItem href="home">
-            <span className="material-symbols-outlined space">folder</span> {openMenu ? "Project 1" : ""}
-          </MenuItem>
-          <MenuItem href="home">
-            <span className="material-symbols-outlined space">folder</span> {openMenu ? "Project 2" : ""}
-          </MenuItem>
-        </div>
+          {projects && (
+            projects.map((proj) => {
+              const link = `/project/q=${proj._id}`
+              return <MenuItem id={proj._id} href={link} key={proj._id}>
+                <span className="material-symbols-outlined space">folder</span> {menu ? proj.projectName : ""}
+              </MenuItem>
+            })
+          )}
+
+        </div> 
       </Sidebar>
     </ChakraProvider>
   );
 };
 
 const Sidebar = styled.div`
-  border-right: 1px solid #cdcdcd;
   height: 100%;
   position: fixed;
   top: 0;

@@ -1,7 +1,6 @@
-import React from 'react';
 import WelcomeNav from '../components/nav/welcomeNav';
 import styled from 'styled-components';
-import ScrollAnimation from '../utils/scrollAnimation';
+// import ScrollAnimation from '../utils/scrollAnimation';
 
 const ProductPage = () => {
     return (
@@ -11,7 +10,7 @@ const ProductPage = () => {
                 <h1>Something</h1>
                 {/* <div className="animate-img slide-in-blurred-left"></div> */}
 
-                <ScrollAnimation reappear><div className="animate-img slide-in-blurred-left"></div></ScrollAnimation>
+                {/* <ScrollAnimation reappear><div className="animate-img slide-in-blurred-left"></div></ScrollAnimation> */}
 
             </ProductContainer>
 

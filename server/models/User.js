@@ -21,9 +21,13 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    // initials: {
-    //   type: String,
-    // },
+    initials: {
+      type: String,
+    },
+    workspaceName: {
+      type: String,
+      default: "Main Space"
+    }
     // user: [
     //   {
     //     type: Schema.Types.ObjectId,

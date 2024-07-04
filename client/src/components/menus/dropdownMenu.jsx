@@ -4,19 +4,19 @@ import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 import UserIconSmall from './userIconSmall';
 
 //Menu component that shows when nav icon is clicked
-const DropdownMenu = ({ userInitials }) => {
+const DropdownMenu = ({ user }) => {
   return (
     <WorkspaceContainer>
       <Menu>
         {({ isOpen }) => (
           <>
             <MenuButton isActive={isOpen} as={Button} >
-            {userInitials}
+            {user.initials}
             </MenuButton>
             <MenuList>
             <div className="menu-header flex-row align">
-        <UserIconSmall userInitials={userInitials} menuFunction={() => null} width="30px" height="30px" />
-        <h4>Gayle McClure</h4>
+        <UserIconSmall userInitials={user.initials} menuFunction={() => null} width="30px" height="30px" />
+        <h4>{user.first} {user.last}</h4>
       </div>
               <MenuItem>
                 <span className="material-symbols-outlined space">edit</span>Rename workspace

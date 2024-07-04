@@ -7,6 +7,9 @@ const projectSchema = new Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String
+    },
     dueDate: {
       type: Date,
       // Sets a default value of 12 weeks from now
@@ -18,6 +21,8 @@ const projectSchema = new Schema(
         ref: 'task',
       },
     ],
+    //Save the views selected
+    // views: []
   },
   {
     toJSON: {

@@ -1,6 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import WelcomeNav from "../components/nav/welcomeNav";
 import icon from "../assets/images/sync-icon.png";
 import text from "../assets/images/sync-text.png";
 import eg from "../assets/images/welcome-eg.png";
@@ -9,11 +7,15 @@ import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
 import accordionData from "../assets/data/welcomeAccordion";
+import WelcomeNav from "../components/nav/welcomeNav";
+import { useOutletContext } from "react-router";
 
 const WelcomePage = () => {
+  const [user] = useOutletContext();
+
   return (
     <WelcomeContainer className="welcome-bg">
-      <WelcomeNav />
+      <WelcomeNav user= {user} />
       <WelcomeBG>
         <div className="main">
           <PageWrapper>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from '../assets/images/management.png';
-const SignupPage = () => {
+const SignupPage = ({userFunction, user}) => {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -26,26 +26,36 @@ const SignupPage = () => {
   };
 
   const handleSignup = async (e) => {
-    //Call api to save new user to the db
+    e.preventDefault()
 
-      e.preventDefault();
-    
-      //Get the values from the inputs - trim whitespace
-    
+    const firstInitial = firstName.charAt(0);
+    const secondInitial = lastName.charAt(0);
+    const initials = `${firstInitial}${secondInitial}`
 
-        const response = await fetch('/signup/api/users', {
-          method: 'POST',
-          body: JSON.stringify({ firstName, lastName, email, password }),
-          headers: { 'Content-Type': 'application/json' },
-        });
-    
-        if (response.ok) {
-          document.location.replace('/');
+    const testUrl = `http://localhost:5001/api/users`;
+    await fetch(testUrl, {
+        method: 'POST',
+        body: JSON.stringify({ firstName, lastName, email, password, initials }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(function (response) {
+        if (!response.ok) {
+          alert('Error message');
         } else {
-          alert(response.statusText);
+          return response.json()
         }
+      }).then(function (data) {
+
+        userFunction(data)
+      }).then(function () {
+
+        document.location.replace('/home');
+      })
+
       
     };
+
+
   
 
   return (
@@ -112,7 +122,12 @@ const ImageContainer = styled.div`
   align-items: center;
 
   img {
-  border-radius: 50%;}
+  border-radius: 50%;
+  max-width: 65%;
+  }
+  button {
+  min-height: 40px;
+}
 `;
 
 const Icon = styled.img`
