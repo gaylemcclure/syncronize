@@ -5,10 +5,12 @@ const projectSchema = new Schema(
   {
     projectName: {
       type: String,
-      required: true,
+      required: 'A project name is required.',
+      trim: true,
     },
     description: {
-      type: String
+      type: String,
+      trim: true,
     },
     dueDate: {
       type: Date,
@@ -18,20 +20,20 @@ const projectSchema = new Schema(
     tasks: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'task',
+        ref: 'Task',
       },
     ],
     //Save the views selected
     // views: []
   },
-  {
-    toJSON: {
-      virtuals: true,
-    },
-    id: false,
-  }
+  // {
+  //   toJSON: {
+  //     virtuals: true,
+  //   },
+  //   id: false,
+  // }
 );
 
-const Project = model('project', projectSchema);
+const Project = model('Project', projectSchema);
 
 module.exports = Project;

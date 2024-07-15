@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from '../assets/images/management.png';
-const SignupPage = ({userFunction, user}) => {
+
+const userFunction = (data) => {
+
+
+  const userObj = {
+    fName: data.first, 
+    lName: data.last,
+    email: data.email
+  }
+
+  localStorage.setItem("user", JSON.stringify(userObj))
+};
+
+
+const SignupPage = () => {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+
     //Find out which page user is on
   const pathName = window.location.pathname;
 
@@ -47,9 +63,15 @@ const SignupPage = ({userFunction, user}) => {
       }).then(function (data) {
 
         userFunction(data)
-      }).then(function () {
-
-        document.location.replace('/home');
+      }).then(async function () {
+        const urlParam = window.location.search;
+        if (urlParam === "") {
+          document.location.replace('/home');
+        }
+        else {
+          
+          document.location.replace(`/checkout${urlParam}`)
+        }
       })
 
       

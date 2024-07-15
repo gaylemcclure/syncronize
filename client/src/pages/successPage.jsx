@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import logo from "../assets/images/sync.png";
+import WelcomeFooter from "../components/nav/welcomeFooter";
+import styled from "styled-components";
+import {useNavigate} from 'react-router-dom';
+
 
 const Success = () => {
   const [session, setSession] = useState({});
   const location = useLocation();
   const sessionId = location.search.replace('?session_id=', '');
+  const [user, setUser] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchSession() {
@@ -17,53 +25,144 @@ const Success = () => {
     fetchSession();
   }, [sessionId]);
 
+  useEffect(() => {
+    const getUser = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const first = user.fName.charAt(0);
+      const last = user.lName.charAt(0);
+      setUser(first + last);
+    };
+
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigate("/home")
+    }, 5000)
+  }, [])
+
   return (
     <div className="sr-root">
-      <div className="sr-main">
-        <header className="sr-header">
-          <div className="sr-header__logo"></div>
-        </header>
-        <div className="sr-payment-summary completed-view">
-          <h1>Your payment succeeded</h1>
-          <h4>View CheckoutSession response:</h4>
-        </div>
-        <div className="sr-section completed-view">
-          <div className="sr-callout">
-            <pre>{JSON.stringify(session, null, 2)}</pre>
+      <PriceNav>
+        <ul className="nav-links flex-row">
+          <Link to="/">
+            <img className="logo" src={logo} alt="logo" />
+          </Link>
+          <div className="link-wrapper flex-row">
+            <Link to="/product" className="nav-link roboto-medium">
+              Product
+            </Link>
+            <Link to="/solutions" className="nav-link roboto-medium">
+              Solutions
+            </Link>
+            <Link to="/pricing" className="nav-link roboto-medium">
+              Pricing
+            </Link>
           </div>
-          <Link to="/">Restart demo</Link>
-        </div>
-      </div>
-      <div className="sr-content">
-        <div className="pasha-image-stack">
-          <img
-            alt=""
-            src="https://picsum.photos/280/320?random=1"
-            width="140"
-            height="160"
-          />
-          <img
-            alt=""
-            src="https://picsum.photos/280/320?random=2"
-            width="140"
-            height="160"
-          />
-          <img
-            alt=""
-            src="https://picsum.photos/280/320?random=3"
-            width="140"
-            height="160"
-          />
-          <img
-            alt=""
-            src="https://picsum.photos/280/320?random=4"
-            width="140"
-            height="160"
-          />
-        </div>
-      </div>
+        </ul>
+        <UserIcon>{user}</UserIcon>
+      </PriceNav>
+      <PaymentText>
+      <h1>Your payment was successful.</h1>
+    <h2>Redirecting to your new Syncronize workspace...</h2>
+
+      </PaymentText>
+      <WelcomeFooter />
     </div>
   );
 };
 
+const PaymentText = styled.div`
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 68vh;
+
+`
+
+const PriceNav = styled.nav`
+  background-color: var(--black);
+  width: 100vw;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: fixed;
+  box-sizing: border-box;
+  .logo {
+    width: 14rem;
+    padding-top: 2px;
+  }
+  .nav-link {
+    text-decoration: none;
+    align-self: center;
+    padding: 0 1.5rem;
+    color: var(--gray-text);
+    font-size: 18px;
+  }
+  .link-wrapper {
+    margin-left: 4rem;
+  }
+
+  .nav-button {
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    background-color: #06866e;
+    border-radius: 25px;
+    border: none;
+    color: white;
+  }
+
+  .nav-signup {
+    margin-left: auto;
+    padding-right: 2rem;
+  }
+
+  .mobile {
+    display: none;
+  }
+  ul {
+    margin-bottom: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem 2rem 1rem 2rem;
+    .link-wrapper,
+    .nav-signup {
+      display: none;
+    }
+    .mobile {
+      display: flex;
+      margin-left: auto;
+    }
+  }
+
+  @media screen and (min-width: 769px) and (max-width: 1023px) {
+    .link-wrapper {
+      margin-left: 1.5rem;
+    }
+    .nav-link {
+      padding: 0 1rem;
+    }
+  }
+`;
+
+const UserIcon = styled.div`
+  background-color: var(--main-green);
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-weight: 600;
+  transition-timing-function: ease-in;
+  transition-duration: 0.2s;
+  height: 40px;
+  width: 40px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+`;
 export default Success;

@@ -1,41 +1,51 @@
-require('dotenv').config({ path: './.env' });
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const express = require('express');
-const app = express();
+require("dotenv").config({ path: "./.env" });
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const express = require("express");
+const { ApolloServer } = require("@apollo/server");
+const cors = require("cors");
 const path = require("path");
-const PORT = process.env.PORT || 5001;
-const routes = require('./routes');
-const cors = require('cors');
-const db = require('./config/connection');
+const { expressMiddleware } = require("@apollo/server/express4");
+const { authMiddleware } = require("./utils/auth");
 
-checkEnv();
+const { typeDefs, resolvers } = require("./schemas");
+const db = require("./config/connection");
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+const PORT = process.env.PORT || 3001;
+const app = express();
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-// Routes
-app.use(routes);
+// Create a new Apollo server instance with GraphQL
+const startApolloServer = async () => {
+  await server.start();
 
+  app.use(cors());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
 
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: authMiddleware,
+    })
+  );
 
+  if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../client/dist")));
 
-//Start the server
-db.once('open', () => {
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+    });
+  }
+
+  db.once("open", () => {
     app.listen(PORT, () => {
-      console.log(`API server running on port ${PORT}!`);
+      console.log(`Apollo server running at http://localhost:${PORT}/graphql`);
     });
   });
+};
 
-  function checkEnv() {
-    const price = process.env.PRICE;
-    if (price === "price_12345" || !price) {
-      console.log("You must set a Price ID in the environment variables. Please see the README.");
-      process.exit(0);
-    }
-  }
-  
-
-
+// Call the function to start the server
+startApolloServer();

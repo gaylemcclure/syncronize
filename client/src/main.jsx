@@ -69,7 +69,7 @@ const router = createBrowserRouter([
         element: <Cancelled />,
       },
       {
-        path: 'success',
+        path: 'success=?*',
         element: <Success />,
       },
 

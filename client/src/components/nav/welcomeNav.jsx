@@ -5,7 +5,7 @@ import WelcomeMenu from "../menus/welcomeMenu";
 
 const WelcomeNav = () => {
   const path = window.location.pathname;
-  console.log(path)
+
   return (
     <Navbar className={path === "/" ? "transparent" : "black"}>
       <ul className="nav-links flex-row">
@@ -91,56 +91,6 @@ const Navbar = styled.nav`
   }
   }
 
-/* 
-@media screen and (max-width: 768px) {
-  .logo {
-      width: 10rem;
-    }
-    ul {
-      padding-left: 0;
-      margin-bottom: 0;
-    }
-    .link-wrapper, .nav-link {
-      display: none;
-    }
-    .nav-button {
-      padding: 0.4rem 0.5rem;
-      font-size: 0.8rem;
-    }
-    .nav-signup {
-      padding-right: 1rem;
-    }
-} */
-
-/* @media screen and (max-width: 1024px) {
-  .logo {
-      width: 10rem;
-    }
-    ul {
-      padding-left: 0;
-      margin-bottom: 0;
-    }
-    .mobile {
-      display: none;
-    }
-    .nav-button {
-      padding: 0.4rem 0.5rem;
-      font-size: 0.8rem;
-    }
-    .nav-signup {
-      padding-right: 1rem;
-    }
-    .link-wrapper, .nav-link {
-      display: flex;
-    }
-} */
-/* 
-@media screen and (max-width: 1300px) {
-
-}
-@media screen and (min-width: 1800px) {
-
-}*/
     
  
 `; 
