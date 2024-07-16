@@ -1,6 +1,7 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+//Import the routes
 import App from "./App.jsx";
 import WelcomePage from "./pages/welcomePage";
 import ProductPage from "./pages/productPage";
@@ -12,8 +13,12 @@ import ProjectPage from './pages/projectPage';
 import ErrorPage from "./pages/errorPage.jsx";
 import Checkout from "./pages/checkout";
 import Success from "./pages/successPage.jsx";
-import Cancelled from './pages/cancelledPage.jsx'
+import Cancelled from './pages/cancelledPage.jsx';
+import Profile from "./pages/accountPage.jsx";
+
+//Import stylesheet
 import '../src/assets/styles/index.css';
+
 
 
 
@@ -72,13 +77,17 @@ const router = createBrowserRouter([
         path: 'success=?*',
         element: <Success />,
       },
+      {
+        path: 'account',
+        element: <Profile />
+      }
 
     ],
   },
 ]);
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-<RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
 )
+

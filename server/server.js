@@ -1,9 +1,11 @@
 require("dotenv").config({ path: "./.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const express = require("express");
-const { ApolloServer } = require("@apollo/server");
+
 const cors = require("cors");
 const path = require("path");
+
+const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const { authMiddleware } = require("./utils/auth");
 

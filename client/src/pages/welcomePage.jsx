@@ -11,11 +11,11 @@ import WelcomeNav from "../components/nav/welcomeNav";
 import { useOutletContext } from "react-router";
 
 const WelcomePage = () => {
-  const [user] = useOutletContext();
+  // const [user] = useOutletContext();
 
   return (
     <WelcomeContainer className="welcome-bg">
-      <WelcomeNav user= {user} />
+      {/* <WelcomeNav user= {user} /> */}
       <WelcomeBG>
         <div className="main">
           <PageWrapper>

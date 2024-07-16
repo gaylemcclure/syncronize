@@ -1,30 +1,24 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
-import pageImg from '../assets/images/management.png';
+import pageImg from "../assets/images/management.png";
 
-const userFunction = (data) => {
-
-
-  const userObj = {
-    fName: data.first, 
-    lName: data.last,
-    email: data.email
-  }
-
-  localStorage.setItem("user", JSON.stringify(userObj))
-};
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../utils/mutations";
+import Auth from "../utils/auth";
 
 
 const SignupPage = () => {
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [addUser, { error, data }] = useMutation(ADD_USER);
 
 
-    //Find out which page user is on
+  //Find out which page user is on
   const pathName = window.location.pathname;
 
   //Text to show when on login page
@@ -41,75 +35,101 @@ const SignupPage = () => {
     );
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault()
+  // const handleSignup = async (e) => {
+  //   e.preventDefault()
 
-    const firstInitial = firstName.charAt(0);
-    const secondInitial = lastName.charAt(0);
+  //   const firstInitial = firstName.charAt(0);
+  //   const secondInitial = lastName.charAt(0);
+  //   const initials = `${firstInitial}${secondInitial}`
+
+  //   const testUrl = `http://localhost:5001/api/users`;
+  //   await fetch(testUrl, {
+  //       method: 'POST',
+  //       body: JSON.stringify({ firstName, lastName, email, password, initials }),
+  //       headers: { 'Content-Type': 'application/json' },
+  //     })
+  //     .then(function (response) {
+  //       if (!response.ok) {
+  //         alert('Error message');
+  //       } else {
+  //         return response.json()
+  //       }
+  //     }).then(function (data) {
+
+  //       userFunction(data)
+  //     }).then(async function () {
+  //       const urlParam = window.location.search;
+  //       if (urlParam === "") {
+  //         document.location.replace('/home');
+  //       }
+  //       else {
+
+  //         document.location.replace(`/checkout${urlParam}`)
+  //       }
+  //     })
+
+  //   };
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+
+    const firstInitial = first.charAt(0);
+    const secondInitial = last.charAt(0);
     const initials = `${firstInitial}${secondInitial}`
 
-    const testUrl = `http://localhost:5001/api/users`;
-    await fetch(testUrl, {
-        method: 'POST',
-        body: JSON.stringify({ firstName, lastName, email, password, initials }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then(function (response) {
-        if (!response.ok) {
-          alert('Error message');
-        } else {
-          return response.json()
-        }
-      }).then(function (data) {
+    try {
+      const { data } = await addUser({
+        variables: { first, last, email, password, initials},
+      });
 
-        userFunction(data)
-      }).then(async function () {
-        const urlParam = window.location.search;
-        if (urlParam === "") {
-          document.location.replace('/home');
-        }
-        else {
-          
-          document.location.replace(`/checkout${urlParam}`)
-        }
-      })
-
-      
-    };
-
-
-  
+      Auth.login(data.addUser.token);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="flex-row">
-      <InputContainer>
-        <Icon src={icon} alt="syncronize icon" />
-        {pathName === "/signup" ? <SignupText /> : <LoginText />}
-        {pathName === "/signup" && (
-        <div className="flex-row input-container">
-        <input placeholder="First name" className="input-gap" type="email" value={firstName} onInput={(e) => setFirstName(e.target.value)} />
-        <input placeholder="Last name" value={lastName} onInput={(e) => setLastName(e.target.value)}/>
-      </div>
+      {data ? (
+        <p>
+          Success! You may now head <Link to="/home">back to the homepage.</Link>
+        </p>
+      ) : (
+        <>
+          <InputContainer>
+            <Icon src={icon} alt="syncronize icon" />
+            {pathName === "/signup" ? <SignupText /> : <LoginText />}
+            <form onSubmit={handleSignup}>
+              {pathName === "/signup" && (
+                <div className="flex-row input-container">
+                  <input placeholder="First name" className="input-gap" value={first} onInput={(e) => setFirst(e.target.value)} />
+                  <input placeholder="Last name" value={last} onInput={(e) => setLast(e.target.value)} />
+                </div>
+              )}
+              <input placeholder="Email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
+              <input placeholder="Password" type="password" value={password} onInput={(e) => setPassword(e.target.value)} />
+              <button className="signup-button" id="signup-button" type="submit">
+                Sign up
+              </button>
+            </form>
 
-        )}
-        <input placeholder="Email" type="email" value={email} onInput={(e) => setEmail(e.target.value)}/>
-        <input placeholder="Password" type="password" value={password} onInput={(e) => setPassword(e.target.value)} />
-        <button className="signup-button" id="signup-button" onClick={handleSignup}>
-          Sign up
-        </button>
+            {pathName === "/signup" ? (
+              <p>
+                Already have an account? Log in <a href="./login">here</a>
+              </p>
+            ) : (
+              <p>
+                No account? Sign up <a href="./signup">here</a>
+              </p>
+            )}
 
-        {pathName === "/signup" ? 
-            <p>
-            Already have an account? Log in <a href="./login">here</a>
-          </p>
-        : <p>
-        No account? Sign up <a href="./signup">here</a>
-      </p>}
-        
-      </InputContainer>
-      <ImageContainer>
-        <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
-      </ImageContainer>
+            {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}
+          </InputContainer>
+          <ImageContainer>
+            <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
+          </ImageContainer>
+        </>
+      )}
     </div>
   );
 };
@@ -144,12 +164,12 @@ const ImageContainer = styled.div`
   align-items: center;
 
   img {
-  border-radius: 50%;
-  max-width: 65%;
+    border-radius: 50%;
+    max-width: 65%;
   }
   button {
-  min-height: 40px;
-}
+    min-height: 40px;
+  }
 `;
 
 const Icon = styled.img`

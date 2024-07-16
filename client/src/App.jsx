@@ -1,37 +1,51 @@
-// Bringing in the required import from 'react-router-dom'
-import { Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { Outlet } from 'react-router-dom';
+
+// Construct our main GraphQL API endpoint
+const httpLink = createHttpLink({
+  uri: '/graphql',
+});
+
+// Construct request middleware that will attach the JWT token to every request as an `authorization` header
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('id_token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
+const client = new ApolloClient({
+  // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
+console.log(client)
 
 function App() {
-  const [user, setUser] = useState("");
-
-  // //TODO - save the user data when logging in/signing up.
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     const testUrl = `http://localhost:5001/api/users/667b571f1bb1a8f2f85b1b75`;
-  //     await fetch(testUrl)
-  //       .then(function (response) {
-  //         if (!response.ok) {
-  //           alert("Error message");
-  //         } else {
-  //           return response.json();
-  //         }
-  //       })
-  //       .then(function (data) {
-  //         setUser(data);
-  //       });
-  //   };
-  //   getUser();
-  // }, []);
-
-
-
-
 
   return (
-    <>
-      <Outlet context={[user, setUser]} />
-    </>
+    <ApolloProvider client={client}>
+      <div className="flex-column justify-flex-start min-100-vh">
+        {/* <Header /> */}
+        <div className="container">
+          <Outlet />
+        </div>
+        {/* <Footer /> */}
+      </div>
+    </ApolloProvider>
+
   );
 }
 

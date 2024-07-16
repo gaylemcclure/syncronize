@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-// const assignmentSchema = require('./Assignment');
 
 // Schema to create Task model
 const taskSchema = new Schema(
@@ -36,18 +35,9 @@ const taskSchema = new Schema(
         required: true,
         trim: true,
     },
-    // user: [
-    //     {
-    //       type: Schema.Types.ObjectId,
-    //       ref: 'User',
-    //     },
-    //   ],
+
   },
-  // {
-  //   toJSON: {
-  //     getters: true,
-  //   },
-  // }
+
 );
 
 const Task = model('Task', taskSchema);
