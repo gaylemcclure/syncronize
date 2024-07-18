@@ -20,8 +20,6 @@ import Profile from "./pages/accountPage.jsx";
 import '../src/assets/styles/index.css';
 
 
-
-
 // Define the accessible routes, and which components respond to which URL
 const router = createBrowserRouter([
   {

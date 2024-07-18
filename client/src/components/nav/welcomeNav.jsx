@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/images/sync.png";
 import WelcomeMenu from "../menus/welcomeMenu";
 
-const WelcomeNav = () => {
+const WelcomeNav = ({ user }) => {
   const path = window.location.pathname;
+  const checkUser = Object.keys(user).length;
 
   return (
     <Navbar className={path === "/" ? "transparent" : "black"}>
@@ -18,10 +19,12 @@ const WelcomeNav = () => {
         <Link to="/pricing" className="nav-link roboto-medium">Pricing</Link>
         </div>
       </ul>
-      <ul className="nav-signup flex-row">
+      {checkUser === 0 && (<ul className="nav-signup flex-row">
         <Link to="/login" className="nav-link roboto-medium">Log in</Link>
         <Link to="/signup" ><button className="nav-button roboto-medium">Sign up</button></Link>
-      </ul>
+      </ul>)}
+      {checkUser !== 0 && (<div className="nav-signup flex-row"><MenuInitials href="/home">{user.initials}</MenuInitials></div>)}
+
       <div className="mobile"><WelcomeMenu /></div>
     </Navbar>
   );
@@ -71,6 +74,7 @@ const Navbar = styled.nav`
     margin-bottom: 0;
   }
 
+
   @media screen and (max-width: 768px) {
     padding: 1rem 2rem 1rem 2rem;
     .link-wrapper, .nav-signup {
@@ -94,5 +98,19 @@ const Navbar = styled.nav`
     
  
 `; 
+
+const MenuInitials = styled.a`
+  background-color: var(--main-green);
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-weight: 600;
+  transition-timing-function: ease-in;
+  transition-duration: 0.2s;
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+
+`
 
 export default WelcomeNav;

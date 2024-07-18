@@ -6,18 +6,24 @@ import Overview from '../components/views/overview';
 import TableView from '../components/views/tableView';
 import ListView from '../components/views/listView';
 import { QUERY_ME } from "../utils/queries";
-import { useQuery } from "@apollo/client";
+import { ADD_PROJECT } from "../utils/mutations";
+import { useQuery, useMutation } from "@apollo/client";
 
 
 const HomePage = () => {
   const [openMenu, setOpenMenu] = useState(true);
   const [innerNav, setInnerNav] = useState("overview");
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
+  // const [projectData] = useState([{
+  //   projectName: "First Project",
+  //   description: "This is my first project"
+  // }]);
   const { data } = useQuery(QUERY_ME);
   const user = data?.me;
 
 
 
+  //Get the user info & save in state
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -29,9 +35,9 @@ const HomePage = () => {
       }
     };
     getUserData();
-  }, [user]);
+  }, [user])
 
-
+  
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };

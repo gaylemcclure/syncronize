@@ -12,31 +12,43 @@ const resolvers = {
         return User.findOne({ _id: context.user._id });
       }
       throw AuthenticationError;
-    },
+    }
   },
 
   Mutation: {
     addUser: async (parent, { first, last, email, password, initials }) => {
-      const user = await User.create({ first, last, email, password, initials });
+      const user = await User.create({ first, last, email, password, initials, projects: [] });
       const token = signToken(user);
       return { token, user };
     },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
+    // login: async (parent, { email, password }) => {
+    //   const user = await User.findOne({ email });
+    //   if (!user) {
+    //     throw AuthenticationError;
+    //   }
+    //   const correctPw = await user.isCorrectPassword(password);
 
-      if (!user) {
-        throw AuthenticationError;
+    //   if (!correctPw) {
+    //     throw AuthenticationError;
+    //   }
+    //   const token = signToken(user);
+    //   return { token, user };
+    // },
+    addProject: async (parent, {projectName, description}, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { projects: {
+            projectName,
+            description,
+          } } },
+          { new: true, runValidators: true }
+        );
+
+        return updatedUser;
       }
 
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw AuthenticationError;
-      }
-
-      const token = signToken(user);
-
-      return { token, user };
+      throw AuthenticationError ("You need to be logged in!");
     },
 
   },

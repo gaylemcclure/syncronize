@@ -1,20 +1,18 @@
 const typeDefs = `
   type User {
     _id: ID
-    first: String
-    last: String
-    email: String
-    password: String
-    initials: String
+    first: String!
+    last: String!
+    email: String!
+    password: String!
+    initials: String!
     workspaceName: String
+    projects: [Project]
   }
 
   type Project {
-    _id: ID
-    projectName: String
+    projectName: String!
     description: String
-    dueDate: String
-    tasks: [Task]!
   }
 
   type Task {
@@ -40,8 +38,7 @@ const typeDefs = `
 
   type Mutation {
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
-
-
+    addProject(projectName: String!, description: String) : User
   }
 `;
 

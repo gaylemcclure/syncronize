@@ -5,10 +5,12 @@ import styled from "styled-components";
 import ProjectTable from "../components/projectTable";
 import ProjectTitleIcon from "../components/menus/projectTitleIcon";
 
-const ProjectPage = ({ user }) => {
+
+const ProjectPage = () => {
   const [openMenu, setOpenMenu] = useState(true);
   const [projectData, setProjectData] = useState({});
   const [innerNav, setInnerNav] = useState("list");
+
 
 
   let projectId = ""
@@ -19,23 +21,23 @@ const ProjectPage = ({ user }) => {
   });
 
 
-    //Get the project data from db
-    useEffect(() => {
-      const testUrl = `http://localhost:5001/api/project/${projectId}`;
-      const getSingleProject = async () => {
-      await fetch(testUrl)
-        .then(function (response) {
-          if (!response.ok) {
-            alert('Error message');
-          } else {
-            return response.json()
-          }
-        }).then(function (data) {
-          setProjectData(data)
-        })
-      }
-      getSingleProject()
-    }, [projectId])
+    // //Get the project data from db
+    // useEffect(() => {
+    //   const testUrl = `http://localhost:5001/api/project/${projectId}`;
+    //   const getSingleProject = async () => {
+    //   await fetch(testUrl)
+    //     .then(function (response) {
+    //       if (!response.ok) {
+    //         alert('Error message');
+    //       } else {
+    //         return response.json()
+    //       }
+    //     }).then(function (data) {
+    //       setProjectData(data)
+    //     })
+    //   }
+    //   getSingleProject()
+    // }, [projectId])
 
 
     console.log(projectData)

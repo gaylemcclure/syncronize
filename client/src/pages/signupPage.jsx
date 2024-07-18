@@ -14,6 +14,10 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
+  // const [projects] = useState([{
+  //   projectName: "First Project",
+  //   description: "This is my first project"
+  // }]);
 
   const [addUser, { error }] = useMutation(ADD_USER, { variables: {first, last, email, password, initials}});
 

@@ -4,13 +4,40 @@ import styled from "styled-components";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { singleData, recurringData } from "../assets/data/pricingData";
+import Auth from "../utils/auth";
+import { QUERY_ME } from "../utils/queries";
+import { useQuery } from "@apollo/client";
+import { useState, useEffect } from "react";
 
 const PricingPage = () => {
+  const [userData, setUserData] = useState({});
+  const { data } = useQuery(QUERY_ME);
+  const user = data?.me;
 
-    const handlePlan = (e) => {
-        const planType = e.target.value
-        window.location.href = `/signup?=${planType}`
-    }
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+        if (!token) {
+          return false;
+        }
+
+        if (user) {
+          setUserData(user);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getUserData();
+  }, [user]);
+
+  const handlePlan = (e) => {
+    const planType = e.target.value;
+    window.location.href = `/signup?=${planType}`;
+  };
 
   const PriceCard = ({ title, description, text, price, features, value }) => {
     const formLink = "http://localhost:5001/create-checkout-session-recurring";
@@ -24,7 +51,9 @@ const PricingPage = () => {
             Get started
           </button>
         </form> */}
-        <PriceButton value={value} onClick={(e) => handlePlan(e)}>Get started</PriceButton>
+        <PriceButton value={value} onClick={(e) => handlePlan(e)}>
+          Get started
+        </PriceButton>
         <div>
           <p>Key features</p>
           <ul>
@@ -44,7 +73,7 @@ const PricingPage = () => {
 
   return (
     <PricingContainer>
-      <WelcomeNav />
+      <WelcomeNav user={userData} />
       <PricingWrapper>
         <h1>
           Start <span className="green-text">syncronizing </span>your work today!
