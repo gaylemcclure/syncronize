@@ -11,32 +11,25 @@ const SideNav = ({ user, menu, setMenu }) => {
 
   const [projects, setProjects] = useState([]);
 
-  //Sets the workspace name and initials
-  let workspaceInitial = "G";
-  let workspaceName = "G"
-  if (user) {
-    workspaceInitial = user.workspaceName.charAt(0);
-    workspaceName = user.workspaceName;
-  }
 
 
   //Get the project data from db
-  useEffect(() => {
-    const getProjects = async () => {
-      const testUrl = `http://localhost:5001/api/project`;
-      await fetch(testUrl)  
-      .then(function(response) {
-        if (!response.ok) {
-          alert ('Error message')
-        } else {
-          return response.json()
-        }
-      }).then(function(data) {
-        setProjects(data)
-      })
-    } 
-    getProjects()
-  }, [])
+  // useEffect(() => {
+  //   const getProjects = async () => {
+  //     const testUrl = `http://localhost:5001/api/project`;
+  //     await fetch(testUrl)  
+  //     .then(function(response) {
+  //       if (!response.ok) {
+  //         alert ('Error message')
+  //       } else {
+  //         return response.json()
+  //       }
+  //     }).then(function(data) {
+  //       setProjects(data)
+  //     })
+  //   } 
+  //   getProjects()
+  // }, [])
 
   const handleOpenMenu = () => {
     setMenu(true)
@@ -90,8 +83,8 @@ const SideNav = ({ user, menu, setMenu }) => {
         </div>
         <div className="flex-col sidenav-main">
           <div className="flex-row workspace-main">
-            <div className={menu ? "workspace-icon space" : "workspace-icon"}>{workspaceInitial}</div>
-            <h4 className="workspace-name">{menu ? workspaceName : ""}</h4>
+            <div className={menu ? "workspace-icon space" : "workspace-icon"}>{user.initials}</div>
+            <h4 className="workspace-name">{menu ? user.workspaceName : ""}</h4>
            {menu && (<WorkspaceMenu />)} 
            {menu && (<AddBoardModal />)}
            

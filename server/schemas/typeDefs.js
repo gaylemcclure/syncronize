@@ -35,17 +35,12 @@ const typeDefs = `
 
   type Query {
     users: [User]
-    user(email: String!): User
-    project(projectId: ID!): Project
-    projects: [Project]
-    tasks: [Task]
-    task(taskId: ID!): Task
     me: User
   }
 
   type Mutation {
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
-    login(email: String!, password: String!): Auth
+
 
   }
 `;

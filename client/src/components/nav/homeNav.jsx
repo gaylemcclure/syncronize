@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useOutletContext } from "react-router";
 import styled from "styled-components";
 import logo from "../../assets/images/sync-icon.png";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
@@ -110,9 +109,8 @@ const AddTask = () => {
 
 
 
-const HomeNav = () => {
-  //Use outlet context to get the user details from main App component
-  const [user] = useOutletContext();
+const HomeNav = ({ user }) => {
+
 
   return (
     <ChakraProvider>

@@ -1,30 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomeNav from "../components/nav/homeNav";
 import SideNav from "../components/nav/sideNav";
 import styled from "styled-components";
 import Overview from '../components/views/overview';
 import TableView from '../components/views/tableView';
 import ListView from '../components/views/listView';
-import { useOutletContext } from "react-router";
+import { QUERY_ME } from "../utils/queries";
+import { useQuery } from "@apollo/client";
+
 
 const HomePage = () => {
   const [openMenu, setOpenMenu] = useState(true);
   const [innerNav, setInnerNav] = useState("overview");
-  const [user] = useOutletContext();
+  const [userData, setUserData] = useState({})
+  const { data } = useQuery(QUERY_ME);
+  const user = data?.me;
 
-  //Sets the workspace name and initials
-  let workspaceInitial = "G";
-  let workspaceName = "G";
-  if (user) {
-    workspaceInitial = user.workspaceName.charAt(0);
-    workspaceName = user.workspaceName;
-  }
+
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        if (user) {
+          setUserData(user);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getUserData();
+  }, [user]);
+
 
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };
-
-
 
   const handleInnerNav = (e) => {
     setInnerNav(e.target.id)
@@ -32,13 +42,13 @@ const HomePage = () => {
 
   return (
     <>
-      <HomeNav user={user} />
+      <HomeNav  user={userData} />
       <div className="flex-row">
-        <SideNav menu={openMenu} setMenu={handleOpenMenu} user={user} />
+        <SideNav menu={openMenu} setMenu={handleOpenMenu} user={userData} />
         <PageContainer className={openMenu ? "main-page open-menu" : "main-page close-menu" }>
           <PageHeader>
-            <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>{workspaceInitial}</div>
-            <h4 className="workspace-name">{openMenu ? workspaceName : ""}</h4>
+            <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>{userData.initials}</div>
+            <h4 className="workspace-name">{openMenu ? userData.workspaceName : ""}</h4>
           </PageHeader>
           <PageWrapper>
             <div className="project-menu flex-row">
@@ -87,6 +97,7 @@ const PageHeader = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    text-transform: uppercase;
   }
 `;
 

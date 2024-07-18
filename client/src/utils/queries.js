@@ -18,7 +18,9 @@ export const QUERY_ME = gql`
       _id
       first
       last
-      email
+      email,
+      initials,
+      workspaceName
     }
   }
 `;

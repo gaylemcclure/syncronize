@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
@@ -14,8 +13,9 @@ const SignupPage = () => {
   const [last, setLast] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [initials, setInitials] = useState("");
 
-  const [addUser, { error, data }] = useMutation(ADD_USER);
+  const [addUser, { error }] = useMutation(ADD_USER, { variables: {first, last, email, password, initials}});
 
 
   //Find out which page user is on
@@ -35,53 +35,23 @@ const SignupPage = () => {
     );
   };
 
-  // const handleSignup = async (e) => {
-  //   e.preventDefault()
+  //Set the users initials when first & last name are entered
+  useEffect(() => {
+    if (first && last) {
+      const firstInitial = first.charAt(0);
+      const secondInitial = last.charAt(0);
+      const ints = `${firstInitial}${secondInitial}`;
+      const upper = ints.toUpperCase();
+      setInitials(upper)
+    }
+  }, [first, last])
 
-  //   const firstInitial = firstName.charAt(0);
-  //   const secondInitial = lastName.charAt(0);
-  //   const initials = `${firstInitial}${secondInitial}`
-
-  //   const testUrl = `http://localhost:5001/api/users`;
-  //   await fetch(testUrl, {
-  //       method: 'POST',
-  //       body: JSON.stringify({ firstName, lastName, email, password, initials }),
-  //       headers: { 'Content-Type': 'application/json' },
-  //     })
-  //     .then(function (response) {
-  //       if (!response.ok) {
-  //         alert('Error message');
-  //       } else {
-  //         return response.json()
-  //       }
-  //     }).then(function (data) {
-
-  //       userFunction(data)
-  //     }).then(async function () {
-  //       const urlParam = window.location.search;
-  //       if (urlParam === "") {
-  //         document.location.replace('/home');
-  //       }
-  //       else {
-
-  //         document.location.replace(`/checkout${urlParam}`)
-  //       }
-  //     })
-
-  //   };
 
   const handleSignup = async (event) => {
     event.preventDefault();
 
-    const firstInitial = first.charAt(0);
-    const secondInitial = last.charAt(0);
-    const initials = `${firstInitial}${secondInitial}`
-
     try {
-      const { data } = await addUser({
-        variables: { first, last, email, password, initials},
-      });
-
+      const { data } = await addUser();
       Auth.login(data.addUser.token);
     } catch (e) {
       console.error(e);
@@ -90,11 +60,6 @@ const SignupPage = () => {
 
   return (
     <div className="flex-row">
-      {data ? (
-        <p>
-          Success! You may now head <Link to="/home">back to the homepage.</Link>
-        </p>
-      ) : (
         <>
           <InputContainer>
             <Icon src={icon} alt="syncronize icon" />
@@ -129,7 +94,7 @@ const SignupPage = () => {
             <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
           </ImageContainer>
         </>
-      )}
+      
     </div>
   );
 };

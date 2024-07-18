@@ -22,6 +22,10 @@ const userSchema = new Schema(
       unique: true,
       match: [/.+@.+\..+/, 'Must match an email address!'],
     },
+    createdOn: {
+      type: Date,
+      default: Date.now()
+    },
     password: {
       type: String,
       required: true,
@@ -34,18 +38,7 @@ const userSchema = new Schema(
       type: String,
       default: "Main Space"
     }
-    // user: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "project",
-    //   },
-    // ],
-  },
-  // {
-  //   toJSON: {
-  //     getters: true,
-  //   },
-  // }
+  }
 );
 
 userSchema.pre('save', async function (next) {
