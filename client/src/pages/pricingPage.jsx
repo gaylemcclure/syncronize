@@ -10,70 +10,68 @@ import { useQuery } from "@apollo/client";
 import { useState, useEffect } from "react";
 
 const PricingPage = () => {
-  const [userData, setUserData] = useState({});
-  const { data } = useQuery(QUERY_ME);
-  const user = data?.me;
+  // const [userData, setUserData] = useState({});
+  // const { data } = useQuery(QUERY_ME);
+  // const user = data?.me;
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
+  //       if (!token) {
+  //         return false;
+  //       }
+  //       if (user) {
+  //         setUserData(user);
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
 
-        if (!token) {
-          return false;
-        }
+  //   getUserData();
+  // }, [user]);
 
-        if (user) {
-          setUserData(user);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  // const handlePlan = (e) => {
+  //   const planType = e.target.value;
+  //   window.location.href = `/signup?=${planType}`;
+  // };
 
-    getUserData();
-  }, [user]);
-
-  const handlePlan = (e) => {
-    const planType = e.target.value;
-    window.location.href = `/signup?=${planType}`;
-  };
-
-  const PriceCard = ({ title, description, text, price, features, value }) => {
-    const formLink = "http://localhost:5001/create-checkout-session-recurring";
-    return (
-      <PriceBox>
-        <h3 style={{ color: `${text}` }}>{title}</h3>
-        <h4>{description}</h4>
-        <h5 style={{ color: `${text}` }}>{price}</h5>
-        {/* <form action={`${formLink}?=${value}`} method="POST">
-          <button role="link" id="submit" value={value} type="submit">
-            Get started
-          </button>
-        </form> */}
-        <PriceButton value={value} onClick={(e) => handlePlan(e)}>
-          Get started
-        </PriceButton>
-        <div>
-          <p>Key features</p>
-          <ul>
-            {features.map((feat) => {
-              return (
-                <li key={feat.id}>
-                  <span className="material-symbols-outlined">check</span>
-                  {feat.name}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </PriceBox>
-    );
-  };
+  // const PriceCard = ({ title, description, text, price, features, value }) => {
+  //   const formLink = "http://localhost:5001/create-checkout-session-recurring";
+  //   return (
+  //     <PriceBox>
+  //       <h3 style={{ color: `${text}` }}>{title}</h3>
+  //       <h4>{description}</h4>
+  //       <h5 style={{ color: `${text}` }}>{price}</h5>
+  //       {/* <form action={`${formLink}?=${value}`} method="POST">
+  //         <button role="link" id="submit" value={value} type="submit">
+  //           Get started
+  //         </button>
+  //       </form> */}
+  //       <PriceButton value={value} onClick={(e) => handlePlan(e)}>
+  //         Get started
+  //       </PriceButton>
+  //       <div>
+  //         <p>Key features</p>
+  //         <ul>
+  //           {features.map((feat) => {
+  //             return (
+  //               <li key={feat.id}>
+  //                 <span className="material-symbols-outlined">check</span>
+  //                 {feat.name}
+  //               </li>
+  //             );
+  //           })}
+  //         </ul>
+  //       </div>
+  //     </PriceBox>
+  //   );
+  // };
 
   return (
     <PricingContainer>
-      <WelcomeNav user={userData} />
+      {/* <WelcomeNav user={userData} />
       <PricingWrapper>
         <h1>
           Start <span className="green-text">syncronizing </span>your work today!
@@ -96,7 +94,7 @@ const PricingPage = () => {
           </TabPanels>
         </Tabs>
       </PricingWrapper>
-      <WelcomeFooter />
+      <WelcomeFooter /> */}
     </PricingContainer>
   );
 };

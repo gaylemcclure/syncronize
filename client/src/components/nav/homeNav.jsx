@@ -5,17 +5,23 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
 import { ChakraProvider } from "@chakra-ui/react";
 import DropdownMenu from "../menus/dropdownMenu";
 import { SubmitButton, CancelButton } from "../popupButtons";
+import { ADD_PROJECT } from "../../utils/mutations";
+import { useMutation } from "@apollo/client";
+import { useUserContext } from "../../utils/contexts";
+import Auth from "../../utils/auth";
 
 const AddTask = () => {
-
   const [projectName, setProjectName] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { userData } = useUserContext();
+
+  const [addProject] = useMutation(ADD_PROJECT);
+
 
   const NavButton = () => {
     const pathName = window.location.pathname;
-
     if (pathName === "/home") {
       return (
         <ButtonNav onClick={onOpen}>
@@ -32,27 +38,30 @@ const AddTask = () => {
   };
 
   const handleAddProject = async () => {
-    const testUrl = `http://localhost:5001/api/project`;
-    await fetch(testUrl, {
-      method: 'POST',
-      body: JSON.stringify({ projectName, description, dueDate }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-    .then(function(response) {
-      if (!response.ok) {
-        alert ('Error message')
-      } else {
-        return response.json()
-      }
-    }).then(function(data) {
-      window.location.reload()
-      return data
-      
-    })
+    // get token
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+    try {
+      const { data } = await addProject({
+        variables: {
+          projectName: projectName,
+          description: description,
+        },
+      })
+        
+    } catch (err) {
+      console.error(err);
+    }
+    setProjectName("")
+    setDescription("")
+    onClose()
   };
-  
+
   const handleAddTask = () => {
-    console.log("something")
+    console.log("something");
   };
 
   return (
@@ -78,13 +87,12 @@ const AddTask = () => {
                 <label>Due Date</label>
                 <input type="date" className="full-input" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
               </div>
-
             </ModalBody>
 
             <ModalFooter>
               <CancelButton cancelText="Cancel" cancelFunction={onClose} />
-            {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
-            <SubmitButton submitText="Add project" submitFunction={handleAddProject} />
+              {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
+              <SubmitButton submitText="Add project" submitFunction={handleAddProject} onClick={onClose} />
             </ModalFooter>
           </ModalContent>
         )}
@@ -96,7 +104,9 @@ const AddTask = () => {
             <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
 
             <ModalFooter>
-              <button className="cancel-button" onClick={onClose}>Cancel</button>
+              <button className="cancel-button" onClick={onClose}>
+                Cancel
+              </button>
               <SubmitButton submitText="Add task" submitFunction={handleAddTask} />
             </ModalFooter>
           </ModalContent>
@@ -106,12 +116,7 @@ const AddTask = () => {
   );
 };
 
-
-
-
 const HomeNav = ({ user }) => {
-
-
   return (
     <ChakraProvider>
       <NavWrapper>
@@ -120,17 +125,13 @@ const HomeNav = ({ user }) => {
           <input className="search-bar" placeholder="Search..." />
         </div>
         <AddTask />
-        {user && (<DropdownMenu user={user}/>)}
+        {user && <DropdownMenu user={user} />}
       </NavWrapper>
     </ChakraProvider>
   );
 };
 
-const AddContainer = styled.div`
-
-
-`
-
+const AddContainer = styled.div``;
 
 const NavWrapper = styled.nav`
   padding: 0.5rem 2rem;
@@ -151,7 +152,8 @@ const NavWrapper = styled.nav`
     height: 3rem;
   }
 
-  input, textarea {
+  input,
+  textarea {
     width: 20rem;
     align-self: center;
   }
@@ -173,7 +175,6 @@ const NavWrapper = styled.nav`
   .search-bar:focus {
     border: none;
   }
-
 `;
 
 const ButtonNav = styled.button`

@@ -15,6 +15,7 @@ import Checkout from "./pages/checkout";
 import Success from "./pages/successPage.jsx";
 import Cancelled from './pages/cancelledPage.jsx';
 import Profile from "./pages/accountPage.jsx";
+import LoginPage from './pages/loginPage.jsx';
 
 //Import stylesheet
 import '../src/assets/styles/index.css';
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <SignupPage />,
+        element: <LoginPage />,
       },
       {
         path: 'signup',

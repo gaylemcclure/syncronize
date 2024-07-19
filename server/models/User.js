@@ -1,9 +1,6 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 
-// import project schema
-const projectSchema = require('./Project');
-
 // Schema to create User model
 const userSchema = new Schema({
   first: {
@@ -40,7 +37,7 @@ const userSchema = new Schema({
     type: String,
     default: "Main Space",
   },
-  projects: [projectSchema]
+  projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
 },
 {
   toJSON: {

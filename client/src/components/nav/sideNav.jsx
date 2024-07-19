@@ -4,32 +4,15 @@ import styled from "styled-components";
 import WorkspaceMenu from '../menus/workspaceMenu';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { useUserContext } from "../../utils/contexts";
 
 
 
-const SideNav = ({ user, menu, setMenu }) => {
+const SideNav = ({ menu, setMenu }) => {
 
   const [projects, setProjects] = useState([]);
-
-
-
-  //Get the project data from db
-  // useEffect(() => {
-  //   const getProjects = async () => {
-  //     const testUrl = `http://localhost:5001/api/project`;
-  //     await fetch(testUrl)  
-  //     .then(function(response) {
-  //       if (!response.ok) {
-  //         alert ('Error message')
-  //       } else {
-  //         return response.json()
-  //       }
-  //     }).then(function(data) {
-  //       setProjects(data)
-  //     })
-  //   } 
-  //   getProjects()
-  // }, [])
+  const { userData } = useUserContext();
+  const userLength = Object.keys(userData).length;
 
   const handleOpenMenu = () => {
     setMenu(true)
@@ -83,20 +66,20 @@ const SideNav = ({ user, menu, setMenu }) => {
         </div>
         <div className="flex-col sidenav-main">
           <div className="flex-row workspace-main">
-            <div className={menu ? "workspace-icon space" : "workspace-icon"}>{user.initials}</div>
-            <h4 className="workspace-name">{menu ? user.workspaceName : ""}</h4>
+            <div className={menu ? "workspace-icon space" : "workspace-icon"}>{userData.initials}</div>
+            <h4 className="workspace-name">{menu ? userData.workspaceName : ""}</h4>
            {menu && (<WorkspaceMenu />)} 
            {menu && (<AddBoardModal />)}
            
           </div>
-          {projects && (
-            projects.map((proj) => {
+          {/* {userLength !== 0 && (
+            userData.projects.map((proj) => {
               const link = `/project/q=${proj._id}`
               return <MenuItem id={proj._id} href={link} key={proj._id}>
                 <span className="material-symbols-outlined space">folder</span> {menu ? proj.projectName : ""}
               </MenuItem>
             })
-          )}
+          )} */}
 
         </div> 
       </Sidebar>

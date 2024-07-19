@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
-
 import { useMutation } from "@apollo/client";
-import { ADD_USER } from "../utils/mutations";
+import { ADD_USER} from "../utils/mutations";
 import Auth from "../utils/auth";
 
 
@@ -14,30 +13,8 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
-  // const [projects] = useState([{
-  //   projectName: "First Project",
-  //   description: "This is my first project"
-  // }]);
 
   const [addUser, { error }] = useMutation(ADD_USER, { variables: {first, last, email, password, initials}});
-
-
-  //Find out which page user is on
-  const pathName = window.location.pathname;
-
-  //Text to show when on login page
-  const LoginText = () => {
-    return <h2>Welcome back to Sycronize</h2>;
-  };
-
-  //Text and inputs to show when on signup page
-  const SignupText = () => {
-    return (
-      <>
-        <h2>Welcome to Sycronize</h2>
-      </>
-    );
-  };
 
   //Set the users initials when first & last name are entered
   useEffect(() => {
@@ -53,7 +30,6 @@ const SignupPage = () => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
     try {
       const { data } = await addUser();
       Auth.login(data.addUser.token);
@@ -62,19 +38,23 @@ const SignupPage = () => {
     }
   };
 
+
   return (
-    <div className="flex-row">
+    <div className="flex-row full-height">
         <>
           <InputContainer>
             <Icon src={icon} alt="syncronize icon" />
-            {pathName === "/signup" ? <SignupText /> : <LoginText />}
-            <form onSubmit={handleSignup}>
-              {pathName === "/signup" && (
+            <h2>Welcome to Sycronize</h2>
+
+
+
+            <form className="flex-col form" onSubmit={handleSignup}>
+
                 <div className="flex-row input-container">
-                  <input placeholder="First name" className="input-gap" value={first} onInput={(e) => setFirst(e.target.value)} />
-                  <input placeholder="Last name" value={last} onInput={(e) => setLast(e.target.value)} />
+                  <input placeholder="First name" className="input-gap half-input" value={first} onInput={(e) => setFirst(e.target.value)} />
+                  <input placeholder="Last name"className="half-input" value={last} onInput={(e) => setLast(e.target.value)} />
                 </div>
-              )}
+              
               <input placeholder="Email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
               <input placeholder="Password" type="password" value={password} onInput={(e) => setPassword(e.target.value)} />
               <button className="signup-button" id="signup-button" type="submit">
@@ -82,15 +62,10 @@ const SignupPage = () => {
               </button>
             </form>
 
-            {pathName === "/signup" ? (
+
               <p>
                 Already have an account? Log in <a href="./login">here</a>
               </p>
-            ) : (
-              <p>
-                No account? Sign up <a href="./signup">here</a>
-              </p>
-            )}
 
             {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}
           </InputContainer>
@@ -114,14 +89,14 @@ const InputContainer = styled.div`
   h2 {
     font-size: 45px;
   }
-  .input-container {
-    width: 45%;
-    input {
-      width: 50%;
-    }
-  }
+.half-input {
+  width: 50%;
+}
   .input-gap {
     margin-right: 1rem;
+  }
+  .form {
+    width: 45%;
   }
 `;
 

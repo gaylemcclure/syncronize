@@ -2,80 +2,93 @@ import { useState, useEffect } from "react";
 import HomeNav from "../components/nav/homeNav";
 import SideNav from "../components/nav/sideNav";
 import styled from "styled-components";
-import Overview from '../components/views/overview';
-import TableView from '../components/views/tableView';
-import ListView from '../components/views/listView';
-import { QUERY_ME } from "../utils/queries";
+import Overview from "../components/views/overview";
+import TableView from "../components/views/tableView";
+import ListView from "../components/views/listView";
 import { ADD_PROJECT } from "../utils/mutations";
-import { useQuery, useMutation } from "@apollo/client";
-
+import { useMutation } from "@apollo/client";
+import { useUserContext } from "../utils/contexts";
+import Auth from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [openMenu, setOpenMenu] = useState(true);
   const [innerNav, setInnerNav] = useState("overview");
-  const [userData, setUserData] = useState({});
-  // const [projectData] = useState([{
-  //   projectName: "First Project",
-  //   description: "This is my first project"
-  // }]);
-  const { data } = useQuery(QUERY_ME);
-  const user = data?.me;
+  const { userData, setUserData } = useUserContext();
+  const [loggedIn, setLoggedIn] = useState(false);
 
+  console.log(loggedIn)
+  console.log(userData)
 
+  const navigate = useNavigate();
 
-  //Get the user info & save in state
   useEffect(() => {
-    const getUserData = async () => {
+    const isLoggedIn = async () => {
       try {
-        if (user) {
-          setUserData(user);
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+        if (!token) {
+          setLoggedIn(false);
+          setTimeout(() => {
+            navigate("/login");
+          }, 5000);
+        } else {
+          setLoggedIn(true);
         }
       } catch (err) {
         console.error(err);
       }
     };
-    getUserData();
-  }, [user])
 
-  
+    isLoggedIn();
+  }, []);
+
   const handleOpenMenu = () => {
     setOpenMenu(!openMenu);
   };
 
   const handleInnerNav = (e) => {
-    setInnerNav(e.target.id)
-  }
+    setInnerNav(e.target.id);
+  };
 
   return (
     <>
-      <HomeNav  user={userData} />
-      <div className="flex-row">
-        <SideNav menu={openMenu} setMenu={handleOpenMenu} user={userData} />
-        <PageContainer className={openMenu ? "main-page open-menu" : "main-page close-menu" }>
-          <PageHeader>
-            <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>{userData.initials}</div>
-            <h4 className="workspace-name">{openMenu ? userData.workspaceName : ""}</h4>
-          </PageHeader>
-          <PageWrapper>
-            <div className="project-menu flex-row">
-              <button id="overview" onClick={(e) => handleInnerNav(e)} className={innerNav === "overview" ? "project-menu-button nav-underline" : "project-menu-button"}>
-                <span className="material-symbols-outlined">dataset</span>Overview
-              </button>
-              <button id="table" onClick={(e) => handleInnerNav(e)} className={innerNav === "table" ? "project-menu-button nav-underline" : "project-menu-button"}>
-                <span className="material-symbols-outlined">table_rows</span>Table
-              </button>
-              <button id="list" onClick={(e) => handleInnerNav(e)} className={innerNav === "list" ? "project-menu-button nav-underline" : "project-menu-button"}>
-                <span className="material-symbols-outlined">list</span>List
-              </button>
-              <button className="plus-button">+</button>
-            </div>
-
-            {innerNav === "overview" && ( <Overview />)}
-            {innerNav === "table" && ( <TableView />)}
-            {innerNav === "list" && ( <ListView />)}
-          </PageWrapper>
-        </PageContainer>
-      </div>
+      {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
+      {loggedIn && (
+        <>
+          <HomeNav user={userData} />
+          <div className="flex-row">
+            <SideNav menu={openMenu} setMenu={handleOpenMenu} />
+            <PageContainer className={openMenu ? "main-page open-menu" : "main-page close-menu"}>
+              <PageHeader>
+                <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>{userData.initials}</div>
+                <h4 className="workspace-name">{openMenu ? userData.workspaceName : ""}</h4>
+              </PageHeader>
+              <PageWrapper>
+                <div className="project-menu flex-row">
+                  <button id="overview" onClick={(e) => handleInnerNav(e)} className={innerNav === "overview" ? "project-menu-button nav-underline" : "project-menu-button"}>
+                    <span className="material-symbols-outlined">dataset</span>Overview
+                  </button>
+                  <button id="table" onClick={(e) => handleInnerNav(e)} className={innerNav === "table" ? "project-menu-button nav-underline" : "project-menu-button"}>
+                    <span className="material-symbols-outlined">table_rows</span>Table
+                  </button>
+                  <button id="list" onClick={(e) => handleInnerNav(e)} className={innerNav === "list" ? "project-menu-button nav-underline" : "project-menu-button"}>
+                    <span className="material-symbols-outlined">list</span>List
+                  </button>
+                  <button className="plus-button">+</button>
+                </div>
+                {userData && (
+                  <>
+                    {innerNav === "overview" && <Overview user={userData} />}
+                    {innerNav === "table" && <TableView user={userData} />}
+                    {innerNav === "list" && <ListView user={userData} />}
+                  </>
+                )}
+              </PageWrapper>
+            </PageContainer>
+          </div>
+        </>
+      )}
     </>
   );
 };
@@ -108,19 +121,18 @@ const PageHeader = styled.div`
 `;
 
 const PageWrapper = styled.div`
-  padding: 1.5rem 2rem ;
- .project-menu-button {
-  display: flex;
-  align-items: center;
-  padding: 0 1rem 0.5rem;
-  border-right: 1px solid var(--gray-border);
- }
- .material-symbols-outlined {
-  padding-right: 0.5rem;
- }
- .plus-button {
-  padding-left: 1rem;
- }
-
+  padding: 1.5rem 2rem;
+  .project-menu-button {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0.5rem;
+    border-right: 1px solid var(--gray-border);
+  }
+  .material-symbols-outlined {
+    padding-right: 0.5rem;
+  }
+  .plus-button {
+    padding-left: 1rem;
+  }
 `;
 export default HomePage;

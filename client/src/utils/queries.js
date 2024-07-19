@@ -20,6 +20,9 @@ export const QUERY_ME = gql`
       email
       initials
       workspaceName
+      projects {
+        _id
+      }
     }
   }
 `;

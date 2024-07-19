@@ -6,6 +6,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { Outlet } from 'react-router-dom';
+import { UserProvider } from '../src/utils/contexts';
 
 // Construct main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
+      <UserProvider>
       <div className="flex-column justify-flex-start min-100-vh">
         {/* <Header /> */}
         <div className="container">
@@ -43,6 +45,7 @@ function App() {
         </div>
         {/* <Footer /> */}
       </div>
+      </UserProvider>
     </ApolloProvider>
 
   );

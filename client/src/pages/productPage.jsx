@@ -6,32 +6,32 @@ import { useQuery } from "@apollo/client";
 import { useState, useEffect } from 'react';
 
 const ProductPage = () => {
-        const [userData, setUserData] = useState({});
-        const { data } = useQuery(QUERY_ME);
-        const user = data?.me;
+        // const [userData, setUserData] = useState({});
+        // const { data } = useQuery(QUERY_ME);
+        // const user = data?.me;
       
-        useEffect(() => {
-          const getUserData = async () => {
-            try {
-              const token = Auth.loggedIn() ? Auth.getToken() : null;
+        // useEffect(() => {
+        //   const getUserData = async () => {
+        //     try {
+        //       const token = Auth.loggedIn() ? Auth.getToken() : null;
       
-              if (!token) {
-                return false;
-              }
+        //       if (!token) {
+        //         return false;
+        //       }
       
-              if (user) {
-                setUserData(user);
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          };
+        //       if (user) {
+        //         setUserData(user);
+        //       }
+        //     } catch (err) {
+        //       console.error(err);
+        //     }
+        //   };
       
-          getUserData();
-        }, [user]);
+        //   getUserData();
+        // }, [user]);
     return (
         <div>
-            <WelcomeNav user={userData} />
+            {/* <WelcomeNav user={userData} /> */}
             <ProductContainer>
                 <h1>Something</h1>
             </ProductContainer>

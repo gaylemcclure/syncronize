@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/sync.png";
 import WelcomeMenu from "../menus/welcomeMenu";
+import { useContext } from "react";
 
 const WelcomeNav = ({ user }) => {
   const path = window.location.pathname;

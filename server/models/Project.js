@@ -1,4 +1,5 @@
-const { Schema } = require('mongoose');
+const { Schema, model } = require("mongoose");
+
 
 // Schema to create a project model
 const projectSchema = new Schema(
@@ -12,16 +13,24 @@ const projectSchema = new Schema(
       type: String,
       trim: true,
     },
+    createdBy: {
+      type: String,
+    },
+    createdOn: {
+      type: Date,
+      default: new Date()
+    },
     // dueDate: {
     //   type: Date,
     //   // Sets a default value of 12 weeks from now
     //   default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
     // },
+    users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 
   },
 
 );
 
-// const Project = model('Project', projectSchema);
+const Project = model('Project', projectSchema);
 
-module.exports = projectSchema;
+module.exports = Project;

@@ -41,7 +41,6 @@ ul {
 input, textarea {
   border-radius: 12px;
   border: 1px solid var(--gray-border);
-  width: 45%;
   margin: 0.25rem 0 1rem;
 }
 
@@ -74,6 +73,10 @@ min-height: 60px;
 
 .flex-start {
   justify-content: flex-start;
+}
+
+.full-height {
+  height: 100%;
 }
 
 input.full-input, textarea.full-input {
@@ -163,9 +166,12 @@ input.full-input, textarea.full-input {
   background-color: transparent;
 }
 
+.container {
+  height: 100%;
+}
+
 /*---------------BUTTON----------------------*/
 .signup-button {
-  width: 45%;
   height: 2.4rem;
   border: none;
   background-color: var(--main-green);

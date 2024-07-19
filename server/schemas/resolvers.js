@@ -1,5 +1,6 @@
-const { User, Thought } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { User, Project } = require("../models");
+const { signToken, AuthenticationError } = require("../utils/auth");
+const { generateProjectId } = require("../utils/projectToken");
 
 const resolvers = {
   Query: {
@@ -12,7 +13,8 @@ const resolvers = {
         return User.findOne({ _id: context.user._id });
       }
       throw AuthenticationError;
-    }
+    },
+
   },
 
   Mutation: {
@@ -21,34 +23,31 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    // login: async (parent, { email, password }) => {
-    //   const user = await User.findOne({ email });
-    //   if (!user) {
-    //     throw AuthenticationError;
-    //   }
-    //   const correctPw = await user.isCorrectPassword(password);
-
-    //   if (!correctPw) {
-    //     throw AuthenticationError;
-    //   }
-    //   const token = signToken(user);
-    //   return { token, user };
-    // },
-    addProject: async (parent, {projectName, description}, context) => {
-      if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { projects: {
-            projectName,
-            description,
-          } } },
-          { new: true, runValidators: true }
-        );
-
-        return updatedUser;
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw AuthenticationError;
       }
+      const correctPw = await user.isCorrectPassword(password);
 
-      throw AuthenticationError ("You need to be logged in!");
+      if (!correctPw) {
+        throw AuthenticationError;
+      }
+      const token = signToken(user);
+      return { token, user };
+    },
+    addProject: async (parent, { projectName, description }, context) => {
+      const curUser = context.user._id;
+      if (context.user) {
+        const project = await Project.create({ projectName, description, createdBy: curUser, users: [curUser] })
+       const user = await User.findOneAndUpdate(
+        {_id: curUser},
+        { $addToSet: { projects: project._id} },
+        { new: true }
+       );
+       return user;
+      }
+      throw AuthenticationError("You need to be logged in!");
     },
 
   },
