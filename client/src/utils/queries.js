@@ -22,6 +22,8 @@ export const QUERY_ME = gql`
       workspaceName
       projects {
         _id
+        projectName
+        description
       }
     }
   }

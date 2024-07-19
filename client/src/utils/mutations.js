@@ -35,10 +35,3 @@ export const ADD_PROJECT = gql`
   }
 `;
 
-// export const UPDATE_USER_PROJECT = gql`
-//     mutation updateUserProject($_id: ID) {
-//       updateUserProject(_id: $_id) {
-//       projects: _id
-//     }
-//   }
-// `;
