@@ -28,3 +28,19 @@ export const QUERY_ME = gql`
     }
   }
 `;
+
+export const QUERY_PROJECT = gql`
+  query proj($_id: String!) {
+    proj(_id: $_id) {
+      _id
+      projectName
+      description
+      createdOn
+      createdBy
+      users {
+        _id
+        initials
+      }
+    }
+  }
+`;

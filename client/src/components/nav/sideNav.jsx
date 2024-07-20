@@ -10,7 +10,6 @@ import { useUserContext } from "../../utils/contexts";
 
 const SideNav = ({ menu, setMenu }) => {
 
-  const [projects, setProjects] = useState([]);
   const { userData } = useUserContext();
   const userLength = Object.keys(userData).length;
 
@@ -72,14 +71,14 @@ const SideNav = ({ menu, setMenu }) => {
            {menu && (<AddBoardModal />)}
            
           </div>
-          {/* {userLength !== 0 && (
+          {userLength !== 0 && (
             userData.projects.map((proj) => {
               const link = `/project/q=${proj._id}`
               return <MenuItem id={proj._id} href={link} key={proj._id}>
                 <span className="material-symbols-outlined space">folder</span> {menu ? proj.projectName : ""}
               </MenuItem>
             })
-          )} */}
+          )}
 
         </div> 
       </Sidebar>

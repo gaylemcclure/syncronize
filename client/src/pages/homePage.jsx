@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Overview from "../components/views/overview";
 import TableView from "../components/views/tableView";
 import ListView from "../components/views/listView";
-import { ADD_PROJECT } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
 import { useUserContext } from "../utils/contexts";
 import Auth from "../utils/auth";
@@ -16,9 +15,6 @@ const HomePage = () => {
   const [innerNav, setInnerNav] = useState("overview");
   const { userData, setUserData } = useUserContext();
   const [loggedIn, setLoggedIn] = useState(false);
-
-  console.log(loggedIn)
-  console.log(userData)
 
   const navigate = useNavigate();
 

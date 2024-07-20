@@ -14,6 +14,11 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
+    proj: async (parent, args, context) => {
+      if (context.user) {
+        return Project.findOne({ _id: args._id }).populate("users")
+      }
+    }
 
   },
 

@@ -39,8 +39,8 @@ const typeDefs = `
   type Query {
     users: [User]
     me: User
-    project: Project
-    projects: [Project]
+    proj(_id: String!): Project
+
   }
 
   type Mutation {
