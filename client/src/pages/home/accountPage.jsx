@@ -6,9 +6,9 @@ import { useQuery } from '@apollo/client';
 
 // import { QUERY_USER, QUERY_ME } from '../utils/queries';
 
-import Auth from '../utils/auth';
+import Auth from '../../utils/auth';
 
-const Profile = () => {
+const AccountPage = () => {
   const { username: userParam } = useParams();
 
 //   const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
@@ -62,4 +62,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default AccountPage;

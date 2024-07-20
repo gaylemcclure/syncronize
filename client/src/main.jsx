@@ -14,8 +14,11 @@ import ErrorPage from "./pages/errorPage.jsx";
 import Checkout from "./pages/checkout";
 import Success from "./pages/successPage.jsx";
 import Cancelled from './pages/cancelledPage.jsx';
-import Profile from "./pages/accountPage.jsx";
 import LoginPage from './pages/loginPage.jsx';
+import AccountPage from "./pages/home/accountPage.jsx";
+import ThemePage from './pages/home/themePage.jsx';
+import SettingsPage from './pages/home/settingsPage.jsx';
+import ManageUsers from './pages/home/manageUsers.jsx'
 
 //Import stylesheet
 import '../src/assets/styles/index.css';
@@ -77,9 +80,22 @@ const router = createBrowserRouter([
         element: <Success />,
       },
       {
-        path: 'account',
-        element: <Profile />
-      }
+        path: 'home/account',
+        element: <AccountPage />
+      },
+      {
+        path: 'home/settings',
+        element: <SettingsPage />
+      },
+      {
+        path: 'home/manage-users',
+        element: <ManageUsers />
+      },
+      {
+        path: 'home/theme',
+        element: <ThemePage />
+      },
+
 
     ],
   },

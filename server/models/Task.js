@@ -14,10 +14,13 @@ const taskSchema = new Schema(
       required: true,
       trim: true,
     },
-    createdAt: {
+    createdOn: {
       type: Date,
       default: Date.now,
-      get: (timestamp) => dateFormat(timestamp),
+      // get: (timestamp) => dateFormat(timestamp),
+    },
+    createdBy: {
+      type: String,
     },
     startDate: {
         type: Date,
@@ -29,12 +32,23 @@ const taskSchema = new Schema(
         default: Date.now(),
         trim: true,
       },
-    // assignments: [assignmentSchema],
+
     status: {
         type: String,
         required: true,
         trim: true,
     },
+    projectId: { 
+      type: Schema.Types.ObjectId, ref: 'Project' 
+    },
+    assignedTo: {
+      type: Schema.Types.ObjectId, ref: 'User' 
+    },
+    updatedOn: {
+      type: Date,
+      default: Date.now()
+    }
+
 
   },
 

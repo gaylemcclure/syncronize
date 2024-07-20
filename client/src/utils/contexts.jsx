@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { QUERY_ME } from "./queries";
+import { QUERY_ME, QUERY_PROJECT } from "./queries";
 import { useQuery } from "@apollo/client";
 
 const UserContext = createContext();
@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
   const { data } = useQuery(QUERY_ME);
   const user = data?.me;
-  console.log(user)
+
 
   useEffect(() => {
     const getUserData = async () => {

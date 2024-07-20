@@ -35,3 +35,11 @@ export const ADD_PROJECT = gql`
   }
 `;
 
+export const ADD_TASK = gql`
+  mutation addTask($title: String!, $description: String, $status: String, $projectId: String) {
+    addTask(title: $title, description: $description, status: $status, projectId: $projectId) {
+      _id
+    }
+  }
+`;
+

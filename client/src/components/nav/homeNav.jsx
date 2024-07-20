@@ -5,7 +5,7 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
 import { ChakraProvider } from "@chakra-ui/react";
 import DropdownMenu from "../menus/dropdownMenu";
 import { SubmitButton, CancelButton } from "../popupButtons";
-import { ADD_PROJECT } from "../../utils/mutations";
+import { ADD_PROJECT, ADD_TASK } from "../../utils/mutations";
 import { useMutation } from "@apollo/client";
 import { useUserContext } from "../../utils/contexts";
 import Auth from "../../utils/auth";
@@ -14,14 +14,30 @@ const AddTask = () => {
   const [projectName, setProjectName] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [status, setStatus] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { userData } = useUserContext();
 
   const [addProject] = useMutation(ADD_PROJECT);
+  const [addTask] = useMutation(ADD_TASK);
+
+  const pathName = window.location.pathname;
+  let projectId = "";
+
+  if (pathName !== "/home") {
+
+    const paramString = window.location.pathname;
+    const searchParams = new URLSearchParams(paramString);
+    searchParams.forEach((value, key) => {
+      projectId = value;
+    });
+  }
 
 
   const NavButton = () => {
-    const pathName = window.location.pathname;
+
     if (pathName === "/home") {
       return (
         <ButtonNav onClick={onOpen}>
@@ -60,8 +76,31 @@ const AddTask = () => {
     onClose()
   };
 
-  const handleAddTask = () => {
-    console.log("something");
+  const handleAddTask = async () => {
+        // get token
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+        if (!token) {
+          return false;
+        }
+        try {
+          const { data } = await addTask({
+            variables: {
+              title: title,
+              description: taskDescription,
+              status: status,
+              projectId: projectId
+            },
+          })
+
+          console.log(data)
+            
+        } catch (err) {
+          console.error(err);
+        }
+        setProjectName("")
+        setDescription("")
+        onClose()
   };
 
   return (
@@ -99,17 +138,34 @@ const AddTask = () => {
 
         {window.location.pathname !== "/home" && (
           <ModalContent>
-            <ModalHeader>Add task</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
+          <ModalHeader>Add task</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="input-container flex-col">
+              <label>Title</label>
+              <input className="full-input" value={title} onChange={(e) => setTitle(e.target.value)} />
+            </div>
+            <div className="input-container flex-col">
+              <label>Description</label>
+              <textarea className="full-input" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)}></textarea>
+            </div>
+            <div className="input-container flex-col">
+              {/* <label>Due Date</label>
+              <input type="date" className="full-input" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /> */}
+            </div>
+            <div className="input-container flex-col">
+              <label>Status</label>
+              <input className="full-input" value={status} onChange={(e) => setStatus(e.target.value)} />
+            </div>
 
-            <ModalFooter>
-              <button className="cancel-button" onClick={onClose}>
-                Cancel
-              </button>
-              <SubmitButton submitText="Add task" submitFunction={handleAddTask} />
-            </ModalFooter>
-          </ModalContent>
+          </ModalBody>
+
+          <ModalFooter>
+            <CancelButton cancelText="Cancel" cancelFunction={onClose} />
+            {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
+            <SubmitButton submitText="Add task" submitFunction={handleAddTask} onClick={onClose} />
+          </ModalFooter>
+        </ModalContent>
         )}
       </Modal>
     </AddContainer>

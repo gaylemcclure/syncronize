@@ -17,17 +17,22 @@ const typeDefs = `
     projectName: String!
     description: String
     users: [User]
+    tasks: [Task]
 
   }
 
   type Task {
     _id: ID
-    title: String
+    title: String!
     description: String
-    createdAt: String
+    createdOn: String
+    createdBy: String
     startDate: String
     dueDate: String
     status: String
+    projectId: Project
+    assignedTo: User
+    updatedOn: String
 
   }
 
@@ -40,13 +45,15 @@ const typeDefs = `
     users: [User]
     me: User
     proj(_id: String!): Project
-
+    projectTasks(projectId: String!): [Task] 
+    singleTask(_id: String!): Task
   }
 
   type Mutation {
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
     login(email: String!, password: String!): Auth
     addProject(projectName: String!, description: String) : Project
+    addTask(title: String!, description: String, status: String, projectId: String) : Task
 
 
   }

@@ -25,7 +25,9 @@ const projectSchema = new Schema(
     //   // Sets a default value of 12 weeks from now
     //   default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
     // },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
+
 
   },
 

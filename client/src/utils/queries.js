@@ -41,6 +41,40 @@ export const QUERY_PROJECT = gql`
         _id
         initials
       }
+        tasks {
+        _id
+        title
+        description
+        createdOn
+        createdBy
+        status
+        }
+    }
+  }
+`;
+
+export const QUERY_PROJECT_TASKS = gql`
+  query projectTasks($projectId: String!) {
+    projectTasks(projectId: $projectId) {
+      _id
+      title
+      description
+      createdOn
+      createdBy
+      status
+    }
+  }
+`;
+
+export const QUERY_TASK = gql`
+  query singleTask($_id: String!) {
+    singleTask(_id: $_id) {
+      _id
+      title
+      description
+      createdOn
+      createdBy
+      status
     }
   }
 `;

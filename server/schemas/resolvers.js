@@ -1,6 +1,5 @@
-const { User, Project } = require("../models");
+const { User, Project, Task } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
-const { generateProjectId } = require("../utils/projectToken");
 
 const resolvers = {
   Query: {
@@ -16,7 +15,17 @@ const resolvers = {
     },
     proj: async (parent, args, context) => {
       if (context.user) {
-        return Project.findOne({ _id: args._id }).populate("users")
+        return Project.findOne({ _id: args._id }).populate("users").populate("tasks")
+      }
+    },
+    projectTasks: async (parent, args, context) => {
+      if (context.user) {
+        return Task.find({ projectId: args.projectId })
+      }
+    },
+    singleTask: async (parent, args, context) => {
+      if (context.user) {
+        return Task.findOne({ _id: args._id })
       }
     }
 
@@ -51,6 +60,19 @@ const resolvers = {
         { new: true }
        );
        return user;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
+    addTask: async (parent, { title, description, status, projectId }, context) => {
+      const curUser = context.user._id;
+      if (context.user) {
+        const task = await Task.create({ title, description, status, createdBy: curUser, projectId: projectId })
+       const proj = await Project.findOneAndUpdate(
+        {_id: projectId},
+        { $addToSet: { tasks: task._id} },
+        { new: true }
+       );
+       return proj;
       }
       throw AuthenticationError("You need to be logged in!");
     },

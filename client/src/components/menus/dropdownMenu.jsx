@@ -17,14 +17,20 @@ const DropdownMenu = ({ user }) => {
         <UserIconSmall userInitials={user.initials} menuFunction={() => null} width="30px" height="30px" />
         <h4>{user.first} {user.last}</h4>
       </div>
-              <MenuItem>
-                <span className="material-symbols-outlined space">edit</span>Rename workspace
+              <MenuItem as="a" href="/home/account">
+                <span className="material-symbols-outlined space">edit</span>Account details
               </MenuItem>
-              <MenuItem onClick={() => alert("Kagebunshin")}>
-                <span className="material-symbols-outlined space">settings</span>Manage workspace
+              <MenuItem as="a" href="/home/settings">
+                <span className="material-symbols-outlined space">settings</span>Settings
               </MenuItem>
-              <MenuItem onClick={() => alert("Kagebunshin")}>
+              <MenuItem as="a" href="/home/theme">
+                <span className="material-symbols-outlined space">palette</span>Themes
+              </MenuItem>
+              <MenuItem as="a" href="/home/manage-users">
                 <span className="material-symbols-outlined space">group</span>Manage users
+              </MenuItem>
+              <MenuItem as="a" href="/home/account">
+                <span className="material-symbols-outlined space">logout</span>Log out
               </MenuItem>
             </MenuList>
           </>

@@ -10,7 +10,7 @@ import { QUERY_PROJECT } from "../utils/queries";
 
 const ProjectPage = () => {
   const [openMenu, setOpenMenu] = useState(true);
-  const [projectData, setProjectData] = useState({});
+  const [projectData, setProjectData] = useState(undefined);
   const [innerNav, setInnerNav] = useState("list");
   const { userData } = useUserContext();
 
@@ -21,6 +21,7 @@ const ProjectPage = () => {
   searchParams.forEach((value, key) => {
     projectId = value;
   });
+
   //use projectId to query the project data
   const { data } = useQuery(QUERY_PROJECT, { variables: { _id: projectId } });
 
@@ -70,10 +71,7 @@ const ProjectPage = () => {
             </button>
             <button className="plus-button">+</button>
           </div>
-          <ProjectTable />
-          <ProjectTable />
-          <ProjectTable />
-          <ProjectTable />
+          <ProjectTable tasks={projectData} />
         </PageContainer>
       </div>
     </>
