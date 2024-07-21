@@ -54,8 +54,8 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addProject(projectName: String!, description: String) : Project
     addTask(title: String!, description: String, status: String, projectId: String) : Task
-
-
+    updateTask(_id: ID!, title: String!, description: String, status: String, dueDate: String) : Task
+    deleteTask(_id: ID!) : Task
   }
 `;
 

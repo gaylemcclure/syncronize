@@ -14,6 +14,7 @@ html {
   --black: #101010;
   --main-gray: #bfbcbc;
   --light-gray: #f3f4f9;
+  --grid-border: rgba(224, 224, 224, 1);
 }
 
 body {
@@ -215,4 +216,31 @@ input.full-input, textarea.full-input {
 .transition {
   transition-duration: 1000ms;
   transform: translateX(-1000px) scaleX(2.5) scaleY(0.2);
+}
+
+
+/*--------DATAGRID----------*/
+.MuiDataGrid-virtualScrollerRenderZone > div.MuiDataGrid-row:hover {
+
+  .MuiDataGrid-cell[aria-colindex="1"] {
+    button {
+      display: flex;
+    }
+  }
+}
+
+.MuiDataGrid-root {
+  border-radius: 6px;
+}
+
+.MuiDataGrid-columnHeader, .MuiDataGrid-cell {
+  border-left: 1px solid var(--grid-border);
+}
+
+.MuiDataGrid-columnHeader {
+  background-color: #bfbcbc;
+}
+
+.MuiDataGrid-columnHeader--last {
+  border-right: none;
 }

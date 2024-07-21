@@ -28,7 +28,6 @@ const resolvers = {
         return Task.findOne({ _id: args._id })
       }
     }
-
   },
 
   Mutation: {
@@ -73,6 +72,26 @@ const resolvers = {
         { new: true }
        );
        return proj;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
+    updateTask: async (parent, { _id, title, description, status, dueDate }, context) => {
+      if (context.user) {
+        const task = await Task.findOneAndUpdate(
+          { _id: _id },
+          { $set: { title: title, description: description, status: status, dueDate: dueDate } },
+          {new: true}
+        )
+       return task;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
+    deleteTask: async (parent, { _id }, context) => {
+      if (context.user) {
+        const task = await Task.findOneAndDelete(
+          { _id: _id }
+        )
+       return task;
       }
       throw AuthenticationError("You need to be logged in!");
     },
