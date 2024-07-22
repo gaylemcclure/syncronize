@@ -21,6 +21,7 @@
     "@mui/x-data-grid": "^7.6.2",
     "@stripe/react-stripe-js": "^2.7.2",
     "@stripe/stripe-js": "^4.0.0",
+    "dayjs": "^1.11.12",
     "graphql": "^16.6.0",
     "jwt-decode": "^3.1.2",
     "mongoose": "^8.4.3",

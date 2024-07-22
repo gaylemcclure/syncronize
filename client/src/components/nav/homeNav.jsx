@@ -1,176 +1,9 @@
-import { useState } from "react";
 import styled from "styled-components";
 import logo from "../../assets/images/sync-icon.png";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import DropdownMenu from "../menus/dropdownMenu";
-import { SubmitButton, CancelButton } from "../popupButtons";
-import { ADD_PROJECT, ADD_TASK } from "../../utils/mutations";
-import { useMutation } from "@apollo/client";
-import { useUserContext } from "../../utils/contexts";
-import Auth from "../../utils/auth";
+import AddTaskModal from "../modals/addTaskModal";
 
-const AddTask = () => {
-  const [projectName, setProjectName] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-  const [status, setStatus] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { userData } = useUserContext();
-
-  const [addProject] = useMutation(ADD_PROJECT);
-  const [addTask] = useMutation(ADD_TASK);
-
-  const pathName = window.location.pathname;
-  let projectId = "";
-
-  if (pathName !== "/home") {
-
-    const paramString = window.location.pathname;
-    const searchParams = new URLSearchParams(paramString);
-    searchParams.forEach((value, key) => {
-      projectId = value;
-    });
-  }
-
-
-  const NavButton = () => {
-
-    if (pathName === "/home") {
-      return (
-        <ButtonNav onClick={onOpen}>
-          <span className="material-symbols-outlined">add</span> Add project
-        </ButtonNav>
-      );
-    } else {
-      return (
-        <ButtonNav onClick={onOpen}>
-          <span className="material-symbols-outlined">add</span> Add task
-        </ButtonNav>
-      );
-    }
-  };
-
-  const handleAddProject = async () => {
-    // get token
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
-    }
-    try {
-      const { data } = await addProject({
-        variables: {
-          projectName: projectName,
-          description: description,
-        },
-      })
-        
-    } catch (err) {
-      console.error(err);
-    }
-    setProjectName("")
-    setDescription("")
-    onClose()
-  };
-
-  const handleAddTask = async () => {
-        // get token
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-        try {
-          const { data } = await addTask({
-            variables: {
-              title: title,
-              description: taskDescription,
-              status: status,
-              projectId: projectId
-            },
-          })
-
-          console.log(data)
-            
-        } catch (err) {
-          console.error(err);
-        }
-        setProjectName("")
-        setDescription("")
-        onClose()
-  };
-
-  return (
-    <AddContainer>
-      <NavButton />
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        {window.location.pathname === "/home" && (
-          <ModalContent>
-            <ModalHeader>Add project</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <div className="input-container flex-col">
-                <label>Project name</label>
-                <input className="full-input" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
-              </div>
-              <div className="input-container flex-col">
-                <label>Project description</label>
-                <textarea className="full-input" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-              </div>
-              <div className="input-container flex-col">
-                <label>Due Date</label>
-                <input type="date" className="full-input" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-              </div>
-            </ModalBody>
-
-            <ModalFooter>
-              <CancelButton cancelText="Cancel" cancelFunction={onClose} />
-              {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
-              <SubmitButton submitText="Add project" submitFunction={handleAddProject} onClick={onClose} />
-            </ModalFooter>
-          </ModalContent>
-        )}
-
-        {window.location.pathname !== "/home" && (
-          <ModalContent>
-          <ModalHeader>Add task</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <div className="input-container flex-col">
-              <label>Title</label>
-              <input className="full-input" value={title} onChange={(e) => setTitle(e.target.value)} />
-            </div>
-            <div className="input-container flex-col">
-              <label>Description</label>
-              <textarea className="full-input" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)}></textarea>
-            </div>
-            <div className="input-container flex-col">
-              {/* <label>Due Date</label>
-              <input type="date" className="full-input" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /> */}
-            </div>
-            <div className="input-container flex-col">
-              <label>Status</label>
-              <input className="full-input" value={status} onChange={(e) => setStatus(e.target.value)} />
-            </div>
-
-          </ModalBody>
-
-          <ModalFooter>
-            <CancelButton cancelText="Cancel" cancelFunction={onClose} />
-            {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
-            <SubmitButton submitText="Add task" submitFunction={handleAddTask} onClick={onClose} />
-          </ModalFooter>
-        </ModalContent>
-        )}
-      </Modal>
-    </AddContainer>
-  );
-};
 
 const HomeNav = ({ user }) => {
   return (
@@ -180,14 +13,13 @@ const HomeNav = ({ user }) => {
         <div className="input-container">
           <input className="search-bar" placeholder="Search..." />
         </div>
-        <AddTask />
+        <AddTaskModal />
         {user && <DropdownMenu user={user} />}
       </NavWrapper>
     </ChakraProvider>
   );
 };
 
-const AddContainer = styled.div``;
 
 const NavWrapper = styled.nav`
   padding: 0.5rem 2rem;

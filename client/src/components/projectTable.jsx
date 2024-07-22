@@ -14,9 +14,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import styled from 'styled-components';
-import { UPDATE_TASK, DELETE_TASK } from "../utils/mutations";
+import { UPDATE_TASK, DELETE_TASK, ADD_TASK } from "../utils/mutations";
 import { QUERY_TASK } from "../utils/queries";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
+
 import {
   Modal,
   ModalOverlay,
@@ -34,7 +35,7 @@ function EditToolbar(props) {
   const { setRows, setRowModesModel, rows } = props;
 
   const handleClick = () => {
-    const id = 1();
+    const id = 1;
     setRows((oldRows) => [...oldRows, { id, title: '', owner: '', status: '', dueDate: '', assignee: '', description: '' }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -104,13 +105,14 @@ const RenderTaskButton = (props) => {
 //   )
 // }
 
-const ProjectTable = ({ tasks }) => {
+const ProjectTable = ({ tasks, refetch }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   let taskId = "";
 
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
+  const [addTask] = useMutation(ADD_TASK);
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
@@ -198,7 +200,6 @@ const ProjectTable = ({ tasks }) => {
         },
       })
 
-      console.log(data)
         
     } catch (err) {
       console.error(err);

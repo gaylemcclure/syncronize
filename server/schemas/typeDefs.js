@@ -50,11 +50,15 @@ const typeDefs = `
   }
 
   type Mutation {
-    addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
     login(email: String!, password: String!): Auth
+
+    addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
     addProject(projectName: String!, description: String) : Project
     addTask(title: String!, description: String, status: String, projectId: String) : Task
+
+    updateProject(_id: ID!, projectName: String!, description: String, dueDate: String): Project
     updateTask(_id: ID!, title: String!, description: String, status: String, dueDate: String) : Task
+
     deleteTask(_id: ID!) : Task
   }
 `;

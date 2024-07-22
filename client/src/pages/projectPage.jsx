@@ -23,7 +23,7 @@ const ProjectPage = () => {
   });
 
   //use projectId to query the project data
-  const { data } = useQuery(QUERY_PROJECT, { variables: { _id: projectId } });
+  const { data, refetch } = useQuery(QUERY_PROJECT, { variables: { _id: projectId } });
 
   useEffect(() => {
     const getProject = async () => {
@@ -53,7 +53,7 @@ const ProjectPage = () => {
         <PageContainer className={openMenu ? "main-page open-menu" : "main-page close-menu"}>
           <div className="flex-row align">
             {projectData && <h3 className="title">{projectData.projectName}</h3>}
-            <ProjectTitleIcon />
+            {projectData && (<ProjectTitleIcon tasks={projectData} /> )}
           </div>
           {projectData && <p>{projectData.description}</p>}
           <div className="project-menu flex-row">
@@ -71,7 +71,7 @@ const ProjectPage = () => {
             </button>
             <button className="plus-button">+</button>
           </div>
-          <ProjectTable tasks={projectData} />
+          <ProjectTable tasks={projectData} refetch={refetch}/>
         </PageContainer>
       </div>
     </>

@@ -244,3 +244,27 @@ input.full-input, textarea.full-input {
 .MuiDataGrid-columnHeader--last {
   border-right: none;
 }
+
+
+
+/*----------------------CHAKRA ------------------*/
+.chakra-editable {
+  display: flex;
+  flex-direction: row; 
+  .chakra-button {
+    background-color: transparent;
+    svg {
+      height: 1rem;
+      width: 1rem;
+    }
+  }
+  .flex.flex-row > div {
+    align-items: center;
+  }
+  .chakra-button__group {
+    padding-left: 1rem;
+    button {
+      margin: 0;
+    }
+  }
+}

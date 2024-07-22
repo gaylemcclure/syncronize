@@ -31,11 +31,6 @@ const resolvers = {
   },
 
   Mutation: {
-    addUser: async (parent, { first, last, email, password, initials }) => {
-      const user = await User.create({ first, last, email, password, initials, projects: [] });
-      const token = signToken(user);
-      return { token, user };
-    },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -49,6 +44,14 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+
+    //CREATE MUTATIONS
+    addUser: async (parent, { first, last, email, password, initials }) => {
+      const user = await User.create({ first, last, email, password, initials, projects: [] });
+      const token = signToken(user);
+      return { token, user };
+    },
+
     addProject: async (parent, { projectName, description }, context) => {
       const curUser = context.user._id;
       if (context.user) {
@@ -75,6 +78,19 @@ const resolvers = {
       }
       throw AuthenticationError("You need to be logged in!");
     },
+
+    //UPDATE MUTATIONS
+    updateProject: async (parent, { _id, projectName, description, dueDate }, context) => {
+      if (context.user) {
+        const project = await Project.findOneAndUpdate(
+          { _id: _id },
+          { $set: { projectName: projectName, description: description, dueDate: dueDate } },
+          {new: true}
+        )
+       return project;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
     updateTask: async (parent, { _id, title, description, status, dueDate }, context) => {
       if (context.user) {
         const task = await Task.findOneAndUpdate(
@@ -86,6 +102,8 @@ const resolvers = {
       }
       throw AuthenticationError("You need to be logged in!");
     },
+
+    //DELETE MUTATIONS
     deleteTask: async (parent, { _id }, context) => {
       if (context.user) {
         const task = await Task.findOneAndDelete(
