@@ -1,0 +1,127 @@
+.icon-size {
+    height: 45px;
+    width: 50px;
+    font-size: 14px;
+  }
+
+  .logo {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  input,
+  textarea {
+    width: 20rem;
+    align-self: center;
+  }
+  .input-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-bar {
+    background-color: #d9d9d9;
+    border: none;
+    color: white;
+    padding-left: 0.5rem;
+  }
+  .search-bar::placeholder {
+    color: #7e7c7c;
+  }
+  .search-bar:focus {
+    border: none;
+  }
+
+  .menu-header {
+    padding: 6px 16px;
+  }
+
+  .user-initials {
+    margin: 0;
+  }
+
+  .sidebar-button {
+    background-color: transparent;
+    border: none;
+    color: var(--main-green);
+  }
+
+  .sidenav-header {
+    align-items: flex-start;
+    border-bottom: 1px solid #4b4e69;
+    padding-bottom: 2rem;
+  }
+  .workspace-icon {
+    background-color: #550080;
+    height: 30px;
+    width: 30px;
+    color: var(--ws-gray-text);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .workspace-name {
+    margin: 0;
+    color: var(--ws-gray-text);
+  }
+
+  .workspace-main {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    .MuiButtonBase-root {
+      color: white;
+      margin-left: auto;
+      min-width: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .sidenav-main {
+    padding: 0 10px 0 20px;
+  }
+
+  .sidenav-main-closed {
+    padding: 0 10px 0 10px;
+  }
+  .arrow-colour {
+    color: var(--ws-gray-text);
+    margin: 0 1.5rem 0 0.5rem;
+  }
+
+  .project-menu-button {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0.5rem;
+    border-right: 1px solid var(--gray-border);
+    background-color: transparent;
+  }
+  .material-symbols-outlined {
+    padding-right: 0.5rem;
+  }
+  .plus-button {
+    padding-left: 1rem;
+  }
+
+  .workspace-icon {
+    background-color: #550080;
+    height: 30px;
+    width: 30px;
+    min-width: 30px;
+    color: var(--ws-gray-text);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+  }
+
+  
+  
+

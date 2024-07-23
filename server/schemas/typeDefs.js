@@ -7,6 +7,7 @@ const typeDefs = `
     password: String!
     initials: String!
     workspaceName: String
+    createdOn: String
     projects: [Project]
   }
 
@@ -16,6 +17,7 @@ const typeDefs = `
     createdOn: String
     projectName: String!
     description: String
+    dueDate: String
     users: [User]
     tasks: [Task]
 
@@ -53,12 +55,15 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
 
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
-    addProject(projectName: String!, description: String) : Project
+    addProject(projectName: String!, description: String, dueDate: String) : Project
     addTask(title: String!, description: String, status: String, projectId: String) : Task
 
+    updateUser(_id: ID!, first: String!, last: String!, email: String!, password: String!, initials: String!) : User
     updateProject(_id: ID!, projectName: String!, description: String, dueDate: String): Project
     updateTask(_id: ID!, title: String!, description: String, status: String, dueDate: String) : Task
 
+    deleteUser(_id: ID!) : User
+    deleteProject(_id: ID!) : Project
     deleteTask(_id: ID!) : Task
   }
 `;

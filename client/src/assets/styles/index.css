@@ -40,14 +40,14 @@ ul {
 }
 
 input, textarea {
-  border-radius: 12px;
-  border: 1px solid var(--gray-border);
-  margin: 0.25rem 0 1rem;
+  /* border-radius: 12px; */
+  /* border: 1px solid var(--gray-border); */
+  /* margin: 0.5rem 0; */
 }
 
 input {
-  height: 40px;
-  min-height: 40px;
+  /* height: 40px;
+  min-height: 40px; */
 
 }
 
@@ -163,12 +163,31 @@ input.full-input, textarea.full-input {
   background-color: var(--black);
 }
 
+.white-text {
+  color: white;
+}
+
+.black-text {
+  color: var(--black);
+}
+
 .transparent {
   background-color: transparent;
 }
 
 .container {
   height: 100%;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.m-top-1 {
+  margin-top: 1rem;
+}
+.m-top-2 {
+  margin-top: 2rem;
 }
 
 /*---------------BUTTON----------------------*/
@@ -244,27 +263,38 @@ input.full-input, textarea.full-input {
 .MuiDataGrid-columnHeader--last {
   border-right: none;
 }
-
-
-
-/*----------------------CHAKRA ------------------*/
-.chakra-editable {
-  display: flex;
-  flex-direction: row; 
-  .chakra-button {
-    background-color: transparent;
-    svg {
-      height: 1rem;
-      width: 1rem;
-    }
+.MuiTabs-root {
+  .MuiTab-root.Mui-selected {
+    color: var(--main-green);
+    font-weight: 700;
   }
-  .flex.flex-row > div {
-    align-items: center;
+  .MuiTabs-indicator  {
+    background-color: var(--main-green);
   }
-  .chakra-button__group {
-    padding-left: 1rem;
-    button {
-      margin: 0;
-    }
+
+}
+
+.MuiModal-root {
+  .MuiBox-root {
+
+  }
+  /* form {
+    width: 500px;
+  } */
+   #add-project {
+    background-color: var(--main-green);
+    color: white;
+   }
+   #add-project:hover {
+    background-color: #4d7f75;
+    color: white;
+   }
+}
+
+.MuiFormControl-root {
+  .Mui-focused.MuiInputLabel-outlined {
+    color: blue;
   }
 }
+
+

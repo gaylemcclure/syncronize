@@ -1,45 +1,76 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ChakraProvider, Modal, ModalOverlay, ModalContent, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Divider, ButtonGroup, Flex, Input } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import SaveIcon from "@mui/icons-material/Save";
-import EditIcon from "@mui/icons-material/Edit";
-import CancelIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { IconButton } from "@chakra-ui/react";
-import { Editable, EditableInput, EditableTextarea, EditablePreview, useEditableControls } from "@chakra-ui/react";
-import Save from "@mui/icons-material/Save";
+// import { ChakraProvider, Modal, ModalOverlay, ModalContent, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, Divider, ButtonGroup, Flex } from "@chakra-ui/react";
+// import SaveIcon from "@mui/icons-material/Save";
+// import EditIcon from "@mui/icons-material/Edit";
+// import CancelIcon from "@mui/icons-material/Close";
+// import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+// import { IconButton } from "@chakra-ui/react";
+import { UPDATE_PROJECT } from "../../utils/mutations";
+import { useMutation } from "@apollo/client";
+import dayjs from 'dayjs';
 
 //Component to house the icon button for the dropdown menu
 const ProjectTitleIcon = ({ tasks }) => {
   const [project, setProject] = useState(tasks);
-  const [toggleTitle, setToggleTitle] = useState(false);
-  const [toggleDescription, setToggleDescription] = useState(false);
-  const [title, setTitle] = useState(tasks.projectName);
+  const [projectName, setProjectName] = useState(tasks.projectName);
   const [description, setDescription] = useState(tasks.description);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  
+
+  const createdDate = dayjs('2024-07-20T11:19:04.742+00:00');
+
+  const [updateProject] = useMutation(UPDATE_PROJECT);
+  
+  const handleTitleEdit = async (e) => {
+    setProjectName(e);
+    try {
+      const { data } = await updateProject({
+        variables: {
+          _id: project._id,
+          projectName: e,
+          description: description
+        },
+      })
+        
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDescriptionEdit = async (e) => {
+    setDescription(e);
+    try {
+      const { data } = await updateProject({
+        variables: {
+          _id: project._id,
+          projectName: projectName,
+          description: e
+        },
+      })
+        
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  //Function to create the popup modal with project info
   const EditTitleModal = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const handleEditTitle = (e) => {
-      e.preventDefault();
-      setToggleTitle(true);
-    };
-
-    const EditableControls = () => {
-      const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
-
-      return isEditing ? (
-        <ButtonGroup justifyContent="center" size="sm">
-          <IconButton icon={<SaveIcon />} {...getSubmitButtonProps()} />
-          <IconButton icon={<CancelIcon />} {...getCancelButtonProps()} />
-        </ButtonGroup>
-      ) : (
-        <Flex justifyContent="center">
-          <IconButton size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
-        </Flex>
-      );
-    };
+    //Create the edit controls for the title and description fields
+    // const EditableControls = () => {
+    //   const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+    //   return isEditing ? (
+    //     <ButtonGroup justifyContent="center" size="sm">
+    //       <IconButton icon={<SaveIcon />} {...getSubmitButtonProps()} />
+    //       <IconButton icon={<CancelIcon />} {...getCancelButtonProps()} />
+    //     </ButtonGroup>
+    //   ) : (
+    //     <Flex justifyContent="center">
+    //       <IconButton size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
+    //     </Flex>
+    //   );
+    // };
 
     return (
       <IconWrapper>
@@ -47,55 +78,12 @@ const ProjectTitleIcon = ({ tasks }) => {
           <span className="material-symbols-outlined space-left">info</span>
         </Icon>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalBody>
-              {/* Edit the project name */}
-              <Editable textAlign="center" defaultValue={title} fontSize="2xl" isPreviewFocusable={false}>
-                <EditablePreview />
-                <div className="flex flex-row">
-                  <EditableInput />
-                  <EditableControls />
-                </div>
-              </Editable>
-
-              {/* Edit the project description */}
-              <Editable textAlign="center" defaultValue={description} fontSize="lg" isPreviewFocusable={false}>
-                <EditablePreview />
-                <div className="flex flex-row">
-                  <EditableInput />
-                  <EditableControls />
-                </div>
-              </Editable>
-
-              <Divider />
-              <div className="flex flex-row">
-                <div>Owner:</div>
-                <div>{project.createdBy}</div>
-              </div>
-              <div className="flex flex-row">
-                <div>Created on:</div>
-                <div>{project.createdOn}</div>
-              </div>
-              <button>Delete project</button>
-            </ModalBody>
-
-            <ModalFooter>
-              <button onClick={onClose}>Close</button>
-              <button>Secondary Action</button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
       </IconWrapper>
     );
   };
 
   return (
-    <ChakraProvider>
       <EditTitleModal />
-    </ChakraProvider>
   );
 };
 const IconWrapper = styled.div`

@@ -52,10 +52,10 @@ const resolvers = {
       return { token, user };
     },
 
-    addProject: async (parent, { projectName, description }, context) => {
+    addProject: async (parent, { projectName, description, dueDate }, context) => {
       const curUser = context.user._id;
       if (context.user) {
-        const project = await Project.create({ projectName, description, createdBy: curUser, users: [curUser] })
+        const project = await Project.create({ projectName, description, dueDate, createdBy: curUser, users: [curUser] })
        const user = await User.findOneAndUpdate(
         {_id: curUser},
         { $addToSet: { projects: project._id} },
@@ -80,6 +80,18 @@ const resolvers = {
     },
 
     //UPDATE MUTATIONS
+    updateUser: async (parent, { _id, first, last, email, password, initials }, context) => {
+      if (context.user) {
+        const user = await User.findOneAndUpdate(
+          { _id: _id },
+          { $set: { first: first, last: last, email: email, password: password, initials: initials } },
+          {new: true}
+        )
+        const token = signToken(user);
+       return {token, user};
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
     updateProject: async (parent, { _id, projectName, description, dueDate }, context) => {
       if (context.user) {
         const project = await Project.findOneAndUpdate(
@@ -104,6 +116,24 @@ const resolvers = {
     },
 
     //DELETE MUTATIONS
+    deleteUser: async (parent, { _id }, context) => {
+      if (context.user) {
+        const user = await User.findOneAndDelete(
+          { _id: _id }
+        )
+       return user;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
+    deleteProject: async (parent, { _id }, context) => {
+      if (context.user) {
+        const project = await Project.findOneAndDelete(
+          { _id: _id }
+        )
+       return project;
+      }
+      throw AuthenticationError("You need to be logged in!");
+    },
     deleteTask: async (parent, { _id }, context) => {
       if (context.user) {
         const task = await Task.findOneAndDelete(

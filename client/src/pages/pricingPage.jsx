@@ -2,7 +2,7 @@
 import WelcomeNav from "../components/nav/welcomeNav";
 import styled from "styled-components";
 import WelcomeFooter from "../components/nav/welcomeFooter";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+// import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { singleData, recurringData } from "../assets/data/pricingData";
 import Auth from "../utils/auth";
 import { QUERY_ME } from "../utils/queries";

@@ -7,11 +7,15 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { Outlet } from 'react-router-dom';
 import { UserProvider } from '../src/utils/contexts';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 // Construct main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
+
+
 
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
@@ -34,10 +38,33 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: light)');
+
+  const theme = createTheme({
+    palette: {
+      mode: prefersDarkMode ? 'dark' : 'light',
+      primary: {
+        main: '#f3f4f9',
+        contrastText: '#000',
+        light: '#06866e'
+      },
+      secondary: {
+        main: '#101010',
+                contrastText: '#fff'
+      },
+      light: {
+        main: '#f3f4f9'
+      }
+    },
+    typography: {
+      fontFamily: "Figtree, sans-serif",
+    }
+  });
 
   return (
     <ApolloProvider client={client}>
       <UserProvider>
+        <ThemeProvider theme={theme}>
       <div className="flex-column justify-flex-start min-100-vh">
         {/* <Header /> */}
         <div className="container">
@@ -45,6 +72,7 @@ function App() {
         </div>
         {/* <Footer /> */}
       </div>
+      </ThemeProvider>
       </UserProvider>
     </ApolloProvider>
 

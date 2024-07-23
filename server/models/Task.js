@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { timestamp } = require('../utils/dateFormat');
 
 // Schema to create Task model
 const taskSchema = new Schema(
@@ -15,22 +16,19 @@ const taskSchema = new Schema(
       trim: true,
     },
     createdOn: {
-      type: Date,
-      default: Date.now,
-      // get: (timestamp) => dateFormat(timestamp),
+      type: String,
+      default: timestamp
     },
     createdBy: {
       type: String,
     },
     startDate: {
-        type: Date,
-        default: Date.now(),
-        trim: true,
+      type: String,
+      default: timestamp
       },
     dueDate: {
-        type: Date,
-        default: Date.now(),
-        trim: true,
+      type: String,
+      default: timestamp
       },
 
     status: {
@@ -45,8 +43,8 @@ const taskSchema = new Schema(
       type: Schema.Types.ObjectId, ref: 'User' 
     },
     updatedOn: {
-      type: Date,
-      default: Date.now()
+      type: String,
+      default: timestamp
     }
 
 

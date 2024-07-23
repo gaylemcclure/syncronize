@@ -1,32 +1,32 @@
 /* eslint-disable react/jsx-key */
-import {   GridRowModes,
-  DataGrid,
-  GridToolbarContainer,
-  GridActionsCellItem,
-  GridRowEditStopReasons,} from "@mui/x-data-grid";
+// import {   GridRowModes,
+//   DataGrid,
+//   GridToolbarContainer,
+//   GridActionsCellItem,
+//   GridRowEditStopReasons,} from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
+// import IconButton from '@mui/material/IconButton';
+// import Button from '@mui/material/Button';
+// import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+// import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+// import SaveIcon from '@mui/icons-material/Save';
+// import CancelIcon from '@mui/icons-material/Close';
+// import AddIcon from '@mui/icons-material/Add';
 import styled from 'styled-components';
 import { UPDATE_TASK, DELETE_TASK, ADD_TASK } from "../utils/mutations";
 import { QUERY_TASK } from "../utils/queries";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react'
+// import {
+//   Modal,
+//   ModalOverlay,
+//   ModalContent,
+//   ModalHeader,
+//   ModalFooter,
+//   ModalBody,
+//   ModalCloseButton,
+// } from '@chakra-ui/react'
 
 
 //Create the toolbar to inline edit rows
@@ -109,10 +109,13 @@ const ProjectTable = ({ tasks, refetch }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   let taskId = "";
+  console.log(tasks)
 
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
   const [addTask] = useMutation(ADD_TASK);
+
+  console.log(new Date("11/12/2024"))
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
@@ -163,9 +166,6 @@ const ProjectTable = ({ tasks, refetch }) => {
           _id: id
         },
       })
-
-      console.log(data)
-        
     } catch (err) {
       console.error(err);
     }
@@ -292,6 +292,10 @@ const ProjectTable = ({ tasks, refetch }) => {
 
 const TableWrapper = styled.div`
 padding-top: 3rem;
+padding-bottom: 3rem;
+.MuiDataGrid-overlayWrapper {
+  min-height: 2rem;
+}
 .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall {
   margin-left: auto;
   height: 25px;

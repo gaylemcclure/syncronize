@@ -1,25 +1,25 @@
 import styled from "styled-components";
-import logo from "../../assets/images/sync-icon.png";
-import { ChakraProvider } from "@chakra-ui/react";
-import DropdownMenu from "../menus/dropdownMenu";
-import AddTaskModal from "../modals/addTaskModal";
+// import logo from "../../assets/images/sync-icon.png";
+// import DropdownMenu from "../menus/dropdownMenu";
+// import AddTaskModal from "../modals/addTaskModal";
+// import AddProjectModal from "../modals/addProjectModal";
+// import '../../assets/styles/sideNav.css';
 
 
 const HomeNav = ({ user }) => {
+  // const pathName = window.location.pathname;
   return (
-    <ChakraProvider>
       <NavWrapper>
-        <img className="logo" src={logo} alt="logo" />
+        {/* <img className="logo" src={logo} alt="logo" />
         <div className="input-container">
           <input className="search-bar" placeholder="Search..." />
         </div>
-        <AddTaskModal />
-        {user && <DropdownMenu user={user} />}
+        {pathName === "/home" && <AddProjectModal text="Add project" button='null' />}
+        {pathName !== "/home" && <AddTaskModal />}
+        {user && <DropdownMenu user={user} />} */}
       </NavWrapper>
-    </ChakraProvider>
   );
 };
-
 
 const NavWrapper = styled.nav`
   padding: 0.5rem 2rem;
@@ -29,7 +29,7 @@ const NavWrapper = styled.nav`
   position: fixed;
   z-index: 5;
   width: 100%;
-  background-color: #101010;
+
   .icon-size {
     height: 45px;
     width: 50px;
