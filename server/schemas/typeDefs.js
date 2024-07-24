@@ -28,13 +28,14 @@ const typeDefs = `
     title: String!
     description: String
     createdOn: String
-    createdBy: String
+    createdBy: User
     startDate: String
     dueDate: String
     status: String
     projectId: Project
     assignedTo: User
     updatedOn: String
+    priority: String
 
   }
 
@@ -49,6 +50,7 @@ const typeDefs = `
     proj(_id: String!): Project
     projectTasks(projectId: String!): [Task] 
     singleTask(_id: String!): Task
+    completedTasks(projectId: String!) : [Task]
   }
 
   type Mutation {
@@ -56,11 +58,11 @@ const typeDefs = `
 
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
     addProject(projectName: String!, description: String, dueDate: String) : Project
-    addTask(title: String!, description: String, status: String, projectId: String) : Task
+    addTask(title: String!, description: String, status: String, projectId: String, dueDate: String, priority: String, assignedTo: String) : Task
 
     updateUser(_id: ID!, first: String!, last: String!, email: String!, password: String!, initials: String!) : User
     updateProject(_id: ID!, projectName: String!, description: String, dueDate: String): Project
-    updateTask(_id: ID!, title: String!, description: String, status: String, dueDate: String) : Task
+    updateTask(_id: ID!, title: String!, description: String, status: String, dueDate: String, assignedTo: String ) : Task
 
     deleteUser(_id: ID!) : User
     deleteProject(_id: ID!) : Project

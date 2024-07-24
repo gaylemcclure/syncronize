@@ -59,6 +59,9 @@ min-height: 60px;
 
 
 /*-----------------GENERAL--------------------*/
+.flex {
+  display: flex;
+}
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -182,6 +185,9 @@ input.full-input, textarea.full-input {
 .gap-1 {
   gap: 1rem;
 }
+.gap-2 {
+  gap: 2rem;
+}
 
 .m-top-1 {
   margin-top: 1rem;
@@ -190,6 +196,9 @@ input.full-input, textarea.full-input {
   margin-top: 2rem;
 }
 
+.m-auto {
+  margin-left: auto;
+}
 /*---------------BUTTON----------------------*/
 .signup-button {
   height: 2.4rem;
@@ -297,4 +306,36 @@ input.full-input, textarea.full-input {
   }
 }
 
+#more-button {
+  padding: 0;
+}
 
+.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl {
+  font-size: 14px;
+}
+.MuiFormLabel-root#title-label {
+  top: -5px;
+}
+.MuiFormLabel-root#status-label,
+.MuiFormLabel-root#priority-label,
+.MuiFormLabel-root#assigned-to-label {
+  top: 8px;
+}
+
+.MuiInputLabel-shrink#title-label {
+  top: 0;
+}
+
+.MuiInputBase-input#title,
+.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedEnd,
+.MuiInputBase-input#status,
+.MuiInputBase-input#priority,
+.MuiInputBase-input#assigned-to {
+  padding: 6px 14px 10px;
+}
+
+.MuiInputBase-input#assigned-to {
+  .MuiAvatar-root {
+    display: none;
+  }
+}

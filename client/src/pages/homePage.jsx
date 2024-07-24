@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/images/sync-icon.png";
 import DropdownMenu from "../components/menus/dropdownMenu";
-import AddTaskModal from "../components//modals/addTaskModal";
-import AddProjectModal from "../components//modals/addProjectModal";
 import { useUserContext } from "../utils/contexts";
 import SideNav from "../components/nav/sideNav";
 import { useNavigate } from "react-router";
@@ -24,7 +21,7 @@ import TableView from '../components/views/tableView';
 import ListView from '../components/views/listView';
 
 //Set the width of the sideNav
-const drawerWidth = 240;
+const drawerWidth = 350;
 
 //Style the sidenav header
 const DrawerHeader = styled("div")(({ theme }) => ({

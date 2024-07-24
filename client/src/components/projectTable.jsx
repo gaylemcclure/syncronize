@@ -1,33 +1,22 @@
 /* eslint-disable react/jsx-key */
-// import {   GridRowModes,
-//   DataGrid,
-//   GridToolbarContainer,
-//   GridActionsCellItem,
-//   GridRowEditStopReasons,} from "@mui/x-data-grid";
+import {   GridRowModes,
+  DataGrid,
+  GridToolbarContainer,
+  GridActionsCellItem,
+  GridRowEditStopReasons,} from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
-// import IconButton from '@mui/material/IconButton';
-// import Button from '@mui/material/Button';
-// import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-// import SaveIcon from '@mui/icons-material/Save';
-// import CancelIcon from '@mui/icons-material/Close';
-// import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import styled from 'styled-components';
 import { UPDATE_TASK, DELETE_TASK, ADD_TASK } from "../utils/mutations";
 import { QUERY_TASK } from "../utils/queries";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
-
-// import {
-//   Modal,
-//   ModalOverlay,
-//   ModalContent,
-//   ModalHeader,
-//   ModalFooter,
-//   ModalBody,
-//   ModalCloseButton,
-// } from '@chakra-ui/react'
-
 
 //Create the toolbar to inline edit rows
 function EditToolbar(props) {
@@ -78,44 +67,15 @@ const RenderTaskButton = (props) => {
   );
 }
 
-// function BasicUsage() {
-//   const { isOpen, onOpen, onClose } = useDisclosure()
-//   return (
-//     <>
-//       <Button onClick={onOpen}>Open Modal</Button>
-
-//       <Modal isOpen={isOpen} onClose={onClose}>
-//         <ModalOverlay />
-//         <ModalContent>
-//           <ModalHeader>Modal Title</ModalHeader>
-//           <ModalCloseButton />
-//           <ModalBody>
-//             <Lorem count={2} />
-//           </ModalBody>
-
-//           <ModalFooter>
-//             <Button colorScheme='blue' mr={3} onClick={onClose}>
-//               Close
-//             </Button>
-//             <Button variant='ghost'>Secondary Action</Button>
-//           </ModalFooter>
-//         </ModalContent>
-//       </Modal>
-//     </>
-//   )
-// }
-
 const ProjectTable = ({ tasks, refetch }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   let taskId = "";
-  console.log(tasks)
 
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
   const [addTask] = useMutation(ADD_TASK);
 
-  console.log(new Date("11/12/2024"))
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
@@ -270,7 +230,7 @@ const ProjectTable = ({ tasks, refetch }) => {
   ];
 
   return (
-    <TableWrapper style={{ width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <DataGrid 
               rows={rows}
               columns={columns}
@@ -286,31 +246,31 @@ const ProjectTable = ({ tasks, refetch }) => {
               //   toolbar: { setRows, setRowModesModel, rows },
               // }}
       />
-    </TableWrapper>
+    </div>
   );
 };
 
-const TableWrapper = styled.div`
-padding-top: 3rem;
-padding-bottom: 3rem;
-.MuiDataGrid-overlayWrapper {
-  min-height: 2rem;
-}
-.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall {
-  margin-left: auto;
-  height: 25px;
-  width: 25px;
-  padding: 0.75rem;
+// const TableWrapper = styled.div`
+// padding-top: 3rem;
+// padding-bottom: 3rem;
+// .MuiDataGrid-overlayWrapper {
+//   min-height: 2rem;
+// }
+// .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall {
+//   margin-left: auto;
+//   height: 25px;
+//   width: 25px;
+//   padding: 0.75rem;
 
-  svg {
-    height: 1rem;
-    width: 1rem;
-  }
-}
+//   svg {
+//     height: 1rem;
+//     width: 1rem;
+//   }
+// }
 
-.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall:hover {
-  background-color: #dddddd;
+// .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall:hover {
+//   background-color: #dddddd;
 
-}
-`
+// }
+//`
 export default ProjectTable;

@@ -24,6 +24,7 @@ export const QUERY_ME = gql`
         _id
         projectName
         description
+        dueDate
       }
     }
   }
@@ -40,13 +41,14 @@ export const QUERY_PROJECT = gql`
       users {
         _id
         initials
+        first
+        last
       }
         tasks {
         _id
         title
         description
         createdOn
-        createdBy
         status
         }
     }
@@ -60,8 +62,16 @@ export const QUERY_PROJECT_TASKS = gql`
       title
       description
       createdOn
-      createdBy
+      createdBy {
+        _id
+        initials
+        first
+        last
+      }
       status
+      projectId {
+        _id
+      }
     }
   }
 `;
@@ -75,6 +85,27 @@ export const QUERY_TASK = gql`
       createdOn
       createdBy
       status
+    }
+  }
+`;
+
+export const QUERY_COMPLETED_TASKS = gql`
+  query completedTasks($projectId: String!) {
+    completedTasks(projectId: $projectId) {
+      _id
+      title
+      description
+      createdOn
+      createdBy {
+        _id
+        initials
+        first
+        last
+      }
+      status
+      projectId {
+        _id
+      }
     }
   }
 `;

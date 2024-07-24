@@ -122,6 +122,33 @@
     text-transform: uppercase;
   }
 
+  .overview-project {
+    display: flex;
+    min-height: 75px;
+    padding-left: 2rem
+  }
+  
+  .overview-date {
+    min-height: 75px;
+  }
+
+  .overview-countdown {
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    color: white;
+  }
+
+  .upcoming {
+    background-color: var(--main-green);
+  }
+
+  .past-date {
+    background-color: #d72f2f;
+  }
+  
+  .overview-gauge {
+    width: 80%;
+  }
   
   
 

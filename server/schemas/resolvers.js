@@ -27,7 +27,18 @@ const resolvers = {
       if (context.user) {
         return Task.findOne({ _id: args._id })
       }
-    }
+    },
+    completedTasks: async (parent, args, context) => {
+      if (context.user) {
+        return Task.find({ 
+          $and: [
+            {projectId: args.projectId},
+{status: "TESTING" }
+          ]
+        
+        })
+      }
+    },
   },
 
   Mutation: {
@@ -65,10 +76,10 @@ const resolvers = {
       }
       throw AuthenticationError("You need to be logged in!");
     },
-    addTask: async (parent, { title, description, status, projectId }, context) => {
+    addTask: async (parent, { title, description, status, projectId, dueDate, assignedTo, priority }, context) => {
       const curUser = context.user._id;
       if (context.user) {
-        const task = await Task.create({ title, description, status, createdBy: curUser, projectId: projectId })
+        const task = await Task.create({ title, description, status, createdBy: curUser, projectId: projectId, dueDate: dueDate, priority: priority, assignedTo: assignedTo })
        const proj = await Project.findOneAndUpdate(
         {_id: projectId},
         { $addToSet: { tasks: task._id} },

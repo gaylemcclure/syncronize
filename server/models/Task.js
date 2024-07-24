@@ -20,7 +20,7 @@ const taskSchema = new Schema(
       default: timestamp
     },
     createdBy: {
-      type: String,
+      type: Schema.Types.ObjectId, ref: 'User' 
     },
     startDate: {
       type: String,
@@ -35,6 +35,9 @@ const taskSchema = new Schema(
         type: String,
         required: true,
         trim: true,
+    },
+    priority: {
+      type: String,
     },
     projectId: { 
       type: Schema.Types.ObjectId, ref: 'Project' 
