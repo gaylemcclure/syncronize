@@ -3,9 +3,10 @@ import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
 import { useMutation } from "@apollo/client";
-import { ADD_USER} from "../utils/mutations";
+import { ADD_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
-
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const SignupPage = () => {
   const [first, setFirst] = useState("");
@@ -14,7 +15,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
 
-  const [addUser, { error }] = useMutation(ADD_USER, { variables: {first, last, email, password, initials}});
+  const [addUser, { error }] = useMutation(ADD_USER, { variables: { first, last, email, password, initials } });
 
   //Set the users initials when first & last name are entered
   useEffect(() => {
@@ -23,10 +24,9 @@ const SignupPage = () => {
       const secondInitial = last.charAt(0);
       const ints = `${firstInitial}${secondInitial}`;
       const upper = ints.toUpperCase();
-      setInitials(upper)
+      setInitials(upper);
     }
-  }, [first, last])
-
+  }, [first, last]);
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -38,42 +38,50 @@ const SignupPage = () => {
     }
   };
 
-
   return (
     <div className="flex-row full-height">
-        <>
-          <InputContainer>
-            <Icon src={icon} alt="syncronize icon" />
-            <h2>Welcome to Sycronize</h2>
+      <>
+        <InputContainer>
+          <Icon src={icon} alt="syncronize icon" />
+          <h2>Welcome to Sycronize</h2>
 
+          <form className="flex-col form" onSubmit={handleSignup}>
+            <TextField size="small" label="First name" id="first-name" value={first} onInput={(e) => setFirst(e.target.value)} />
+            <TextField sx={{ marginTop: "1rem" }} label="Last name" size="small" id="last" value={last} onInput={(e) => setLast(e.target.value)} />
 
+            <TextField
+              size="small"
+              sx={{ marginTop: "1rem" }}
+              label="Email"
+              id="email"
+              type="email"
+              value={email}
+              onInput={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              sx={{ marginTop: "1rem" }}
+              label="Password"
+              size="small"
+              type="password"
+              id="password"
+              value={password}
+              onInput={(e) => setPassword(e.target.value)}
+            />
+            <Button sx={{ backgroundColor: "var(--main-green)", marginTop: "1rem" }} className="signup-button" id="signup-button" type="submit">
+              Sign up
+            </Button>
+          </form>
 
-            <form className="flex-col form" onSubmit={handleSignup}>
+          <p>
+            Already have an account? Log in <a href="./login">here</a>
+          </p>
 
-                <div className="flex-row input-container">
-                  <input placeholder="First name" className="input-gap half-input" value={first} onInput={(e) => setFirst(e.target.value)} />
-                  <input placeholder="Last name"className="half-input" value={last} onInput={(e) => setLast(e.target.value)} />
-                </div>
-              
-              <input placeholder="Email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
-              <input placeholder="Password" type="password" value={password} onInput={(e) => setPassword(e.target.value)} />
-              <button className="signup-button" id="signup-button" type="submit">
-                Sign up
-              </button>
-            </form>
-
-
-              <p>
-                Already have an account? Log in <a href="./login">here</a>
-              </p>
-
-            {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}
-          </InputContainer>
-          <ImageContainer>
-            <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
-          </ImageContainer>
-        </>
-      
+          {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}
+        </InputContainer>
+        <ImageContainer>
+          <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
+        </ImageContainer>
+      </>
     </div>
   );
 };
@@ -89,9 +97,9 @@ const InputContainer = styled.div`
   h2 {
     font-size: 45px;
   }
-.half-input {
-  width: 50%;
-}
+  .half-input {
+    width: 50%;
+  }
   .input-gap {
     margin-right: 1rem;
   }

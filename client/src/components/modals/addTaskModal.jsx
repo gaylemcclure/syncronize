@@ -23,7 +23,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Avatar } from "@mui/material";
 
-const AddTaskModal = () => {
+const AddTaskModal = ({ projectData }) => {
   //Set state for the task fields
   const [title, setTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -31,13 +31,36 @@ const AddTaskModal = () => {
   const [dueDate, setDueDate] = useState(dayjs());
   const [priority, setPriority] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
+  const [assignedId, setAssignedId] = useState("");
+  const [assignedInitials, setAssignedInitials] = useState("")
   const { userData } = useUserContext();
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  const [projData, setProjData] = useState(projectData);
+
+  const [getProject] = useLazyQuery(QUERY_PROJECT);
+
+  useEffect(() => {
+    const getProjectData = async () => {
+      if (projectData !== undefined) {
+      const projectId = projectData._id;
+     if (projectId) {
+      try {
+        const { data } = await getProject({variables: { _id: projectData._id}})
+        setUsers(data.proj.users)
+        setProjData(data.proj)
+      } catch (err) {
+        console.error(err);
+      }
+     }
+    }
+  }
+  getProjectData()
+  }, [projectData]);
+
 
   const theme = useTheme();
   const [addTask] = useMutation(ADD_TASK);
-  const [queryProject, { data }] = useLazyQuery(QUERY_PROJECT);
 
   //Functions to open and close the modal
   const handleOpen = () => setOpen(true);
@@ -57,31 +80,6 @@ const AddTaskModal = () => {
     p: 4,
   };
 
-  //Get project id from url params
-  let projectId = "";
-  const paramString = window.location.pathname;
-  const searchParams = new URLSearchParams(paramString);
-  searchParams.forEach((value, key) => {
-    projectId = value;
-  });
-
-  useEffect(() => {
-    if (projectId !== "") {
-      const getProjectData = async () => {
-        try {
-          const { data } = await queryProject({variables: {_id: projectId}})
-          setUsers(data.proj.users)
-        } catch (err) {
-          console.error(err);
-        }
-      }
-      getProjectData()
-    }
-  }, [projectId])
-
-  console.log(users)
-
-
   //Function to add task to db
   const handleAddTask = async (e) => {
     e.preventDefault();
@@ -96,25 +94,30 @@ const AddTaskModal = () => {
           title: title,
           description: taskDescription,
           status: status,
-          projectId: projectId,
+          projectId: projectData._id,
           priority: priority,
           dueDate: dueDate,
-          assignedTo: "669b9af84718ef68df73102b"
+          assignedTo: assignedTo,
         },
-
       });
-      setUsers(data)
+      setUsers(data);
     } catch (err) {
       console.error(err);
     }
 
-    setOpen(false)
+    setOpen(false);
     window.location.reload();
   };
 
+  const handleAvatarChange = (e) => {
+    setAssignedTo(e.target.value)
+    setAssignedInitials(e.target.name)
+    setAssignedId(e.target.id)
+  }
+
   return (
     <div className="flex m-auto align">
-      <Button onClick={handleOpen} sx={{ color: theme.palette.secondary.contrastText, backgroundColor: "var(--main-green)", borderRadius: "4px"}}>
+      <Button onClick={handleOpen} sx={{ color: theme.palette.secondary.contrastText, backgroundColor: "var(--main-green)", borderRadius: "4px" }}>
         <AddIcon sx={{ height: "1.5rem", width: "1.5rem", borderRadius: "4px" }} />
         Add task
       </Button>
@@ -157,41 +160,60 @@ const AddTaskModal = () => {
               id="due-date"
             />
           </LocalizationProvider>
-            <FormControl fullWidth>
-              <InputLabel id="status-label">Status</InputLabel>
-              <Select labelId="status-label" id="status" value={status} label="Status" onChange={(e) => setStatus(e.target.value)} sx={{ mt: 2, mb: 1 }}>
-                <MenuItem value={"to-do"}>Not started</MenuItem>
-                <MenuItem value={"in-progress"}>In progress</MenuItem>
-                <MenuItem value={"stuck"}>Stuck</MenuItem>
-                <MenuItem value={"completed"}>Completed</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
+          <FormControl fullWidth>
+            <InputLabel id="status-label">Status</InputLabel>
+            <Select
+              labelId="status-label"
+              id="status"
+              value={status}
+              label="Status"
+              onChange={(e) => setStatus(e.target.value)}
+              sx={{ mt: 2, mb: 1 }}
+            >
+              <MenuItem value={"Not started"}>Not started</MenuItem>
+              <MenuItem value={"In progress"}>In progress</MenuItem>
+              <MenuItem value={"Stuck"}>Stuck</MenuItem>
+              <MenuItem value={"Completed"}>Completed</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
             <InputLabel id="priority-label">Priority</InputLabel>
-              <Select labelId="priority-label" id="priority" value={priority} label="Priority" onChange={(e) => setPriority(e.target.value)} sx={{ mt: 2, mb: 1 }}>
-                <MenuItem value={"-"}>-</MenuItem>
-                <MenuItem value={"low"}>Low</MenuItem>
-                <MenuItem value={"medium"}>Medium</MenuItem>
-                <MenuItem value={"high"}>High</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
+            <Select
+              labelId="priority-label"
+              id="priority"
+              value={priority}
+              label="Priority"
+              onChange={(e) => setPriority(e.target.value)}
+              sx={{ mt: 2, mb: 1 }}
+            >
+              <MenuItem value={"-"}>-</MenuItem>
+              <MenuItem value={"Low"}>Low</MenuItem>
+              <MenuItem value={"Medium"}>Medium</MenuItem>
+              <MenuItem value={"High"}>High</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
             <InputLabel id="assigned-to-label">Assigned to</InputLabel>
-              <Select labelId="assigned-to-label" id="assigned-to" value={assignedTo} label="Assigned to" onChange={(e) => setAssignedTo(e.target.value)} sx={{ mt: 2, mb: 1 }}>
-                {users.map((user) => {
-return <MenuItem key={user._id} value={user._id}>
-              <Avatar sx={{ width: 24, height: 24, fontSize: 12, marginRight: 2, backgroundColor: "var(--main-green)" }}>{user.initials}</Avatar>
-              {user.first} {user.last}
-
-</MenuItem>
-                }
-                )}
-                {/* <MenuItem value={"-"}>-</MenuItem>
-                <MenuItem value={"low"}>Low</MenuItem>
-                <MenuItem value={"medium"}>Medium</MenuItem>
-                <MenuItem value={"high"}>High</MenuItem> */}
-              </Select>
-            </FormControl>
+            <Select
+              labelId="assigned-to-label"
+              id="assigned-to"
+              value={assignedTo}
+              label="Assigned to"
+              onChange={(e) => setAssignedTo(e.target.value)}
+              sx={{ mt: 2, mb: 1 }}
+            >
+              {users.map((user) => {
+                return (
+                  <MenuItem key={user._id} value={user._id}>
+                    <Avatar sx={{ width: 24, height: 24, fontSize: 12, marginRight: 2, backgroundColor: "var(--main-green)" }}>
+                      {user.initials}
+                    </Avatar>
+                    {user.first} {user.last}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
           <div className="flex flex-row gap-1 m-top-2">
             <Button type="cancel" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={handleClose}>
               Cancel
@@ -206,26 +228,5 @@ return <MenuItem key={user._id} value={user._id}>
   );
 };
 
-// const NavWrapper = styled.nav``;
-
-// const ButtonNav = styled.button`
-//   padding: 0.75rem 1rem;
-//   color: var(--main-green);
-//   border: none;
-//   background-color: var(--gray-text);
-//   border-radius: 18px;
-//   font-weight: 700;
-//   margin-left: auto;
-//   margin-right: 1rem;
-//   transition-timing-function: ease-in;
-//   transition-duration: 0.2s;
-//   font-size: 1rem;
-//   width: 10rem;
-//   display: flex;
-//   justify-content: center;
-//   &:hover {
-//     opacity: 0.5;
-//   }
-// `;
 
 export default AddTaskModal;

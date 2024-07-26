@@ -1,6 +1,4 @@
 const { Schema, model, ObjectId } = require("mongoose");
-const { timestamp } = require('../utils/dateFormat');
-
 
 // Schema to create a project model
 const projectSchema = new Schema(
@@ -18,18 +16,16 @@ const projectSchema = new Schema(
       type: String,
     },
     createdOn: {
-      type: String,
-      default: timestamp
+      type: Date,
+      default: new Date()
     },
     dueDate: {
-      type: String,
-      default: timestamp
+      type: Date,
+      default: new Date()
 
     },
     users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-
-
   },
 
 );

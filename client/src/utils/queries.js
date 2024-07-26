@@ -1,12 +1,24 @@
 import { gql } from "@apollo/client";
 
-export const QUERY_USER = gql`
-  query user($username: String!) {
-    user(username: $username) {
+export const QUERY_USERS = gql`
+  query users($username: String!) {
+    users(username: $username) {
       _id
       first
       last
       email
+      initials
+    }
+  }
+`;
+
+export const QUERY_USER = gql`
+  query user($_id: String!) {
+    user(_id: $_id) {
+      _id
+      first
+      last
+      initials
     }
   }
 `;
@@ -44,13 +56,18 @@ export const QUERY_PROJECT = gql`
         first
         last
       }
-        tasks {
+      tasks {
         _id
         title
         description
         createdOn
         status
+        dueDate
+        priority
+        assignedTo {
+          _id
         }
+      }
     }
   }
 `;
@@ -64,10 +81,11 @@ export const QUERY_PROJECT_TASKS = gql`
       createdOn
       createdBy {
         _id
-        initials
-        first
-        last
       }
+      assignedTo {
+        _id
+      }
+      dueDate
       status
       projectId {
         _id
@@ -83,8 +101,42 @@ export const QUERY_TASK = gql`
       title
       description
       createdOn
-      createdBy
+      createdBy {
+        _id
+      }
       status
+      dueDate
+      priority
+      projectId {
+        _id
+        projectName
+        users {
+          _id
+          first
+          last
+          initials
+        }
+      }
+      assignedTo {
+        _id
+        first
+        last
+        initials
+      }
+        comments {
+                _id
+        commentText
+        createdOn,
+        createdBy
+        createdInitials
+        }
+        subtasks {
+        _id
+        taskTitle,
+        taskStatus
+        dueDate
+        
+        }
     }
   }
 `;

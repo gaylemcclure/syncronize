@@ -8,7 +8,6 @@ import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
 import accordionData from "../assets/data/welcomeAccordion";
-import WelcomeNav from "../components/nav/welcomeNav";
 import Auth from "../utils/auth";
 import { QUERY_ME } from "../utils/queries";
 import { useQuery } from "@apollo/client";
@@ -43,7 +42,6 @@ const WelcomePage = () => {
 
   return (
     <WelcomeContainer className="welcome-bg">
-      <WelcomeNav user={userData} />
       <WelcomeBG>
         <div className="main">
           <PageWrapper>

@@ -5,6 +5,9 @@ import pageImg from "../assets/images/management.png";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
 
 
 const SignupPage = () => {
@@ -30,11 +33,11 @@ const SignupPage = () => {
           <Icon src={icon} alt="syncronize icon" />
           <h2>Welcome back to Sycronize</h2>
           <form className="flex-col form" onSubmit={handleLogin}>
-            <input placeholder="Email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
-            <input placeholder="Password" type="password" value={password} onInput={(e) => setPassword(e.target.value)} />
-            <button className="signup-button" id="signup-button" type="submit">
+            <TextField size="small" label="Email" id="email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
+            <TextField sx={{marginTop: '1rem'}} label="Password" size="small" type="password" id="password" value={password} onInput={(e) => setPassword(e.target.value)} />
+            <Button sx={{backgroundColor: "var(--main-green)", marginTop: '1rem'}} className="signup-button" id="signup-button" type="submit">
               Log in
-            </button>
+            </Button>
           </form>
           <p>
             No account? Sign up <a href="./signup">here</a>

@@ -1,104 +1,69 @@
 /* eslint-disable react/jsx-key */
-import {   GridRowModes,
-  DataGrid,
-  GridToolbarContainer,
-  GridActionsCellItem,
-  GridRowEditStopReasons,} from "@mui/x-data-grid";
+import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import styled from 'styled-components';
-import { UPDATE_TASK, DELETE_TASK, ADD_TASK } from "../utils/mutations";
-import { QUERY_TASK } from "../utils/queries";
-import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
-
-//Create the toolbar to inline edit rows
-function EditToolbar(props) {
-
-  const { setRows, setRowModesModel, rows } = props;
-
-  const handleClick = () => {
-    const id = 1;
-    setRows((oldRows) => [...oldRows, { id, title: '', owner: '', status: '', dueDate: '', assignee: '', description: '' }]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'title' },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-    </GridToolbarContainer>
-  );
-}
-
+import IconButton from "@mui/material/IconButton";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
+import { UPDATE_TASK, DELETE_TASK } from "../utils/mutations";
+import { QUERY_PROJECT_TASKS, QUERY_USER } from "../utils/queries";
+import { useMutation, useLazyQuery } from "@apollo/client";
+import dayjs from "dayjs";
+import { Avatar } from "@mui/material";
+import EditTaskModal from "./modals/editTaskModal";
 
 //Create the open task button within title cell
 const RenderTaskButton = (props) => {
-  const handleOpenTask = (e) => {
-    const selectedId = e.target.id;
-    const curr = window.location.pathname
-    const link = `${curr}/task/q=${selectedId}`
-    //Navigate to the task
-    window.location.href = link;
-  }
-  
   return (
     <div className="flex-row justify align">
       <div>{props.value}</div>
-      <IconButton
-        variant="contained"
-        size="small"
-        id={props.id}
-        onClick={(e) => handleOpenTask(e)}
-      >
-<OpenInFullIcon />
-      </IconButton>
+      <EditTaskModal id={props.id} />
     </div>
   );
-}
+};
 
-const ProjectTable = ({ tasks, refetch }) => {
+const ProjectTable = ({ projectData, projectId }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  let taskId = "";
 
+  let taskId = "";
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
-  const [addTask] = useMutation(ADD_TASK);
-
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
-    if (tasks !== undefined) {
+    if (projectData.tasks) {
       const handleCreateRows = () => {
-        const allTasks = tasks.tasks;
         let taskArr = [];
-        allTasks.map((task) =>
-          taskArr.push({
-            id: task._id,
-            title: task.title,
-            owner: task.createdBy,
-            status: task.status,
-            dueDate: "11/11/2024",
-            assignee: "Gayle",
-            description: task.description,
-          })
-        );
+        projectData.tasks.map(async (task) => {
+          try {
+            //Get the assigned users initials for avatar
+            const users = projectData.users;
+            const assignedTo = users.filter((user) => user._id === task.assignedTo._id);
+
+            // const assignedToInitials = assignedTo[0].initials;
+            //Push all the items into array to save to state
+            taskArr.push({
+              id: task._id,
+              title: task.title,
+              status: task.status,
+              dueDate: task.dueDate,
+              assignee: assignedTo[0].initials,
+              description: task.description,
+              priority: task.priority,
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        });
         setRows(taskArr);
       };
       handleCreateRows();
     }
-  }, [tasks]);
+  }, [projectData]);
+
 
   //Cancel the editing function
   const handleRowEditStop = (params, event) => {
@@ -123,9 +88,9 @@ const ProjectTable = ({ tasks, refetch }) => {
     try {
       const { data } = await deleteTask({
         variables: {
-          _id: id
+          _id: id,
         },
-      })
+      });
     } catch (err) {
       console.error(err);
     }
@@ -146,21 +111,25 @@ const ProjectTable = ({ tasks, refetch }) => {
 
   //Process to update the row & save to db
   const processRowUpdate = async (newRow) => {
+
     const updatedRow = { ...newRow, isNew: false };
+
     taskId = updatedRow.id;
+
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     try {
+      const assUser = projectData.users.filter((use) => use.initials === updatedRow.assignee);
       const { data } = await updateTask({
         variables: {
           _id: taskId,
           title: updatedRow.title,
           description: updatedRow.description,
           dueDate: updatedRow.dueDate,
-          status: updatedRow.status
+          status: updatedRow.status,
+          priority: updatedRow.priority,
+          assignedTo: assUser[0]._id
         },
-      })
-
-        
+      });
     } catch (err) {
       console.error(err);
     }
@@ -171,22 +140,58 @@ const ProjectTable = ({ tasks, refetch }) => {
     setRowModesModel(newRowModesModel);
   };
 
-  
-//Create the columns
+  //Generate an array of users for the assignedTo field dropdown edit
+  const userOptions = () => {
+    const options = [];
+    projectData.users.map((user) => {
+      options.push({ code: user.initials, name: user.first + " " + user.last });
+    });
+    return options;
+  };
+
+  //Create the columns
   const columns = [
-    { field: "title", headerName: "Title", flex: 1, editable: true, renderCell: (e) => RenderTaskButton(e),  },
-    { field: "owner", headerName: "Owner", flex: 0.5, editable: false  },
-    { field: "status", headerName: "Status", flex: 0.5, editable: true  },
-    { field: "dueDate", headerName: "Due date", flex: 0.5, editable: true  },
-    { field: "assignee", headerName: "Assignee", flex: 0.5, editable: true  },
-    { field: "description", headerName: "Description", flex: 2, editable: true  },
+    { field: "modal", headerName: "", flex: 0.2, editable: false, renderCell: (e) => RenderTaskButton(e)},
+    { field: "title", headerName: "Title", flex: 1, editable: true },
     {
-      //Action buttons for inline editing
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
+      field: "assignee",
+      headerName: "Assigned to",
+      flex: 0.5,
+      editable: true,
+      getOptionValue: (value) => value.code,
+      getOptionLabel: (value) => value.name,
+      type: "singleSelect",
+      valueOptions: () => userOptions(),
+      renderCell: (params) => {
+        return <Avatar sx={{ width: 30, height: 30, fontSize: 14, marginRight: 2, backgroundColor: "var(--main-green)" }}>{params.value}</Avatar>;
+      },
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 0.5,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["Not started", "In progress", "Stuck", "Completed"],
+    },
+    {
+      field: "dueDate",
+      headerName: "Due date",
+      flex: 0.5,
+      editable: true,
+      type: "date",
+      valueGetter: (value) => {
+        return new Date(value);
+      },
+    },
+    { field: "priority", headerName: "Priority", flex: 0.5, editable: true, type: "singleSelect", valueOptions: ["-", "Low", "Medium", "High"] },
+    { field: "description", headerName: "Description", flex: 2, editable: true },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
       width: 100,
-      cellClassName: 'actions',
+      cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         //If already editing, change buttons to save/cancel
@@ -195,82 +200,39 @@ const ProjectTable = ({ tasks, refetch }) => {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
               onClick={handleSaveClick(id)}
             />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
+            <GridActionsCellItem icon={<CancelIcon />} label="Cancel" className="textPrimary" onClick={handleCancelClick(id)} color="inherit" />,
           ];
         }
         //Edit and delete buttons show
         return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
+          <GridActionsCellItem icon={<EditIcon />} label="Edit" className="textPrimary" onClick={handleEditClick(id)} color="inherit" />,
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={handleDeleteClick(id)} color="inherit" />,
         ];
       },
     },
   ];
 
   return (
-    <div style={{ width: "100%" }}>
-      <DataGrid 
-              rows={rows}
-              columns={columns}
-              editMode="row"
-              rowModesModel={rowModesModel}
-              onRowModesModelChange={handleRowModesModelChange}
-              onRowEditStop={handleRowEditStop}
-              processRowUpdate={processRowUpdate}
-              // slots={{
-              //   toolbar: EditToolbar,
-              // }}
-              // slotProps={{
-              //   toolbar: { setRows, setRowModesModel, rows },
-              // }}
+    <div style={{ width: "100%", height: '800px'}}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        editMode="row"
+        rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
+        onRowEditStop={handleRowEditStop}
+        processRowUpdate={processRowUpdate}
+        slotProps={{
+          loadingOverlay: {
+            variant: 'circular-progress',
+            noRowsVariant: 'skeleton'
+          }
+        }}
       />
     </div>
   );
 };
 
-// const TableWrapper = styled.div`
-// padding-top: 3rem;
-// padding-bottom: 3rem;
-// .MuiDataGrid-overlayWrapper {
-//   min-height: 2rem;
-// }
-// .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall {
-//   margin-left: auto;
-//   height: 25px;
-//   width: 25px;
-//   padding: 0.75rem;
-
-//   svg {
-//     height: 1rem;
-//     width: 1rem;
-//   }
-// }
-
-// .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall:hover {
-//   background-color: #dddddd;
-
-// }
-//`
 export default ProjectTable;

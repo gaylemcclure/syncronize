@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
-const { timestamp } = require('../utils/dateFormat');
 
 // Schema to create User model
 const userSchema = new Schema({
@@ -23,8 +22,8 @@ const userSchema = new Schema({
     match: [/.+@.+\..+/, "Must match an email address!"],
   },
   createdOn: {
-    type: String,
-    default: timestamp
+    type: Date,
+    default: new Date()
   },
   password: {
     type: String,

@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
-const { timestamp } = require('../utils/dateFormat');
+const commentSchema = require("./Comments");
+const subtaskSchema = require("./Subtasks");
 
 // Schema to create Task model
 const taskSchema = new Schema(
@@ -16,19 +17,19 @@ const taskSchema = new Schema(
       trim: true,
     },
     createdOn: {
-      type: String,
-      default: timestamp
+      type: Date,
+      default: new Date()
     },
     createdBy: {
       type: Schema.Types.ObjectId, ref: 'User' 
     },
     startDate: {
-      type: String,
-      default: timestamp
+      type: Date,
+      default: new Date()
       },
     dueDate: {
-      type: String,
-      default: timestamp
+      type: Date,
+      default: new Date()
       },
 
     status: {
@@ -38,6 +39,7 @@ const taskSchema = new Schema(
     },
     priority: {
       type: String,
+      default: "-"
     },
     projectId: { 
       type: Schema.Types.ObjectId, ref: 'Project' 
@@ -46,10 +48,11 @@ const taskSchema = new Schema(
       type: Schema.Types.ObjectId, ref: 'User' 
     },
     updatedOn: {
-      type: String,
-      default: timestamp
-    }
-
+      type: Date,
+      default: new Date()
+    },
+    comments: [ commentSchema ],
+    subtasks: [ subtaskSchema ]
 
   },
 

@@ -151,4 +151,11 @@
   }
   
   
+.project-title {
+  margin: 0;
+  padding-right: 1rem;
+}
 
+.popover {
+  padding: 1rem 2rem;
+}

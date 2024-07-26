@@ -142,6 +142,10 @@ input.full-input, textarea.full-input {
   align-items: center;
 }
 
+.align-base {
+  align-items: baseline;
+}
+
 .submit-button {
   background-color: var(--main-green);
   color: white;
@@ -160,6 +164,10 @@ input.full-input, textarea.full-input {
 
 .full {
   width: 98%;
+}
+
+.half {
+  width: 50%;
 }
 
 .black {
@@ -338,4 +346,35 @@ input.full-input, textarea.full-input {
   .MuiAvatar-root {
     display: none;
   }
+}
+
+.MuiDataGrid-overlayWrapper {
+  min-height: 2rem;
+}
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall {
+  margin-left: auto;
+  height: 25px;
+  width: 25px;
+  padding: 0.75rem;
+  margin-right: 0;
+
+  svg {
+    height: 1rem;
+    width: 1rem;
+  }
+}
+
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall:hover {
+  background-color: #dddddd;
+}
+
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft[data-field='assignee'] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container .MuiInputBase-root.MuiOutlinedInput-root {
+  height: 35px;
+  width: 27rem;
 }

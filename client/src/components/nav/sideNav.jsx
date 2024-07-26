@@ -20,6 +20,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Menu, Avatar } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { DELETE_PROJECT } from "../../utils/mutations";
+import { useMutation, useLazyQuery } from "@apollo/client";
 
 const drawerWidth = 350;
 
@@ -75,6 +77,7 @@ const SideNav = ({ open, setOpen, user }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const moreOpen = Boolean(anchorEl);
+  const [deleteProject] = useMutation(DELETE_PROJECT);
   
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -99,6 +102,19 @@ const SideNav = ({ open, setOpen, user }) => {
     const url = e.target.parentElement.parentElement.id;
     window.location.href = `/project/q=${url}`;
   };
+
+  const handleHomeNavigation = () => {
+    window.location.href = "/home";
+  }
+
+  const handleDeleteProject = async (e) => {
+    try{
+      const data = await deleteProject({variables: { _id: e.currentTarget.id }})
+      window.location.href = "/home";
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
@@ -114,6 +130,7 @@ const SideNav = ({ open, setOpen, user }) => {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={(e) => handleHomeNavigation(e)}
             >
               <ListItemIcon
                 sx={{
@@ -168,24 +185,22 @@ const SideNav = ({ open, setOpen, user }) => {
               </ListItemButton>
               <Menu
         sx={{ width: 400, maxWidth: "100%",  }}
-        id="basic-menu"
+        id="delete-menu"
         anchorEl={anchorEl}
         open={moreOpen}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",
+          "aria-labelledby": "delete-menu",
         }}
       >
-        {/* <MenuList> */}
             <MenuItem>
-            <ListItemButton>
+            <ListItemButton id={proj._id} onClick={(e) => handleDeleteProject(e)}>
               <ListItemIcon>
                 <DeleteIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
               <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Delete project</ListItemText>
               </ListItemButton>
             </MenuItem>
-        {/* </MenuList> */}
       </Menu>
 
             </ListItem>
