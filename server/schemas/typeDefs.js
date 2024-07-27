@@ -75,6 +75,7 @@ const typeDefs = `
     projectTasks(projectId: String!): [Task] 
     singleTask(_id: String!): Task
     completedTasks(projectId: String!) : [Task]
+    queryFilters(projectId: ID!, status: String, priority: String) : Task
   }
 
   input SubtaskArray {
@@ -106,7 +107,7 @@ const typeDefs = `
     updateProjectDescription(_id:ID!, description: String) : Project
     updateProjectDate(_id:ID!, dueDate: Date) : Project
     updateSubtask(_id: String!, subtasks: SubtaskArray ) : Task
-    updateWorkspace(_id: ID!, workspaceName: String) : User
+    updateWorkspace(_id: String!, workspaceName: String) : User
 
     deleteUser(_id: ID!) : User
     deleteProject(_id: ID!) : Project

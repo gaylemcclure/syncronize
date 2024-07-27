@@ -8,11 +8,20 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import { UPDATE_TASK, DELETE_TASK } from "../utils/mutations";
-import { QUERY_PROJECT_TASKS, QUERY_USER } from "../utils/queries";
+import { QUERY_PROJECT_TASKS, QUERY_USER, QUERY_FILTERS } from "../utils/queries";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import dayjs from "dayjs";
 import { Avatar } from "@mui/material";
 import EditTaskModal from "./modals/editTaskModal";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import Button from "@mui/material/Button";
+import { styled, useTheme } from "@mui/material/styles";
 
 //Create the open task button within title cell
 const RenderTaskButton = (props) => {
@@ -27,10 +36,22 @@ const RenderTaskButton = (props) => {
 const ProjectTable = ({ projectData, projectId }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [age, setAge] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [isFilter, setIsFilter] = useState(false);
+  const [nonFilterRows, setNonFilterRows] = useState([])
 
+  const theme = useTheme();
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
+  console.log(projectData);
   let taskId = "";
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
+  const [queryFilters] = useLazyQuery(QUERY_FILTERS);
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
@@ -42,9 +63,6 @@ const ProjectTable = ({ projectData, projectId }) => {
             //Get the assigned users initials for avatar
             const users = projectData.users;
             const assignedTo = users.filter((user) => user._id === task.assignedTo._id);
-
-            // const assignedToInitials = assignedTo[0].initials;
-            //Push all the items into array to save to state
             taskArr.push({
               id: task._id,
               title: task.title,
@@ -63,7 +81,6 @@ const ProjectTable = ({ projectData, projectId }) => {
       handleCreateRows();
     }
   }, [projectData]);
-
 
   //Cancel the editing function
   const handleRowEditStop = (params, event) => {
@@ -111,7 +128,6 @@ const ProjectTable = ({ projectData, projectId }) => {
 
   //Process to update the row & save to db
   const processRowUpdate = async (newRow) => {
-
     const updatedRow = { ...newRow, isNew: false };
 
     taskId = updatedRow.id;
@@ -127,7 +143,7 @@ const ProjectTable = ({ projectData, projectId }) => {
           dueDate: updatedRow.dueDate,
           status: updatedRow.status,
           priority: updatedRow.priority,
-          assignedTo: assUser[0]._id
+          assignedTo: assUser[0]._id,
         },
       });
     } catch (err) {
@@ -151,7 +167,7 @@ const ProjectTable = ({ projectData, projectId }) => {
 
   //Create the columns
   const columns = [
-    { field: "modal", headerName: "", flex: 0.2, editable: false, renderCell: (e) => RenderTaskButton(e)},
+    { field: "modal", headerName: "", flex: 0.2, editable: false, renderCell: (e) => RenderTaskButton(e) },
     { field: "title", headerName: "Title", flex: 1, editable: true },
     {
       field: "assignee",
@@ -197,11 +213,7 @@ const ProjectTable = ({ projectData, projectId }) => {
         //If already editing, change buttons to save/cancel
         if (isInEditMode) {
           return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-            />,
+            <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
             <GridActionsCellItem icon={<CancelIcon />} label="Cancel" className="textPrimary" onClick={handleCancelClick(id)} color="inherit" />,
           ];
         }
@@ -214,8 +226,88 @@ const ProjectTable = ({ projectData, projectId }) => {
     },
   ];
 
+
+  const handleStatusSelect = async () => {
+    if (!isFilter) {
+    const tasksList = projectData.tasks;
+    setNonFilterRows(rows)
+    let newFilter = [];
+    const arr = [];
+    if (statusFilter === "" && priorityFilter !== "") {
+      newFilter = tasksList.filter((task) => task.priority === priorityFilter);
+
+    } else if (priorityFilter === "" && statusFilter !== "") {
+      newFilter = tasksList.filter((task) => task.status === statusFilter);
+    } else if (statusFilter !== "" && priorityFilter !== "") {
+      newFilter = tasksList.filter((task) => task.priority === priorityFilter && task.status === statusFilter);
+    } 
+
+    newFilter.map((tas) => {
+      arr.push({
+          id: tas._id,
+          title: tas.title,
+          description: tas.description,
+          dueDate: tas.dueDate,
+          status: tas.status,
+          priority: tas.priority,
+          assignedTo: "FD",
+      })
+    });
+
+    setRows(arr)
+    setIsFilter(true)
+  } else if (isFilter) {
+    setStatusFilter("")
+    setPriorityFilter("")
+    setRows(nonFilterRows)
+    setIsFilter(false)
+  }
+  };
+
+
   return (
-    <div style={{ width: "100%", height: '800px'}}>
+    <div style={{ width: "100%", height: "800px" }}>
+      <Box sx={{ minWidth: 120, display: "flex", flexDirection: "row" }}>
+        <div className="flex-row">
+          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
+            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={statusFilter}
+              label="Status"
+              onChange={(e) => setStatusFilter(e.target.value)}
+              sx={{ width: "15rem", height: "40px" }}
+            >
+              <MenuItem value={"Not started"}>Not started</MenuItem>
+              <MenuItem value={"In progress"}>In progress</MenuItem>
+              <MenuItem value={"Stuck"}>Stuck</MenuItem>
+              <MenuItem value={"Completed"}>Completed</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div className="flex-row">
+          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
+            <InputLabel id="demo-simple-select-label">Priority</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={priorityFilter}
+              label="Status"
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              sx={{ width: "15rem", height: "40px" }}
+            >
+              <MenuItem value={"None"}>None</MenuItem>
+              <MenuItem value={"Low"}>Low</MenuItem>
+              <MenuItem value={"Medium"}>Medium</MenuItem>
+              <MenuItem value={"High"}>High</MenuItem>
+            </Select>
+          </FormControl>
+          <Button onClick={handleStatusSelect}>
+            {isFilter ? <FilterAltOffIcon sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}/> : <FilterAltIcon sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}/> }
+          </Button>
+        </div>
+      </Box>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -226,9 +318,9 @@ const ProjectTable = ({ projectData, projectId }) => {
         processRowUpdate={processRowUpdate}
         slotProps={{
           loadingOverlay: {
-            variant: 'circular-progress',
-            noRowsVariant: 'skeleton'
-          }
+            variant: "circular-progress",
+            noRowsVariant: "skeleton",
+          },
         }}
       />
     </div>

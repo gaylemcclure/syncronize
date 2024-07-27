@@ -161,3 +161,12 @@ export const QUERY_COMPLETED_TASKS = gql`
     }
   }
 `;
+
+export const QUERY_FILTERS = gql`
+  query queryFilters($projectId: ID!, $status: String, $priority: String) {
+    queryFilters(projectId: $projectId, status: $status, priority: $priority) {
+      _id
+    }
+  }
+`;
+

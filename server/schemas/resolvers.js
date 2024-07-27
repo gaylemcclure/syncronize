@@ -2,7 +2,6 @@ const { User, Project, Task } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
-
   Query: {
     users: async () => {
       return User.find();
@@ -32,7 +31,9 @@ const resolvers = {
     },
     singleTask: async (parent, args, context) => {
       if (context.user) {
-        return Task.findOne({ _id: args._id }).populate({path: "projectId", populate: { path: "users", model: "User"}}).populate("assignedTo");
+        return Task.findOne({ _id: args._id })
+          .populate({ path: "projectId", populate: { path: "users", model: "User" } })
+          .populate("assignedTo");
       }
     },
     completedTasks: async (parent, args, context) => {
@@ -42,7 +43,31 @@ const resolvers = {
         });
       }
     },
+    queryFilters: async (parent, { projectId, status, priority }, context) => {
+      if (context.user) {
+        if (status === "" && priority !== "") {
+          console.log("priority only")
+          return Task.find({
+            $and: [{ projectId: projectId }, { priority: priority }],
+          });
+        } else if (priority === "" && status !== "") {
+          console.log("status only")
+          return Task.find({
+            $and: [{ projectId: projectId }, { status: status }],
+          });
+        } else if (status !== "" && priority !== "") {
+          console.log("both")
+          return Task.find({
 
+            $and: [{ projectId: projectId }, { status: status}, { priority: priority}],
+          });
+        } else {
+                      console.log("none")
+          return Task.find({ projectId: projectId })
+          }
+        }
+      }
+    
   },
 
   Mutation: {
@@ -99,11 +124,10 @@ const resolvers = {
       if (context.user) {
         const task = await Task.findOneAndUpdate(
           { _id: taskId },
-          { 
-            $addToSet: { comments: {taskId:taskId, commentText: commentText, createdBy: createdBy, createdInitials: createdInitials}}
+          {
+            $addToSet: { comments: { taskId: taskId, commentText: commentText, createdBy: createdBy, createdInitials: createdInitials } },
           },
-          { new: true}
-        
+          { new: true }
         );
         return task;
       }
@@ -114,19 +138,15 @@ const resolvers = {
       if (context.user) {
         const task = await Task.findOneAndUpdate(
           { _id: taskId },
-          { 
-            $addToSet: { subtasks: {taskId, taskTitle, taskStatus, dueDate}}
+          {
+            $addToSet: { subtasks: { taskId, taskTitle, taskStatus, dueDate } },
           },
-          { new: true}
-        
+          { new: true }
         );
         return task;
       }
       throw AuthenticationError("You need to be logged in!");
     },
-
-
-
 
     //UPDATE MUTATIONS
     updateUser: async (parent, { _id, first, last, email, password, initials }, context) => {
@@ -164,48 +184,30 @@ const resolvers = {
       throw AuthenticationError("You need to be logged in!");
     },
 
-    updateProjectName: async (parent, { _id, projectName}, context) => {
+    updateProjectName: async (parent, { _id, projectName }, context) => {
       if (context.user) {
-        const project = await Project.findOneAndUpdate(
-          { _id: _id },
-          { $set: { projectName: projectName } },
-          { new: true }
-        );
+        const project = await Project.findOneAndUpdate({ _id: _id }, { $set: { projectName: projectName } }, { new: true });
         return project;
       }
       throw AuthenticationError("You need to be logged in!");
     },
     updateProjectDescription: async (parent, { _id, description }, context) => {
       if (context.user) {
-        const project = await Project.findOneAndUpdate(
-          { _id: _id },
-          { $set: { description: description } },
-          { new: true }
-        );
+        const project = await Project.findOneAndUpdate({ _id: _id }, { $set: { description: description } }, { new: true });
         return project;
       }
       throw AuthenticationError("You need to be logged in!");
     },
     updateProjectDate: async (parent, { _id, dueDate }, context) => {
       if (context.user) {
-        const project = await Project.findOneAndUpdate(
-          { _id: _id },
-          { $set: { dueDate: dueDate } },
-          { new: true }
-        );
+        const project = await Project.findOneAndUpdate({ _id: _id }, { $set: { dueDate: dueDate } }, { new: true });
         return project;
       }
       throw AuthenticationError("You need to be logged in!");
     },
     updateSubtask: async (parent, { _id, subtasks }, context) => {
       if (context.user) {
-        const task = await Task.updateOne(
-          { _id: _id },
-          { $set: { subtasks: subtasks }},
-          { new: true }
-
-
-        );
+        const task = await Task.updateOne({ _id: _id }, { $set: { subtasks: subtasks } }, { new: true });
         return task;
       }
       throw AuthenticationError("You need to be logged in!");
@@ -213,19 +215,11 @@ const resolvers = {
 
     updateWorkspace: async (parent, { _id, workspaceName }, context) => {
       if (context.user) {
-        const task = await User.findOneAndUpdate(
-          { _id: _id },
-          { $set: { workspaceName: workspaceName }},
-          { new: true }
-
-
-        );
+        const task = await User.findOneAndUpdate({ _id: _id }, { $set: { workspaceName: workspaceName } }, { new: true });
         return task;
       }
       throw AuthenticationError("You need to be logged in!");
     },
-
-
 
     //DELETE MUTATIONS
     deleteUser: async (parent, { _id }, context) => {
@@ -240,14 +234,10 @@ const resolvers = {
         const proj = await Project.findOne({ _id: _id }).populate("users");
         const userArr = proj.users;
         userArr.map(async (user) => {
-          await User.findOneAndUpdate(
-            { _id: user._id },
-            { $pull: { projects: _id} },
-            { new: true}
-          )
-        })
-        const deleteTasks = await Task.deleteMany({ projectId: _id});
-        const deleteProj = await Project.findOneAndDelete({ _id: _id })
+          await User.findOneAndUpdate({ _id: user._id }, { $pull: { projects: _id } }, { new: true });
+        });
+        const deleteTasks = await Task.deleteMany({ projectId: _id });
+        const deleteProj = await Project.findOneAndDelete({ _id: _id });
         return deleteProj;
       }
       throw AuthenticationError("You need to be logged in!");
@@ -261,22 +251,14 @@ const resolvers = {
     },
     deleteComment: async (parent, { taskId, _id }, context) => {
       if (context.user) {
-        const task = await Task.findOneAndUpdate(
-          { _id: taskId },
-          { $pull: {comments: { _id: _id}}},
-          { new: true}
-        );
+        const task = await Task.findOneAndUpdate({ _id: taskId }, { $pull: { comments: { _id: _id } } }, { new: true });
         return task;
       }
       throw AuthenticationError("You need to be logged in!");
     },
     deleteSubtask: async (parent, { taskId, _id }, context) => {
       if (context.user) {
-        const task = await Task.findOneAndUpdate(
-          { _id: taskId },
-          { $pull: {subtasks: { _id: _id}}},
-          { new: true}
-        );
+        const task = await Task.findOneAndUpdate({ _id: taskId }, { $pull: { subtasks: { _id: _id } } }, { new: true });
         return task;
       }
       throw AuthenticationError("You need to be logged in!");

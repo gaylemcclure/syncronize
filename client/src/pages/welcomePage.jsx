@@ -7,7 +7,6 @@ import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
-import accordionData from "../assets/data/welcomeAccordion";
 import Auth from "../utils/auth";
 import { QUERY_ME } from "../utils/queries";
 import { useQuery } from "@apollo/client";
@@ -138,7 +137,7 @@ const WelcomePage = () => {
       </WelcomeBGAlt>
       <WelcomeBGLast>
         <PageWrapper>
-          <AccordionComponent data={accordionData} />
+          <AccordionComponent  />
         </PageWrapper>
       </WelcomeBGLast>
       <WelcomeFooter />
