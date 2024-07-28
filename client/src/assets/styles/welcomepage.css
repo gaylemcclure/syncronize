@@ -1,0 +1,40 @@
+.logo-full {
+    width: 14rem;
+    padding-top: 6px;
+}
+.nav-link {
+    text-decoration: none;
+    align-self: center;
+    padding: 0 1.5rem;
+    color: var(--gray-text);
+    font-size: 18px;
+  }
+  .link-wrapper {
+    margin-left: 4rem;
+  }
+
+  .nav-button {
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    background-color: #06866E;
+    border-radius: 25px;
+    border: none;
+    color: white;
+  }
+
+  .nav-signup {
+    margin-left: auto;
+    padding-right: 2rem;
+  }
+
+  .mobile {
+    display: none;
+  }
+  ul {
+    margin-bottom: 0;
+  }
+
+  .nav-link:hover {
+    color: #ffbcfc;
+    transition: 0.4s;
+  }

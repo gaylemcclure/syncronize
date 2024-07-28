@@ -1,0 +1,216 @@
+.icon-size {
+    height: 45px;
+    width: 50px;
+    font-size: 14px;
+  }
+
+  .logo {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  input,
+  textarea {
+    width: 20rem;
+    align-self: center;
+  }
+  .input-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-bar {
+    background-color: #d9d9d9;
+    border: none;
+    color: white;
+    padding-left: 0.5rem;
+  }
+  .search-bar::placeholder {
+    color: #7e7c7c;
+  }
+  .search-bar:focus {
+    border: none;
+  }
+
+  .menu-header {
+    padding: 6px 16px;
+  }
+
+  .user-initials {
+    margin: 0;
+  }
+
+  .sidebar-button {
+    background-color: transparent;
+    border: none;
+    color: var(--main-green);
+  }
+
+  .sidenav-header {
+    align-items: flex-start;
+    border-bottom: 1px solid #4b4e69;
+    padding-bottom: 2rem;
+  }
+  .workspace-icon {
+    background-color: #550080;
+    height: 30px;
+    width: 30px;
+    color: var(--ws-gray-text);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .workspace-name {
+    margin: 0;
+    color: var(--ws-gray-text);
+  }
+
+  .workspace-main {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    .MuiButtonBase-root {
+      color: white;
+      margin-left: auto;
+      min-width: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .sidenav-main {
+    padding: 0 10px 0 20px;
+  }
+
+  .sidenav-main-closed {
+    padding: 0 10px 0 10px;
+  }
+  .arrow-colour {
+    color: var(--ws-gray-text);
+    margin: 0 1.5rem 0 0.5rem;
+  }
+
+  .project-menu-button {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0.5rem;
+    border-right: 1px solid var(--gray-border);
+    background-color: transparent;
+  }
+  .material-symbols-outlined {
+    padding-right: 0.5rem;
+  }
+  .plus-button {
+    padding-left: 1rem;
+  }
+
+  .workspace-icon {
+    background-color: #550080;
+    height: 30px;
+    width: 30px;
+    min-width: 30px;
+    color: var(--ws-gray-text);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+  }
+
+  .overview-project {
+    display: flex;
+    min-height: 75px;
+    padding-left: 2rem
+  }
+  
+  .overview-date {
+    min-height: 55px;
+  }
+
+  .overview-countdown {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: white;
+  }
+
+  .upcoming {
+    background-color: var(--main-green);
+  }
+
+  .past-date {
+    background-color: #d72f2f;
+  }
+  
+  .overview-gauge {
+    width: 80%;
+  }
+  
+  
+.project-title {
+  margin: 0;
+  padding-right: 1rem;
+}
+
+.popover {
+  padding: 1rem 2rem;
+}
+
+.overview-task {
+  /* display: flex;
+  justify-content: space-between;
+  width: 88%;
+  padding: 0.5rem; */
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-column-gap: 40px;
+    grid-row-gap: 0px;
+    justify-items: center;
+    width: 100%;
+    padding-left: 1rem;
+    
+}
+
+.low {
+  background-color: rgb(87, 155, 252);
+}
+.medium {
+  background-color: rgb(85, 89, 223);
+}
+.high {
+  background-color: rgb(64, 22, 148);
+}
+
+.not-started {
+  background-color: rgb(196, 196, 196);
+}
+.progress {
+  background-color: rgb(253, 171, 61);
+}
+.stuck {
+  background-color: rgb(223, 47, 74);
+}
+.completed {
+  background-color: rgb(44 147 104);
+}
+
+.same-width {
+  min-width: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.status p, .status h3 {
+  padding-left: 0.5rem;
+  height: 28px;
+}
+
+.comment-name {
+  margin: 0 0 0 1rem;
+}

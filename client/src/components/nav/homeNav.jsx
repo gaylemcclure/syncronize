@@ -1,173 +1,202 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+// import { useState, useEffect } from "react";
+// import { styled } from "@mui/material/styles";
+// import Box from "@mui/material/Box";
+// import MuiAppBar from "@mui/material/AppBar";
+// import Toolbar from "@mui/material/Toolbar";
+// import CssBaseline from "@mui/material/CssBaseline";
+// import IconButton from "@mui/material/IconButton";
+// import MenuIcon from "@mui/icons-material/Menu";
+// import logo from "../assets/images/sync-icon.png";
+// import DropdownMenu from "../components/menus/dropdownMenu";
+// import { useUserContext } from "../utils/contexts";
+// import SideNav from "../components/nav/sideNav";
+// import { useNavigate } from "react-router";
+// import "../assets/styles/homepage.css";
+// import Auth from "../utils/auth";
+// import TextField from "@mui/material/TextField";
+
+import { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../../assets/images/sync-icon.png";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
-import { ChakraProvider } from "@chakra-ui/react";
-import DropdownMenu from "../menus/dropdownMenu";
-import { SubmitButton, CancelButton } from "../popupButtons";
+import DropdownMenu from "../../components/menus/dropdownMenu";
+import { useUserContext } from "../../utils/contexts";
+import SideNav from "../../components/nav/sideNav";
+import { useNavigate } from "react-router";
+import "../../assets/styles/homepage.css";
+import Auth from "../../utils/auth";
+import TextField from "@mui/material/TextField";
+import { useOpenContext } from "../../utils/openContext";
 
-const AddTask = () => {
+// //Set the width of the sideNav
+// const drawerWidth = 350;
 
-  const [projectName, setProjectName] = useState("")
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const NavButton = () => {
-    const pathName = window.location.pathname;
 
-    if (pathName === "/home") {
-      return (
-        <ButtonNav onClick={onOpen}>
-          <span className="material-symbols-outlined">add</span> Add project
-        </ButtonNav>
-      );
-    } else if (pathName === "/home/board") {
-      return (
-        <ButtonNav onClick={onOpen}>
-          <span className="material-symbols-outlined">add</span> Add task
-        </ButtonNav>
-      );
+
+const HomeNav = ({ setPath }) => {
+  const { userData, setUserData } = useUserContext();
+  const [loggedIn, setLoggedIn] = useState(false);
+  const { open, setOpen, drawerWidth } = useOpenContext();
+
+  const pathName = window.location.pathname;
+  useEffect(() => {
+    const handleNav = () => {
+      switch (pathName) {
+        case "/":
+          setPath("welcome");
+          break;
+        case "/solutions":
+          setPath("welcome");
+          break;
+        case "/product":
+          setPath("welcome");
+          break;
+        case "/pricing":
+          setPath("welcome");
+          break;
+        case "/login":
+          setPath("none");
+          break;
+        case "/signup":
+          setPath("none");
+         break;
+        case "/home":
+          setPath("home");
+          break;
+        case "/project":
+          setPath("home");
+          break;
+        case "/home/account":
+          setPath("home");
+          break;
+        default:
+     }
+    };
+
+    const pathStart = pathName.slice(0, 11);
+    if (pathStart === "/project/q=") {
+      setPath('home')
     }
-  };
-
-  const handleAddProject = () => {
-    console.log("add project")
-  };
   
-  const handleAddTask = () => {
+    handleNav()
+  }, [pathName])
 
+  //Style the sidenav header
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+//Style the top menu bar
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+//Style the rest of the nav bar
+const StyledBox = styled(Box)(({ theme }) => ({
+  "& .MuiPaper-root.MuiAppBar-root": {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  "& .MuiButtonBase-root": {
+    marginRight: "20px",
+  },
+  "& .MuiToolbar-root": {
+    paddingRight: "0",
+  },
+}));
+
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+        if (!token) {
+          setLoggedIn(false);
+          setTimeout(() => {
+            navigate("/login");
+          }, 5000);
+        } else {
+          setLoggedIn(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    isLoggedIn();
+  }, []);
+
+
   return (
-    <AddContainer>
-      <NavButton />
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        {window.location.pathname === "/home" && (
-          <ModalContent>
-            <ModalHeader>Add project</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <div className="input-container flex-col">
-                <label>Project name</label>
-                <input className="full-input" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
-              </div>
-
-            </ModalBody>
-
-            <ModalFooter>
-              <CancelButton cancelText="Cancel" cancelFunction={onClose} />
-            {/* <button className="cancel-button" onClick={onClose}>Cancel</button> */}
-            <SubmitButton submitText="Add project" submitFunction={handleAddProject} />
-            </ModalFooter>
-          </ModalContent>
-        )}
-
-        {window.location.pathname === "/home/board" && (
-          <ModalContent>
-            <ModalHeader>Add task</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
-
-            <ModalFooter>
-              <button className="cancel-button" onClick={onClose}>Cancel</button>
-              <button className="submit-button">Add task</button>
-            </ModalFooter>
-          </ModalContent>
-        )}
-      </Modal>
-    </AddContainer>
+    <>
+    {/* {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
+    {loggedIn && ( */}
+      <StyledBox sx={{ display: "flex", flexDirection: "row" }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              // color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+          <img className="logo" src={logo} alt="logo" />
+          <div className="input-container">
+            <TextField className="search-bar" placeholder="Search..." />
+          </div>
+          {userData && <DropdownMenu user={userData} />}
+        </AppBar>
+        <SideNav open={open} setOpen={setOpen} user={userData} />
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <DrawerHeader />
+        </Box>
+      </StyledBox>
+    {/* )} */}
+</>
   );
 };
 
-
-const AddContainer = styled.div`
-
-
-`
-
-const HomeNav = () => {
-  //TODO - set user initials
-  const [userInitials, setUserInitials] = useState("GM");
-
-  return (
-    <ChakraProvider>
-      <NavWrapper>
-        <img className="logo" src={logo} alt="logo" />
-        <div className="input-container">
-          <input className="search-bar" placeholder="Search..." />
-        </div>
-        <AddTask />
-        <DropdownMenu userInitials={userInitials} />
-      </NavWrapper>
-    </ChakraProvider>
-  );
-};
-
-
-
-const NavWrapper = styled.nav`
-  padding: 0.5rem 2rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: fixed;
-  z-index: 5;
-  width: 100%;
-  background-color: #101010;
-  .icon-size {
-    height: 45px;
-    width: 50px;
-    font-size: 14px;
-  }
-
-  .logo {
-    height: 3rem;
-  }
-
-  input {
-    width: 20rem;
-    align-self: center;
-  }
-  .input-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .search-bar {
-    background-color: #d9d9d9;
-    border: none;
-    color: white;
-    padding-left: 0.5rem;
-  }
-  .search-bar::placeholder {
-    color: #7e7c7c;
-  }
-  .search-bar:focus {
-    border: none;
-  }
-
-`;
-
-const ButtonNav = styled.button`
-  padding: 0.75rem 1rem;
-  color: var(--main-green);
-  border: none;
-  background-color: var(--gray-text);
-  border-radius: 18px;
-  font-weight: 700;
-  margin-left: auto;
-  margin-right: 1rem;
-  transition-timing-function: ease-in;
-  transition-duration: 0.2s;
-  font-size: 1rem;
-  width: 10rem;
-  display: flex;
-  justify-content: center;
-  &:hover {
-    opacity: 0.5;
-  }
-`;
 
 export default HomeNav;

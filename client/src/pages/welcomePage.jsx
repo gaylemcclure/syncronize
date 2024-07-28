@@ -1,6 +1,5 @@
-import React from "react";
 import styled from "styled-components";
-import WelcomeNav from "../components/nav/welcomeNav";
+import { useState, useEffect } from "react";
 import icon from "../assets/images/sync-icon.png";
 import text from "../assets/images/sync-text.png";
 import eg from "../assets/images/welcome-eg.png";
@@ -8,12 +7,40 @@ import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
-import accordionData from "../assets/data/welcomeAccordion";
+import Auth from "../utils/auth";
+import { QUERY_ME } from "../utils/queries";
+import { useQuery } from "@apollo/client";
 
 const WelcomePage = () => {
+  const [userData, setUserData] = useState({});
+  const { data } = useQuery(QUERY_ME);
+  const user = data?.me;
+
+  // Determine if `useEffect()` hook needs to run again
+  const userDataLength = Object.keys(userData).length;
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+        if (!token) {
+          return false;
+        }
+
+        if (user) {
+          setUserData(user);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getUserData();
+  }, [user]);
+
   return (
     <WelcomeContainer className="welcome-bg">
-      <WelcomeNav />
       <WelcomeBG>
         <div className="main">
           <PageWrapper>
@@ -110,7 +137,7 @@ const WelcomePage = () => {
       </WelcomeBGAlt>
       <WelcomeBGLast>
         <PageWrapper>
-          <AccordionComponent data={accordionData} />
+          <AccordionComponent  />
         </PageWrapper>
       </WelcomeBGLast>
       <WelcomeFooter />
@@ -125,7 +152,6 @@ const WelcomeContainer = styled.div`
   .main {
     padding-top: 7rem;
   }
-
 `;
 
 //Black slanted background variations
@@ -219,7 +245,6 @@ const PageWrapper = styled.div`
     justify-content: center;
     flex-wrap: wrap;
     width: 100vw;
-
   }
 
   .feature-alt {
@@ -262,7 +287,7 @@ const PageWrapper = styled.div`
     border-color: var(--main-green);
     h2 {
       border-color: var(--main-green);
-      
+
       button {
         height: 5rem;
         span {
@@ -277,7 +302,6 @@ const PageWrapper = styled.div`
     }
   }
 
-
   @media screen and (max-width: 568px) {
     .flex-row.feature-container.top {
       padding: 0 2rem;
@@ -285,41 +309,38 @@ const PageWrapper = styled.div`
     .left .task-text {
       padding-bottom: 4rem;
     }
-
   }
 
-  @media screen and  (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     padding-bottom: 3rem;
     .flex-row {
       flex-direction: column;
     }
-    
+
     .left {
       width: 100%;
       padding: 1rem 2rem;
       justify-content: center;
       align-items: center;
       .logo-icon {
-      width: 4rem;
-    }
-    .logo-text {
-      width: 15rem;
-    }
-    .slogan {
-      width: 100%;
-      padding: 0 3rem;
-      text-align: center;
-
-    }
-    h2 {
-      width: 100%;
-      margin-top: -12rem;
-      color: white;
-    }
-    .task-text {
-
-    width: 100%;
-  }
+        width: 4rem;
+      }
+      .logo-text {
+        width: 15rem;
+      }
+      .slogan {
+        width: 100%;
+        padding: 0 3rem;
+        text-align: center;
+      }
+      h2 {
+        width: 100%;
+        margin-top: -12rem;
+        color: white;
+      }
+      .task-text {
+        width: 100%;
+      }
     }
     .right {
       width: 100%;
@@ -351,59 +372,56 @@ const PageWrapper = styled.div`
       margin-bottom: 17rem;
     }
     .team-text,
-  .left h2.task-text {
-    font-size: 20px;
-  }
-  .team-text {
-    padding: 1rem 3rem;
-  }
-  .flex-row.feature-container {
-    flex-direction: row;
-  }
-  .left.flex-start {
-    padding: 0;
-  }
-
+    .left h2.task-text {
+      font-size: 20px;
+    }
+    .team-text {
+      padding: 1rem 3rem;
+    }
+    .flex-row.feature-container {
+      flex-direction: row;
+    }
+    .left.flex-start {
+      padding: 0;
+    }
   }
 
   @media screen and (min-width: 769px) and (max-width: 1023px) {
     .link-wrapper {
-    margin-left: 2rem;
-  }
-  .left {
-    width: 45%;
-    .logo-text {
-      width: 22rem;
+      margin-left: 2rem;
     }
-    .logo-icon {
-      width: 5rem;
+    .left {
+      width: 45%;
+      .logo-text {
+        width: 22rem;
+      }
+      .logo-icon {
+        width: 5rem;
+      }
+      .task-text {
+        padding: 0;
+      }
     }
-    .task-text {
-      padding: 0;
+    .right {
+      width: 52%;
+      padding-top: 5rem;
+    }
+    .left-alt {
+      width: 55%;
+      padding: 6rem 0 11rem 2rem;
+    }
+    .right-alt {
+      width: 45%;
+      padding: 6rem 3rem 0 3rem;
+    }
+    .team-text,
+    .left h2.task-text {
+      font-size: 20px;
+    }
+    .left.flex-start {
+      padding-top: 2rem;
     }
   }
-  .right {
-    width: 52%;
-    padding-top: 5rem;
-  }
-  .left-alt {
-    width: 55%;
-    padding: 6rem 0 11rem 2rem;
-  }
-  .right-alt {
-    width: 45%;
-    padding: 6rem 3rem 0 3rem;
-  }
-  .team-text,
-  .left h2.task-text {
-    font-size: 20px;
-  }
-  .left.flex-start {
-    padding-top: 2rem;
-  }
-  }
-
-
 
   @media screen and (min-width: 1024px) and (max-width: 1300px) {
     .right {
@@ -421,26 +439,25 @@ const PageWrapper = styled.div`
       padding: 12rem 3rem 0 2rem;
     }
     .team-text,
-  .left h2.task-text {
-    font-size: 20px;
-  }
-  .left.flex-start {
-    padding: 0 1rem;
-  }
-  .left {
-    .slogan {
-      font-size: 30px;
-      padding-right: 7rem;
+    .left h2.task-text {
+      font-size: 20px;
     }
-    .task-text {
-      padding: 0 2rem;
+    .left.flex-start {
+      padding: 0 1rem;
+    }
+    .left {
+      .slogan {
+        font-size: 30px;
+        padding-right: 7rem;
+      }
+      .task-text {
+        padding: 0 2rem;
+      }
+    }
+    .link-wrapper {
+      margin-left: 2rem;
     }
   }
-  .link-wrapper {
-    margin-left: 2rem;
-  }
-
-  } 
 
   @media screen and (min-width: 1301px) and (max-width: 1800px) {
     .left.flex-start {
@@ -450,15 +467,13 @@ const PageWrapper = styled.div`
       padding: 20rem 3rem 0 3rem;
     }
     .team-text,
-  .left h2.task-text {
-    font-size: 24px;
-  }
-
+    .left h2.task-text {
+      font-size: 24px;
+    }
   }
 
   @media screen and (min-width: 1801px) {
   }
-
 `;
 
 //First page icon background

@@ -1,6 +1,5 @@
-import React from "react";
 import styled from "styled-components";
-import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
+// import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 
 
 //Menu component that shows when nav icon is clicked
@@ -8,7 +7,7 @@ const WelcomeMenu = () => {
   return (
 
     <WorkspaceContainer>
-      <Menu>
+      {/* <Menu>
         {({ isOpen }) => (
           <>
             <MenuButton isActive={isOpen} as={Button} rightIcon={<span className="material-symbols-outlined">menu</span>}></MenuButton>
@@ -31,7 +30,7 @@ const WelcomeMenu = () => {
             </MenuList>
           </>
         )}
-      </Menu>
+      </Menu> */}
     </WorkspaceContainer>
 
   );

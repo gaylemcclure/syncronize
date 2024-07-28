@@ -1,15 +1,12 @@
-import React, { forwardRef } from 'react';
-import styled from 'styled-components';
 
-const UserIconSmall = forwardRef((props, ref) => {
-    const { userInitials} = props;
+const UserIconSmall = ({ userInitials }) => {
     return (
         <Icon>
           {userInitials}
         </Icon>
 
     )
-});
+};
 
 const Icon = styled.button`
   background-color: var(--main-green);

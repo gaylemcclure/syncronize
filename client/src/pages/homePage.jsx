@@ -1,72 +1,86 @@
-import React, { useState } from "react";
-import HomeNav from "../components/nav/homeNav";
-import SideNav from "../components/nav/sideNav";
-import styled from "styled-components";
-import ProjectTable from "../components/projectTable";
+import { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import { useUserContext } from "../utils/contexts";
+import { useNavigate } from "react-router";
+import "../assets/styles/homepage.css";
+import Auth from "../utils/auth";
+import { useOpenContext } from "../utils/openContext";
+import HomeTabs from "../components/homeTabs";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useQuery, useLazyQuery } from "@apollo/client";
+// import HomeTabs from '../components/homeTabs';
 import ProjectTitleIcon from "../components/menus/projectTitleIcon";
+import { QUERY_PROJECT_TASKS, QUERY_COMPLETED_TASKS, QUERY_PROJECT, QUERY_TASKS } from "../utils/queries";
 
 const HomePage = () => {
-  const [openMenu, setOpenMenu] = useState(true);
-  const [buttonMenu, setButtonMenu] = useState(false);
-  const [titleMenu, setTitleMenu] = useState(false);
-  const [projectName, setProjectName] = useState("Project name");
-  const [projectDesc, setProjectDesc] = useState("Project description");
+  const { open, drawerWidth } = useOpenContext();
+  const { userData } = useUserContext();
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [allTasks, setAllTasks] = useState([])
+  const navigate = useNavigate();
 
-  const handleOpenMenu = () => {
-    setOpenMenu(!openMenu);
-  };
+  console.log(userData)
 
-  const handleButtonMenu = () => {
-    setButtonMenu(!buttonMenu);
-  };
+  //Check if user is logged in, otherwise redirect to signin page
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+        if (!token) {
+          setLoggedIn(false);
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        } else {
+          setLoggedIn(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    isLoggedIn();
+  }, []);
 
-  const handleClassname = () => {
-    if (openMenu && buttonMenu) {
-      return "main-page open-menu move-back";
-    } else if (openMenu && !buttonMenu) {
-      return "main-page open-menu";
+  // Check that the user & projects are loaded before rendering
+  useEffect(() => {
+    if (userData.projects && userData.tasks) {
+      setIsLoaded(true);
     } else {
-      return "main-page close-menu";
+      setIsLoaded(false);
     }
-  };
+    setAllTasks(userData.tasks)
+  }, [userData]);
+
+
 
   return (
     <>
-      <HomeNav />
-      <div className="flex-row">
-        <SideNav openMenu={openMenu} menuFunction={handleOpenMenu} buttonMenu={buttonMenu} buttonFunction={handleButtonMenu} setButtonMenu={setButtonMenu} />
-        <PageContainer className={handleClassname()}>
-            <div className="flex-row align">
-          <h3 className="title">{projectName} </h3>
-          <ProjectTitleIcon />
-          </div>
-          <p>{projectDesc}</p>
-          <div className="project-menu flex-row">
-            <button>List</button>
-            <button>Table</button>
-            <button>Dashboard</button>
-            <button>+</button>
-          </div>
-          <ProjectTable />
-          <ProjectTable />
-          <ProjectTable />
-          <ProjectTable />
-        </PageContainer>
-      </div>
+      {loggedIn && (
+        <>
+          {!isLoaded && (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <CircularProgress color="secondary" />
+            </Box>
+          )}
+          {isLoaded && (
+            <Box
+              component="main"
+              sx={{
+                width: open ? `calc(100% - ${drawerWidth}px)` : "calc(100% - 65px)",
+                flexGrow: 1,
+                p: 3,
+                marginLeft: open ? `${drawerWidth}px` : "65px",
+              }}
+            >
+              <HomeTabs one="Overview" two="Table" allTasks={allTasks} />
+            </Box>
+          )}
+        </>
+      )}
     </>
   );
 };
 
-const PageContainer = styled.div`
-  position: fixed;
-  top: 4.5rem;
-  height: 93%;
-  padding: 1rem 2rem;
-  overflow: auto;
-
-  .title {
-
-  }
-`;
 export default HomePage;

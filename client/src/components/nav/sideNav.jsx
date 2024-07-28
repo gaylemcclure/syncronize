@@ -1,128 +1,213 @@
-import React from "react";
-import styled from "styled-components";
-import WorkspaceMenu from '../menus/workspaceMenu';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
-import { ChakraProvider } from "@chakra-ui/react";
-//TODO - render the projects from the DB
+import { useEffect, useState } from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import MuiDrawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import MailIcon from "@mui/icons-material/Mail";
+import HomeIcon from "@mui/icons-material/Home";
+import "../../assets/styles/homepage.css";
+import FolderIcon from "@mui/icons-material/Folder";
+import AddProjectModal from "../modals/addProjectModal";
+import WorkspaceMenu from "../menus/workspaceMenu";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { Menu, Avatar } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { DELETE_PROJECT } from "../../utils/mutations";
+import { useMutation, useLazyQuery } from "@apollo/client";
 
-const SideNav = ({ workspaceInitials, openMenu, menuFunction }) => {
-  const AddBoardModal = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const drawerWidth = 350;
 
-    return (
-      <>
-        <button onClick={onOpen} className="add-button-icon">
-          <span className="material-symbols-outlined">add</span>
-        </button>
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>{/* <Lorem count={2} /> */}</ModalBody>
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden",
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
 
-            <ModalFooter>
-              <button onClick={onClose}>Close</button>
-              <button>Secondary Action</button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    );
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
+
+
+
+const SideNav = ({ open, setOpen, user }) => {
+  const theme = useTheme();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const moreOpen = Boolean(anchorEl);
+  const [deleteProject] = useMutation(DELETE_PROJECT);
+  
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
+  //Check that the user & projects are loaded before rendering
+  useEffect(() => {
+    if (user.projects) {
+      setIsLoaded(true);
+    } else {
+      setIsLoaded(false);
+    }
+  }, [user]);
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const handleSideNavigation = (e) => {
+    const url = e.target.parentElement.parentElement.id;
+    window.location.href = `/project/q=${url}`;
+  };
+
+  const handleHomeNavigation = () => {
+    window.location.href = "/home";
+  }
+
+  const handleDeleteProject = async (e) => {
+    try{
+      const data = await deleteProject({variables: { _id: e.currentTarget.id }})
+      window.location.href = "/home";
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
-    <ChakraProvider>
-      <Sidebar className={openMenu ? "sidebar open" : "sidebar closed"}>
-        <div className="flex-col sidenav-header">
-          <button className="sidebar-button" onClick={menuFunction}>
-            <i className={openMenu ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"}></i>
-          </button>
-          <MenuItem href="/home">
-            <span className="material-symbols-outlined space">home</span> {openMenu ? "Home" : ""}
-          </MenuItem>
-          <MenuItem href="/home">
-            <span className="material-symbols-outlined space">inventory</span> {openMenu ? "My work" : ""}
-          </MenuItem>
+    <Drawer variant="permanent" open={open}>
+      <DrawerHeader>
+        <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
+      </DrawerHeader>
+      <Divider />
+      <List>
+        {["Home", "Inbox"].map((text, index) => (
+          <ListItem key={text} disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={(e) => handleHomeNavigation(e)}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                {index % 2 === 0 ? <HomeIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <div className={open ? "flex-col sidenav-main" : "flex-col sidenav-main-closed"}>
+        <div className="flex-row workspace-main">
+          <div className={open ? "workspace-icon space" : "workspace-icon"}>{user.initials}</div>
+          <h4 className={theme.palette.mode === "dark" ? "workspace-name white-text" : "workspace-name black-text"}>{open ? user.workspaceName : ""}</h4>
+
+          {open && <WorkspaceMenu user={user} />}
+          {open && <AddProjectModal button="button" />}
         </div>
-        <div className="flex-col sidenav-main">
-          <div className="flex-row workspace-main">
-            <div className={openMenu ? "workspace-icon space" : "workspace-icon"}>M</div>
-            <h4 className="workspace-name">{openMenu ? "Main workspace" : ""}</h4>
-           {openMenu && (<WorkspaceMenu />)} 
-           {openMenu && (<AddBoardModal />)}
-           
-          </div>
-          <MenuItem href="home">
-            <span className="material-symbols-outlined space">folder</span> {openMenu ? "Project 1" : ""}
-          </MenuItem>
-          <MenuItem href="home">
-            <span className="material-symbols-outlined space">folder</span> {openMenu ? "Project 2" : ""}
-          </MenuItem>
-        </div>
-      </Sidebar>
-    </ChakraProvider>
+      </div>
+      <List>
+        {isLoaded &&
+          user.projects.map((proj) => (
+            <ListItem key={proj._id} disablePadding sx={{ display: "flex", flexDirection: "row" }} id={proj._id}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                id={proj._id}
+                onClick={(e) => handleSideNavigation(e)}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FolderIcon />
+                </ListItemIcon>
+                <ListItemText primary={proj.projectName} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+              <ListItemButton id="more-button" sx={{ width: "24px", minWidth: "24px", maxWidth: "24px" }} onClick={(e) => handleClick(e)}>
+                <MoreHorizIcon />{" "}
+              </ListItemButton>
+              <Menu
+        sx={{ width: 400, maxWidth: "100%",  }}
+        id="delete-menu"
+        anchorEl={anchorEl}
+        open={moreOpen}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "delete-menu",
+        }}
+      >
+            <MenuItem>
+            <ListItemButton id={proj._id} onClick={(e) => handleDeleteProject(e)}>
+              <ListItemIcon>
+                <DeleteIcon sx={{ fontSize: "16px" }} />
+              </ListItemIcon>
+              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Delete project</ListItemText>
+              </ListItemButton>
+            </MenuItem>
+      </Menu>
+
+            </ListItem>
+          ))}
+      </List>
+    </Drawer>
   );
 };
-
-const Sidebar = styled.div`
-  border-right: 1px solid #cdcdcd;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-image: linear-gradient(180deg, #101010 0%, #0d0e17 100%);
-  overflow-x: hidden;
-  transition: 0.5s;
-  .sidebar-button {
-    background-color: transparent;
-    border: none;
-    color: var(--main-green);
-  }
-
-  .sidenav-header {
-    align-items: flex-start;
-    border-bottom: 1px solid #4b4e69;
-    padding-bottom: 2rem;
-  }
-  .workspace-icon {
-    background-color: #550080;
-    height: 30px;
-    width: 30px;
-    color: var(--ws-gray-text);
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .workspace-name {
-    margin: 0;
-    color: var(--ws-gray-text);
-  }
-
-  .workspace-main {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    margin-top: 1rem;
-  }
-
-  .arrow-colour {
-    color: var(--ws-gray-text);
-    margin: 0 1.5rem 0 0.5rem;
-  }
-`;
-
-const MenuItem = styled.a`
-  display: flex;
-  text-decoration: none;
-  color: var(--ws-gray-text);
-  font-size: 1rem;
-  font-weight: 300;
-  margin: 0.5rem 1rem 0.5rem 0;
-  /* justify-content: center; */
-`;
 
 export default SideNav;
