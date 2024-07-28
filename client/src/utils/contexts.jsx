@@ -11,7 +11,6 @@ export const UserProvider = ({ children }) => {
   const { data } = useQuery(QUERY_ME);
   const user = data?.me;
 
-
   useEffect(() => {
     const getUserData = async () => {
       try {

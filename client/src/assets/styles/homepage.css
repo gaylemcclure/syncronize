@@ -134,7 +134,7 @@
 
   .overview-countdown {
     padding: 0.5rem 1rem;
-    border-radius: 12px;
+    border-radius: 4px;
     color: white;
   }
 
@@ -158,4 +158,55 @@
 
 .popover {
   padding: 1rem 2rem;
+}
+
+.overview-task {
+  /* display: flex;
+  justify-content: space-between;
+  width: 88%;
+  padding: 0.5rem; */
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-column-gap: 40px;
+    grid-row-gap: 0px;
+    justify-items: center;
+    width: 100%;
+    padding-left: 1rem;
+    
+}
+
+.low {
+  background-color: rgb(87, 155, 252);
+}
+.medium {
+  background-color: rgb(85, 89, 223);
+}
+.high {
+  background-color: rgb(64, 22, 148);
+}
+
+.not-started {
+  background-color: rgb(196, 196, 196);
+}
+.progress {
+  background-color: rgb(253, 171, 61);
+}
+.stuck {
+  background-color: rgb(223, 47, 74);
+}
+.completed {
+  background-color: rgb(44 147 104);
+}
+
+.same-width {
+  min-width: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.status p, .status h3 {
+  padding-left: 0.5rem;
+  height: 28px;
 }

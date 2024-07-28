@@ -11,6 +11,9 @@ import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -35,8 +38,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import SubtaskModal from "./addSubtaskModal";
 import Checkbox from "@mui/material/Checkbox";
+import TitleIcon from "@mui/icons-material/Title";
+import DescriptionIcon from "@mui/icons-material/Description";
+import mongoose from "mongoose";
 
-const EditTaskModal = ({ projectId, id }) => {
+const EditTaskModal = ({ id }) => {
   //Set state for the task fields
   const [title, setTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -49,6 +55,12 @@ const EditTaskModal = ({ projectId, id }) => {
   const [task, setTask] = useState({});
   const [taskId, setTaskId] = useState("");
   const [showSelect, setShowSelect] = useState(false);
+  const [titleEdit, setTitleEdit] = useState(false);
+  const [descriptionEdit, setDescriptionEdit] = useState(false);
+  const [statusEdit, setStatusEdit] = useState(false);
+  const [dueEdit, setDueEdit] = useState(false);
+  const [assignedEdit, setAssignedEdit] = useState(false);
+  const [priorityEdit, setPriorityEdit] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [comment, setComment] = useState("");
   const [subtaskTitle, setSubtaskTitle] = useState("");
@@ -69,6 +81,8 @@ const EditTaskModal = ({ projectId, id }) => {
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const [deleteSubtask] = useMutation(DELETE_SUBTASK);
   const [updateSubtask] = useMutation(UPDATE_SUBTASK);
+
+  const { ObjectId } = mongoose.Types;
 
   //Functions to open and close the modal
   const handleOpen = (e) => {
@@ -94,13 +108,15 @@ const EditTaskModal = ({ projectId, id }) => {
     display: "block",
   };
 
+
   useEffect(() => {
     if (taskId) {
       const getTaskData = async () => {
         try {
           const { data } = await queryTask({ variables: { _id: taskId } });
-          console.log(data);
+          const date = dayjs(data.singleTask.dueDate).format("DD/MM/YYYY")
           setTask(data.singleTask);
+          setTaskDescription(data.singleTask.description);
           setStatus(data.singleTask.status);
           setPriority(data.singleTask.priority);
           setAssignedTo(data.singleTask.assignedTo._id);
@@ -108,6 +124,8 @@ const EditTaskModal = ({ projectId, id }) => {
           setTitle(data.singleTask.title);
           setCommentArr(data.singleTask.comments);
           setSubtaskArr(data.singleTask.subtasks);
+          setIsLoaded(true);
+          setDueDate(date)
         } catch (err) {
           console.error(err);
         }
@@ -116,17 +134,9 @@ const EditTaskModal = ({ projectId, id }) => {
     }
   }, [taskId]);
 
-  useEffect(() => {
-    if (task.projectId) {
-      setIsLoaded(true);
-    } else {
-      setIsLoaded(false);
-    }
-  }, [task]);
-
   //Function to add task to db
   const handleUpdateTask = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     //Check if logged in still
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -135,22 +145,20 @@ const EditTaskModal = ({ projectId, id }) => {
     try {
       const { data } = await updateTask({
         variables: {
+          _id: taskId, 
           title: title,
           description: taskDescription,
           status: status,
-          projectId: projectId,
           priority: priority,
           dueDate: dueDate,
-          assignedTo: "669b9af84718ef68df73102b",
+          assignedTo: assignedTo,
         },
       });
-      setUsers(data);
     } catch (err) {
       console.error(err);
     }
-
-    setOpen(false);
-    window.location.reload();
+    // setOpen(false);
+    // window.location.reload();
   };
 
   const handleAddComment = async (e) => {
@@ -195,7 +203,7 @@ const EditTaskModal = ({ projectId, id }) => {
         subtasks,
       },
     };
-    console.log(newArr);
+
     setSubtaskArr(subtasks);
     // try{
     //   const { data } = await updateSubtask({ variables: {_id: taskId, subtasks: subtasks}});
@@ -205,6 +213,7 @@ const EditTaskModal = ({ projectId, id }) => {
     //   console.error(err);
     // }
   };
+
 
   return (
     <div className="flex m-auto align">
@@ -217,107 +226,277 @@ const EditTaskModal = ({ projectId, id }) => {
           {isLoaded && (
             <>
               <div className="modal-header flex flex-row">
-                <div className="flex-vol">
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="title"
-                    label="Title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="description"
-                    label="Description"
-                    name="description"
-                    value={taskDescription}
-                    onChange={(e) => setTaskDescription(e.target.value)}
-                  />
+                <div className="flex-col full">
+                  <div className="status flex-row full align">
+                    <TitleIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Title: </p>
+                    {!titleEdit && (
+                      <div className="flex-row status ">
+                        <p className="  project-title">{title}</p>
+                        <Button
+                          onClick={() => setTitleEdit(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {titleEdit && (
+                      <div className="flex-row">
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="title"
+                          label="Title"
+                          name="title"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <Button
+                          onClick={(e) => handleUpdateTask(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={(e) => setTitleEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    <IconButton sx={{ display: "flex", marginLeft: "auto" }} onClick={handleClose}>
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
+                  <div className="status flex-row full align">
+                    <DescriptionIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Description: </p>
+                    {!descriptionEdit && (
+                      <div className="flex-row ">
+                        <p className="project-title">{taskDescription}</p>
+                        <Button
+                          onClick={() => setDescriptionEdit(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {descriptionEdit && (
+                      <div className="flex-row">
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="description"
+                          label="Description"
+                          name="description"
+                          value={taskDescription}
+                          onChange={(e) => setTaskDescription(e.target.value)}
+                        />
+                        <Button
+                          onClick={(e) => handleUpdateTask(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={() => setDescriptionEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <IconButton sx={{ display: "flex", marginLeft: "auto" }} onClick={handleClose}>
-                  <CloseIcon />
-                </IconButton>
               </div>
               <div className="flex-row">
                 <div className="flex-col half">
-                  <div className="status flex-row">
-                    <ModeStandbyIcon />
-                    <p>Status</p>
-                    <FormControl fullWidth>
-                      <Select labelId="status-label" id="status" value={status} label="Status" onChange={(e) => setStatus(e.target.value)}>
-                        <MenuItem value={"Not started"}>Not started</MenuItem>
-                        <MenuItem value={"In progress"}>In progress</MenuItem>
-                        <MenuItem value={"Stuck"}>Stuck</MenuItem>
-                        <MenuItem value={"Completed"}>Completed</MenuItem>
-                      </Select>
-                    </FormControl>
+                  <div className="status flex-row full align">
+                    <ModeStandbyIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Status: </p>
+                    {!statusEdit && (
+                      <div className="flex-row ">
+                        <p className="project-title">{status}</p>
+                        <Button
+                          onClick={() => setStatusEdit(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {statusEdit && (
+                      <div className="flex-row full align">
+                        <FormControl fullWidth>
+                          <Select labelId="status-label" id="status" value={status} label="Status" onChange={(e) => setStatus(e.target.value)}>
+                            <MenuItem value={"Not started"}>Not started</MenuItem>
+                            <MenuItem value={"In progress"}>In progress</MenuItem>
+                            <MenuItem value={"Stuck"}>Stuck</MenuItem>
+                            <MenuItem value={"Completed"}>Completed</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <Button
+                          onClick={(e) => handleUpdateTask(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={(e) => setStatusEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  <div className="status flex-row">
-                    <DateRangeIcon />
-                    <p>Due date</p>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        label="Due date"
-                        sx={{ marginTop: "1rem", width: "100%" }}
-                        value={dayjs(task.dueDate)}
-                        onChange={(newValue) => setDueDate(newValue)}
-                      />
-                    </LocalizationProvider>
+                  <div className="status flex-row full align">
+                    <DateRangeIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Due date: </p>
+                    {!dueEdit && (
+                      <div className="flex-row ">
+                        <p className="project-title">{dayjs(dueDate)}</p>
+                        <Button
+                          onClick={(e) => setDueEdit(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {dueEdit && (
+                      <div className="flex-row full align">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Due date"
+                            sx={{ marginTop: "1rem", width: "100%" }}
+                            value={dayjs(task.dueDate)}
+                            onChange={(newValue) => setDueDate(newValue)}
+                          />
+                        </LocalizationProvider>
+                        <Button
+                          onClick={(e) => handleUpdateTask(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={(e) => setDueEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex-col half">
-                  <div className="status flex-row">
-                    <PersonIcon />
-                    <p>Assigned to</p>
-                    <FormControl fullWidth>
-                      <InputLabel id="assigned-to-label">Assigned to</InputLabel>
-                      <Select
-                        labelId="assigned-to-label"
-                        id="assigned-to"
-                        value={assignedTo}
-                        label="Assigned to"
-                        onChange={(e) => setAssignedTo(e.target.value)}
-                        sx={{ mt: 2, mb: 1 }}
-                      >
-                        {task.projectId.users.map((user) => {
-                          return (
-                            // <></>
-                            <MenuItem key={user._id} value={user._id}>
-                              <Avatar sx={{ width: 24, height: 24, fontSize: 12, marginRight: 2, backgroundColor: "var(--main-green)" }}>
-                                {user.initials}
-                              </Avatar>
-                              {user.first} {user.last}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
+                  <div className="status flex-row full align">
+                    <PersonIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Assigned to: </p>
+                    {!assignedEdit && (
+                      <div className="flex-row ">
+                        <p className="project-title">{assignedTo}</p>
+                        <Button
+                          onClick={(e) => setAssignedEdit(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {assignedEdit && (
+                      <div className="flex-row">
+                        <FormControl fullWidth>
+                          <InputLabel id="assigned-to-label">Assigned to</InputLabel>
+                          <Select
+                            labelId="assigned-to-label"
+                            id="assigned-to"
+                            value={assignedTo}
+                            label="Assigned to"
+                            onChange={(e) => setAssignedTo(e.target.value)}
+                            sx={{ mt: 2, mb: 1 }}
+                          >
+                            {task.projectId.users.map((user) => {
+                              return (
+                                // <></>
+                                <MenuItem key={user._id} value={user._id}>
+                                  <Avatar sx={{ width: 24, height: 24, fontSize: 12, marginRight: 2, backgroundColor: "var(--main-green)" }}>
+                                    {user.initials}
+                                  </Avatar>
+                                  {user.first} {user.last}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
+                        <Button
+                          onClick={(e) => handleUpdateTask(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={(e) => setAssignedEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="status flex-row">
-                    <FlagIcon />
-                    <p>Priority</p>
-                    <FormControl fullWidth>
-                      <InputLabel id="priority-label">Priority</InputLabel>
-                      <Select
-                        labelId="priority-label"
-                        id="priority"
-                        value={priority}
-                        label="Priority"
-                        onChange={(e) => setPriority(e.target.value)}
-                        sx={{ mt: 2, mb: 1 }}
-                      >
-                        <MenuItem value={"None"}>None</MenuItem>
-                        <MenuItem value={"Low"}>Low</MenuItem>
-                        <MenuItem value={"Medium"}>Medium</MenuItem>
-                        <MenuItem value={"High"}>High</MenuItem>
-                      </Select>
-                    </FormControl>
+                  <div className="status flex-row full align">
+                    <FlagIcon sx={{marginBottom: '4px', height: '1rem'}}/>
+                    <p>Priority: </p>
+                    {!priorityEdit && (
+                      <div className="flex-row ">
+                        <p className="project-title">{priority}</p>
+                        <Button
+                          onClick={(e) => handleUpdateTask(true)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <EditIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
+                    {priorityEdit && (
+                      <div className="flex-row">
+                        <FormControl fullWidth>
+                          <InputLabel id="priority-label">Priority</InputLabel>
+                          <Select
+                            labelId="priority-label"
+                            id="priority"
+                            value={priority}
+                            label="Priority"
+                            onChange={(e) => setPriority(e.target.value)}
+                            sx={{ mt: 2, mb: 1 }}
+                          >
+                            <MenuItem value={"None"}>None</MenuItem>
+                            <MenuItem value={"Low"}>Low</MenuItem>
+                            <MenuItem value={"Medium"}>Medium</MenuItem>
+                            <MenuItem value={"High"}>High</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <Button
+                          onClick={(e) => handlePriorityEdit(e)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <SaveIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                        <Button
+                          onClick={(e) => setPriorityEdit(false)}
+                          sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+                        >
+                          <CancelIcon sx={{ fontSize: "16px" }} />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
 

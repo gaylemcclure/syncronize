@@ -32,18 +32,18 @@ const ProjectTitleIcon = ({ projectData }) => {
   const [updateName] = useMutation(UPDATE_PROJECT_NAME)
   const [updateDesc] = useMutation(UPDATE_PROJECT_DESCRIPTION);
   const [updateDate] = useMutation(UPDATE_PROJECT_DATE)
-  const { data } = useQuery(QUERY_USER, { variables: {_id: projectData.createdBy}})
-  const createdBy = data?.user
-  const createdFirst = data ? data.user.first : "";
-  const createdLast = data ? data.user.last : "";
+
+
+  const createdBy = projectData.createdBy;
+  const createdFirst = createdBy.first;
+  const createdLast = createdBy.last;
   const createdDate = dayjs(projectData.createdOn).format('DD/MM/YYYY');
   const dueDateText = dayjs(dueDate).format('DD/MM/YYYY');
-
 
   useEffect(() => {
     setTitle(projectData.projectName)
     setDescription(projectData.description)
-    setDueDate(projectData.dueDate)
+    setDueDate(dayjs(projectData.dueDate))
   }, [projectData])
 
   const handleClick = (event) => {

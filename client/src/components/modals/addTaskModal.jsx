@@ -30,37 +30,28 @@ const AddTaskModal = ({ projectData }) => {
   const [status, setStatus] = useState("");
   const [dueDate, setDueDate] = useState(dayjs());
   const [priority, setPriority] = useState("");
-  const [assignedTo, setAssignedTo] = useState("");
+  const [assignedTo, setAssignedTo] = useState("66a5c8cfb26ac60be343cbf0");
   const [assignedId, setAssignedId] = useState("");
-  const [assignedInitials, setAssignedInitials] = useState("")
+  const [assignedInitials, setAssignedInitials] = useState("");
   const { userData } = useUserContext();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
-  const [projData, setProjData] = useState(projectData);
+  const [projData, setProjData] = useState({})
 
-  const [getProject] = useLazyQuery(QUERY_PROJECT);
+  const theme = useTheme();
+  const [addTask] = useMutation(ADD_TASK);
 
   useEffect(() => {
     const getProjectData = async () => {
       if (projectData !== undefined) {
-      const projectId = projectData._id;
-     if (projectId) {
-      try {
-        const { data } = await getProject({variables: { _id: projectData._id}})
-        setUsers(data.proj.users)
-        setProjData(data.proj)
-      } catch (err) {
-        console.error(err);
+        setUsers(projectData[0].users);
+        setProjData(projectData[0])
+
       }
-     }
-    }
-  }
-  getProjectData()
+    };
+    getProjectData();
   }, [projectData]);
 
-
-  const theme = useTheme();
-  const [addTask] = useMutation(ADD_TASK);
 
   //Functions to open and close the modal
   const handleOpen = () => setOpen(true);
@@ -94,13 +85,12 @@ const AddTaskModal = ({ projectData }) => {
           title: title,
           description: taskDescription,
           status: status,
-          projectId: projectData._id,
+          projectId: projData._id,
           priority: priority,
           dueDate: dueDate,
           assignedTo: assignedTo,
         },
       });
-      setUsers(data);
     } catch (err) {
       console.error(err);
     }
@@ -110,10 +100,17 @@ const AddTaskModal = ({ projectData }) => {
   };
 
   const handleAvatarChange = (e) => {
-    setAssignedTo(e.target.value)
-    setAssignedInitials(e.target.name)
-    setAssignedId(e.target.id)
+    setAssignedTo(e.target.value);
+    setAssignedInitials(e.target.name);
+    setAssignedId(e.target.id);
+  };
+
+  const handleUserSelect = (e) => {
+    const initials = users.filter((user) => user._id === e.target.value)
+    setAssignedTo("66a5c8cfb26ac60be343cbf0")
+    setAssignedInitials(initials[0].initials)
   }
+
 
   return (
     <div className="flex m-auto align">
@@ -198,8 +195,9 @@ const AddTaskModal = ({ projectData }) => {
               labelId="assigned-to-label"
               id="assigned-to"
               value={assignedTo}
+              name={assignedInitials}
               label="Assigned to"
-              onChange={(e) => setAssignedTo(e.target.value)}
+              onChange={(e) => handleUserSelect(e)}
               sx={{ mt: 2, mb: 1 }}
             >
               {users.map((user) => {
@@ -227,6 +225,5 @@ const AddTaskModal = ({ projectData }) => {
     </div>
   );
 };
-
 
 export default AddTaskModal;

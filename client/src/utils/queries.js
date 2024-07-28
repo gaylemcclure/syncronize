@@ -37,7 +37,52 @@ export const QUERY_ME = gql`
         projectName
         description
         dueDate
+        users {
+          _id
+          initials
+          first
+          last
+        }
+        createdBy {
+          initials
+          first
+          last
+        }
+        tasks {
+          _id
+          title
+          dueDate
+          status
+          priority
+          description
+          assignedTo {
+            _id
+            initials
+            first
+            last
+          }
+        }
       }
+      tasks {
+        _id
+        title
+        dueDate
+        status
+        priority
+        description
+      }
+    }
+  }
+`;
+export const QUERY_TASKS = gql`
+  query allTasks {
+    allTasks {
+      _id
+      title
+      dueDate
+      status
+      priority
+      description
     }
   }
 `;
@@ -49,7 +94,9 @@ export const QUERY_PROJECT = gql`
       projectName
       description
       createdOn
-      createdBy
+      createdBy {
+        _id
+      }
       users {
         _id
         initials
@@ -87,6 +134,7 @@ export const QUERY_PROJECT_TASKS = gql`
       }
       dueDate
       status
+      priority
       projectId {
         _id
       }
@@ -123,20 +171,19 @@ export const QUERY_TASK = gql`
         last
         initials
       }
-        comments {
-                _id
+      comments {
+        _id
         commentText
-        createdOn,
+        createdOn
         createdBy
         createdInitials
-        }
-        subtasks {
+      }
+      subtasks {
         _id
-        taskTitle,
+        taskTitle
         taskStatus
         dueDate
-        
-        }
+      }
     }
   }
 `;
@@ -169,4 +216,3 @@ export const QUERY_FILTERS = gql`
     }
   }
 `;
-

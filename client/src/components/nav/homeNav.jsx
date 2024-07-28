@@ -163,8 +163,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
   return (
     <>
-    {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
-    {loggedIn && (
+    {/* {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
+    {loggedIn && ( */}
       <StyledBox sx={{ display: "flex", flexDirection: "row" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -193,7 +193,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
           <DrawerHeader />
         </Box>
       </StyledBox>
-    )}
+    {/* )} */}
 </>
   );
 };

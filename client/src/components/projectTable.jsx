@@ -22,6 +22,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import Button from "@mui/material/Button";
 import { styled, useTheme } from "@mui/material/styles";
+import { useUserContext } from "../utils/contexts";
 
 //Create the open task button within title cell
 const RenderTaskButton = (props) => {
@@ -40,47 +41,41 @@ const ProjectTable = ({ projectData, projectId }) => {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [isFilter, setIsFilter] = useState(false);
-  const [nonFilterRows, setNonFilterRows] = useState([])
+  const [nonFilterRows, setNonFilterRows] = useState([]);
+  const { userData, setUserData } = useUserContext();
 
   const theme = useTheme();
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  console.log(projectData);
   let taskId = "";
+
   const [updateTask] = useMutation(UPDATE_TASK);
   const [deleteTask] = useMutation(DELETE_TASK);
   const [queryFilters] = useLazyQuery(QUERY_FILTERS);
 
+
   //Get the tasks from db and save into rows state
   useEffect(() => {
-    if (projectData.tasks) {
+    if (projectData[0].tasks) {
       const handleCreateRows = () => {
         let taskArr = [];
-        projectData.tasks.map(async (task) => {
-          try {
+        projectData[0].tasks.map( (task) => {
+
             //Get the assigned users initials for avatar
-            const users = projectData.users;
-            const assignedTo = users.filter((user) => user._id === task.assignedTo._id);
             taskArr.push({
               id: task._id,
               title: task.title,
               status: task.status,
               dueDate: task.dueDate,
-              assignee: assignedTo[0].initials,
+              assignee: task.assignedTo.initials,
               description: task.description,
               priority: task.priority,
             });
-          } catch (err) {
-            console.error(err);
-          }
         });
         setRows(taskArr);
       };
       handleCreateRows();
     }
   }, [projectData]);
+
 
   //Cancel the editing function
   const handleRowEditStop = (params, event) => {
@@ -134,7 +129,7 @@ const ProjectTable = ({ projectData, projectId }) => {
 
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     try {
-      const assUser = projectData.users.filter((use) => use.initials === updatedRow.assignee);
+      const assUser = projectData[0].users.filter((use) => use.initials === updatedRow.assignee);
       const { data } = await updateTask({
         variables: {
           _id: taskId,
@@ -159,7 +154,7 @@ const ProjectTable = ({ projectData, projectId }) => {
   //Generate an array of users for the assignedTo field dropdown edit
   const userOptions = () => {
     const options = [];
-    projectData.users.map((user) => {
+    projectData[0].users.map((user) => {
       options.push({ code: user.initials, name: user.first + " " + user.last });
     });
     return options;

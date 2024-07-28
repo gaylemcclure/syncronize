@@ -12,11 +12,12 @@ const typeDefs = `
     workspaceName: String
     createdOn: Date
     projects: [Project]
+    tasks: [Task]
   }
 
   type Project {
     _id: ID
-    createdBy: String
+    createdBy: User
     createdOn: Date
     projectName: String!
     description: String
@@ -76,6 +77,7 @@ const typeDefs = `
     singleTask(_id: String!): Task
     completedTasks(projectId: String!) : [Task]
     queryFilters(projectId: ID!, status: String, priority: String) : Task
+    allTasks: [Task]
   }
 
   input SubtaskArray {
@@ -96,7 +98,7 @@ const typeDefs = `
 
     addUser(first: String!, last: String!, email: String!, password: String!, initials: String!): Auth
     addProject(projectName: String!, description: String, dueDate: Date) : Project
-    addTask(title: String!, description: String, status: String, projectId: String, dueDate: Date, priority: String, assignedTo: String) : Task
+    addTask(title: String!, description: String, status: String, projectId: String, dueDate: Date, priority: String, assignedTo: ID) : Task
     addComment(taskId: String!, commentText: String, createdBy: String, createdInitials: String) : Task
     addSubtask(taskId: String!, taskTitle: String!, taskStatus: Boolean, dueDate: Date) : Task
 

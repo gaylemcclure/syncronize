@@ -9,8 +9,15 @@ const resolvers = {
 
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate("projects");
+        return User.findOne({ _id: context.user._id })
+          .populate({ path: "projects", populate: { path: "createdBy", model: "User"} })
+          .populate({ path: "projects", populate: { path: "users", model: "User"} })
+          .populate({ path: "projects", populate: { path: "tasks", model: "Task"} })
+          .populate({ path: "projects", populate: { path: "tasks", populate: { path: 'assignedTo', model: "User"}} })
+          .populate('tasks')
       }
+      console.log(user)
+
       throw AuthenticationError;
     },
     user: async (parent, args, context) => {
@@ -21,7 +28,7 @@ const resolvers = {
     },
     proj: async (parent, args, context) => {
       if (context.user) {
-        return Project.findOne({ _id: args._id }).populate("users").populate("tasks");
+        return Project.findOne({ _id: args._id }).populate("users").populate("tasks").populate("createdBy");
       }
     },
     projectTasks: async (parent, args, context) => {
@@ -66,9 +73,15 @@ const resolvers = {
           return Task.find({ projectId: projectId })
           }
         }
-      }
+      },
+      allTasks: async () => {
+        return Task.find();
+      },
     
   },
+
+
+
 
   Mutation: {
     login: async (parent, { email, password }) => {
@@ -87,7 +100,7 @@ const resolvers = {
 
     //CREATE MUTATIONS
     addUser: async (parent, { first, last, email, password, initials }) => {
-      const user = await User.create({ first, last, email, password, initials, projects: [] });
+      const user = await User.create({ first, last, email, password, initials, projects: [], tasks: [] });
       const token = signToken(user);
       return { token, user };
     },
@@ -95,7 +108,7 @@ const resolvers = {
     addProject: async (parent, { projectName, description, dueDate }, context) => {
       const curUser = context.user._id;
       if (context.user) {
-        const project = await Project.create({ projectName, description, dueDate, createdBy: curUser, users: [curUser] });
+        const project = await Project.create({ projectName, description, dueDate, createdBy: curUser, users: [curUser], tasks: [] });
         const user = await User.findOneAndUpdate({ _id: curUser }, { $addToSet: { projects: project._id } }, { new: true });
         return user;
       }
@@ -103,6 +116,7 @@ const resolvers = {
     },
     addTask: async (parent, { title, description, status, projectId, dueDate, assignedTo, priority }, context) => {
       const curUser = context.user._id;
+
       if (context.user) {
         const task = await Task.create({
           title,
@@ -114,8 +128,13 @@ const resolvers = {
           priority: priority,
           assignedTo: assignedTo,
         });
+        const taskId = task._id.toString();
         const proj = await Project.findOneAndUpdate({ _id: projectId }, { $addToSet: { tasks: task._id } }, { new: true });
-        return proj;
+        console.log(proj)
+        const user = await User.findOneAndUpdate({ _id: curUser }, { $addToSet: { tasks: taskId } }, { new: true });
+        console.log(user)
+
+        return user;
       }
       throw AuthenticationError("You need to be logged in!");
     },

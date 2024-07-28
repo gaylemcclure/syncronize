@@ -118,8 +118,8 @@ const WelcomeNav = ({ setPath }) => {
 
   return (
     <>
-      {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
-      {loggedIn && (
+      {/* {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
+      {loggedIn && ( */}
         <StyledBox sx={{ display: "flex", flexDirection: "row" }}>
           <CssBaseline />
           <MuiAppBar
@@ -159,7 +159,7 @@ const WelcomeNav = ({ setPath }) => {
             {/* {userData && <DropdownMenu user={userData} />} */}
           </MuiAppBar>
         </StyledBox>
-      )}
+      {/* )} */}
     </>
   );
 

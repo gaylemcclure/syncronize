@@ -37,7 +37,8 @@ const userSchema = new Schema({
     type: String,
     default: "Main Space",
   },
-  projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
+  projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
 },
 {
   toJSON: {
