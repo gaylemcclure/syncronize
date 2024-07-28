@@ -54,7 +54,6 @@ const EditTaskModal = ({ id }) => {
   const [users, setUsers] = useState([]);
   const [task, setTask] = useState({});
   const [taskId, setTaskId] = useState("");
-  const [showSelect, setShowSelect] = useState(false);
   const [titleEdit, setTitleEdit] = useState(false);
   const [descriptionEdit, setDescriptionEdit] = useState(false);
   const [statusEdit, setStatusEdit] = useState(false);
@@ -67,6 +66,7 @@ const EditTaskModal = ({ id }) => {
   const [subtaskStatus, setSubtaskStatus] = useState("");
   const [commentArr, setCommentArr] = useState([]);
   const [subtaskArr, setSubtaskArr] = useState([]);
+  const [dueDateText, setDueDateText] = useState("")
 
   const [checked, setChecked] = useState([1]);
   dayjs.extend(relativeTime);
@@ -82,7 +82,6 @@ const EditTaskModal = ({ id }) => {
   const [deleteSubtask] = useMutation(DELETE_SUBTASK);
   const [updateSubtask] = useMutation(UPDATE_SUBTASK);
 
-  const { ObjectId } = mongoose.Types;
 
   //Functions to open and close the modal
   const handleOpen = (e) => {
@@ -125,7 +124,9 @@ const EditTaskModal = ({ id }) => {
           setCommentArr(data.singleTask.comments);
           setSubtaskArr(data.singleTask.subtasks);
           setIsLoaded(true);
-          setDueDate(date)
+          setDueDateText(date)
+          setDueDate(dayjs(data.singleTask.dueDate))
+
         } catch (err) {
           console.error(err);
         }
@@ -136,7 +137,6 @@ const EditTaskModal = ({ id }) => {
 
   //Function to add task to db
   const handleUpdateTask = async (e) => {
-    // e.preventDefault();
     //Check if logged in still
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
@@ -157,7 +157,7 @@ const EditTaskModal = ({ id }) => {
     } catch (err) {
       console.error(err);
     }
-    // setOpen(false);
+    setOpen(true);
     // window.location.reload();
   };
 
@@ -360,7 +360,7 @@ const EditTaskModal = ({ id }) => {
                     <p>Due date: </p>
                     {!dueEdit && (
                       <div className="flex-row ">
-                        <p className="project-title">{dayjs(dueDate)}</p>
+                        <p className="project-title">{dayjs(dueDate).format("DD/MM/YYYY")}</p>
                         <Button
                           onClick={(e) => setDueEdit(true)}
                           sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
@@ -375,7 +375,7 @@ const EditTaskModal = ({ id }) => {
                           <DatePicker
                             label="Due date"
                             sx={{ marginTop: "1rem", width: "100%" }}
-                            value={dayjs(task.dueDate)}
+                            value={dayjs(dueDate)}
                             onChange={(newValue) => setDueDate(newValue)}
                           />
                         </LocalizationProvider>
@@ -484,7 +484,7 @@ const EditTaskModal = ({ id }) => {
                           </Select>
                         </FormControl>
                         <Button
-                          onClick={(e) => handlePriorityEdit(e)}
+                          onClick={(e) => handleUpdateTask(e)}
                           sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
                         >
                           <SaveIcon sx={{ fontSize: "16px" }} />

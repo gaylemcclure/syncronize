@@ -378,3 +378,8 @@ input.full-input, textarea.full-input {
   height: 35px;
   width: 27rem;
 }
+
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft[data-field="modal"] {
+  display: flex;
+  justify-content: center;
+}

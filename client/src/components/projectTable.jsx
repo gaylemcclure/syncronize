@@ -224,7 +224,9 @@ const ProjectTable = ({ projectData, projectId }) => {
 
   const handleStatusSelect = async () => {
     if (!isFilter) {
-    const tasksList = projectData.tasks;
+      console.log(projectData)
+    const tasksList = projectData[0].tasks;
+    console.log(tasksList)
     setNonFilterRows(rows)
     let newFilter = [];
     const arr = [];
@@ -262,17 +264,17 @@ const ProjectTable = ({ projectData, projectId }) => {
 
   return (
     <div style={{ width: "100%", height: "800px" }}>
-      <Box sx={{ minWidth: 120, display: "flex", flexDirection: "row" }}>
+      <Box sx={{ minWidth: 120, display: "flex", flexDirection: "row", paddingBottom: '1rem' }}>
         <div className="flex-row">
           <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
-            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+            <InputLabel id="status-select-label">Status</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="status-select-label"
+              id="status-select"
               value={statusFilter}
-              label="Status"
+              label="Status-select"
               onChange={(e) => setStatusFilter(e.target.value)}
-              sx={{ width: "15rem", height: "40px" }}
+              sx={{ width: "15rem", height: "48px" }}
             >
               <MenuItem value={"Not started"}>Not started</MenuItem>
               <MenuItem value={"In progress"}>In progress</MenuItem>
@@ -282,15 +284,15 @@ const ProjectTable = ({ projectData, projectId }) => {
           </FormControl>
         </div>
         <div className="flex-row">
-          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>
-            <InputLabel id="demo-simple-select-label">Priority</InputLabel>
+          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", marginLeft: '1rem' }}>
+            <InputLabel id="priority-select-label">Priority</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="priority-label"
+              id="priority"
               value={priorityFilter}
-              label="Status"
+              label="Priority-select"
               onChange={(e) => setPriorityFilter(e.target.value)}
-              sx={{ width: "15rem", height: "40px" }}
+              sx={{ width: "15rem", height: "48px" }}
             >
               <MenuItem value={"None"}>None</MenuItem>
               <MenuItem value={"Low"}>Low</MenuItem>

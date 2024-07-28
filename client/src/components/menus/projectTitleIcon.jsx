@@ -103,12 +103,12 @@ const ProjectTitleIcon = ({ projectData }) => {
   return (
     <div>
       <Button
-        sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
+        sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, paddingLeft: '0', backgroundColor: 'transparent', border: 'none', boxShadow: 'none', minWidth: '1rem'}}
         aria-describedby={id}
         variant="contained"
         onClick={handleClick}
       >
-        <InfoOutlinedIcon />
+        <InfoOutlinedIcon sx={{fontSize: '1.2rem'}}/>
       </Button>
       <Popover
         id={id}
@@ -183,18 +183,18 @@ const ProjectTitleIcon = ({ projectData }) => {
           <div className="flex-row m-top-2">
             <div>Project owner:</div>
             {createdBy !== "" && (
-            <div>{createdFirst} {createdLast} </div>
+            <div className="space-left">{createdFirst} {createdLast} </div>
           )}
           </div>
           <div className="flex-row m-top-2">
             <div>Created on:</div>
-            <div>{createdDate}</div>
+            <div className="space-left">{createdDate}</div>
           </div>
           <div className="flex-row align-base">
             <div>Due date:</div>
             {!dateEdit && (
               <div className="flex-row m-top-2 ">
-            <div>{dueDateText}</div>
+            <div className="space-left">{dueDateText}</div>
             <Button onClick={() => setDateEdit(true)} sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}>
                 <EditIcon sx={{ fontSize: "16px" }} />
               </Button>
