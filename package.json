@@ -7,7 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:client": "cd client && npm run dev",
-    "start:server": "cd server && npm run dev"
+    "start:server": "cd server && npm run dev",
+    "install": "cd server && npm i && cd ../client && npm i --production=false",
+    "build": "cd client && npm run build",
+    "render-build": "npm install && npm run build"
   },
   "keywords": [],
   "author": "",
