@@ -129,7 +129,7 @@
   }
   
   .overview-date {
-    min-height: 75px;
+    min-height: 55px;
   }
 
   .overview-countdown {
@@ -209,4 +209,8 @@
 .status p, .status h3 {
   padding-left: 0.5rem;
   height: 28px;
+}
+
+.comment-name {
+  margin: 0 0 0 1rem;
 }

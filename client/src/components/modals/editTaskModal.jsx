@@ -70,7 +70,7 @@ const EditTaskModal = ({ id }) => {
 
   const [checked, setChecked] = useState([1]);
   dayjs.extend(relativeTime);
-
+console.log(task)
   const theme = useTheme();
   const { userData } = useUserContext();
   const [updateTask] = useMutation(UPDATE_TASK);
@@ -101,9 +101,9 @@ const EditTaskModal = ({ id }) => {
     border: "none",
     borderRadius: "4px",
     boxShadow: 24,
-    p: 4,
+    p: 5,
     overflowY: "scroll",
-    height: "100%",
+    height: "75%",
     display: "block",
   };
 
@@ -401,7 +401,7 @@ const EditTaskModal = ({ id }) => {
                     <p>Assigned to: </p>
                     {!assignedEdit && (
                       <div className="flex-row ">
-                        <p className="project-title">{assignedTo}</p>
+                        <p className="project-title">{task.assignedTo.first} {task.assignedTo.last}</p>
                         <Button
                           onClick={(e) => setAssignedEdit(true)}
                           sx={{ color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText }}
@@ -514,7 +514,6 @@ const EditTaskModal = ({ id }) => {
                   <List dense sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
                     {subtaskArr.map((sub) => {
                       const labelId = `checkbox-list-secondary-label-${sub.taskTitle}`;
-                      console.log(sub);
                       return (
                         <ListItem
                           key={sub._id}
@@ -562,12 +561,12 @@ const EditTaskModal = ({ id }) => {
                       const diff = dayjs(comment.createdOn).fromNow();
                       return (
                         <div key={comment._id} className="flex-col m-top-1">
-                          <div className="flex-row">
+                          <div className="flex-row align">
                             <Avatar>{comment.createdInitials}</Avatar>
-                            <h4>{comment.createdBy}</h4>
+                            <h4 className="comment-name">{comment.createdBy}</h4>
                             <p className="m-auto">Created {diff} </p>
-                            <Button id={comment._id} onClick={(e) => handleDeleteComment(e)}>
-                              <DeleteIcon />
+                            <Button sx={{minWidth: '0.5rem'}} id={comment._id} onClick={(e) => handleDeleteComment(e)}>
+                              <DeleteIcon sx={{height: '1rem', color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}/>
                             </Button>
                           </div>
                           <p>{comment.commentText}</p>
