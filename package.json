@@ -1,7 +1,22 @@
 {
+  "name": "syncronize",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && npm run dev",
+    "install": "cd server && npm i && cd ../client && npm i --production=false",
+    "build": "cd client && npm run build",
+    "render-build": "npm install && npm run build"
+  },
+  "keywords": [],
+  "author": "",
   "dependencies": {
-    "react-scripts": "^5.0.1",
     "styled-components": "^6.1.11"
+
   },
   "devDependencies": {
     "concurrently": "^8.2.0"
