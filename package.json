@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "react-scripts": "^5.0.1",
+    "styled-components": "^6.1.11"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
