@@ -119,7 +119,7 @@ const WelcomePage = () => {
 
 // Styled components
 const WelcomeContainer = styled.div`
-  background-color: #afafaf;
+  background-color: red;
   height: 100%;
   .main {
     padding-top: 7rem;

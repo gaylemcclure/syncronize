@@ -32,6 +32,7 @@ export const QUERY_ME = gql`
       email
       initials
       workspaceName
+      avatarColour
       projects {
         _id
         projectName
@@ -71,6 +72,20 @@ export const QUERY_ME = gql`
         priority
         description
       }
+    }
+  }
+`;
+
+export const QUERY_ACCOUNT = gql`
+  query meAccount {
+    meAccount {
+      _id
+      first
+      last
+      initials
+      email
+      workspaceName
+      avatarColour
     }
   }
 `;

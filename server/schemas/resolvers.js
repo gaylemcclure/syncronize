@@ -16,7 +16,12 @@ const resolvers = {
           .populate({ path: "projects", populate: { path: "tasks", populate: { path: 'assignedTo', model: "User"}} })
           .populate('tasks')
       }
-      console.log(user)
+      throw AuthenticationError;
+    },
+    meAccount: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id })
+      }
 
       throw AuthenticationError;
     },

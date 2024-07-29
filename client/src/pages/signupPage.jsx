@@ -7,6 +7,7 @@ import { ADD_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material";
 
 const SignupPage = () => {
   const [first, setFirst] = useState("");
@@ -14,6 +15,8 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
+  const theme = useTheme();
+  const pageTheme = theme.palette.mode;
 
   const [addUser, { error }] = useMutation(ADD_USER, { variables: { first, last, email, password, initials } });
 
@@ -45,9 +48,9 @@ const SignupPage = () => {
   return (
     <div className="flex-row full-height">
       <>
-        <InputContainer>
+        <InputContainer className={pageTheme === "dark" ? 'dark-bg' : 'light-bg'}>
           <Icon src={icon} alt="syncronize icon" />
-          <h2>Welcome to Sycronize</h2>
+          <h2 className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>Welcome to Sycronize</h2>
 
           <form className="flex-col form" onSubmit={handleSignup}>
             <TextField size="small" label="First name" id="first-name" value={first} onInput={(e) => setFirst(e.target.value)} />
@@ -76,8 +79,8 @@ const SignupPage = () => {
             </Button>
           </form>
 
-          <p>
-            Already have an account? Log in <a href="./login">here</a>
+          <p className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>
+            Already have an account? Log in <a className={pageTheme === "dark" ? 'white-text link-text' : 'dark-text link-text'} href="./login">here</a>
           </p>
 
           {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}

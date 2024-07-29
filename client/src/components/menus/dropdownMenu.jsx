@@ -33,6 +33,7 @@ const DropdownMenu = (user) => {
     setAnchorEl(null);
   };
 
+  console.log(user)
   const theme = useTheme();
   const pageTheme = theme.palette.mode;
 
@@ -42,7 +43,7 @@ const DropdownMenu = (user) => {
   return (
     <>
       <Button id="basic-button" aria-controls={open ? "basic-menu" : undefined} aria-haspopup="true" aria-expanded={open ? "true" : undefined} onClick={handleClick}>
-        <Avatar sx={{ bgcolor: "var(--main-green)", fontWeight: '700' }}>{user.user.initials}</Avatar>
+        <Avatar sx={{ bgcolor: `#${user.user.avatarColour}`, fontWeight: '700' }}>{user.user.initials}</Avatar>
       </Button>
 
       <Menu

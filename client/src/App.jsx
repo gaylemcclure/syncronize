@@ -39,7 +39,7 @@ const client = new ApolloClient({
 function App() {
   const pathname = window.location.pathname;
   const [path, setPath] = useState("welcome");
-  const [mode, setMode] = useState('dark');
+  const [mode, setMode] = useState('light');
   
   const colorMode = useMemo(
     () => ({

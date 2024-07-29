@@ -7,12 +7,13 @@ import { LOGIN_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-
-
+import { useTheme } from "@mui/material";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const theme = useTheme();
+  const pageTheme = theme.palette.mode;
 
 
   const [login, { error, data }] = useMutation(LOGIN_USER, { variables: { email, password }});
@@ -29,18 +30,18 @@ const SignupPage = () => {
 
   return (
     <div className="flex-row full-height">
-        <InputContainer>
+        <InputContainer className={pageTheme === "dark" ? 'dark-bg' : 'light-bg'}>
           <Icon src={icon} alt="syncronize icon" />
-          <h2>Welcome back to Sycronize</h2>
+          <h2 className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>Welcome back to Sycronize</h2>
           <form className="flex-col form" onSubmit={handleLogin}>
-            <TextField size="small" label="Email" id="email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
+            <TextField className={pageTheme === "dark" ? 'white-text' : 'black-text'} sx={{borderColor: pageTheme === "dark" ? 'var(--input-border' : 'red'}} size="small" label="Email" id="email" type="email" value={email} onInput={(e) => setEmail(e.target.value)} />
             <TextField sx={{marginTop: '1rem'}} label="Password" size="small" type="password" id="password" value={password} onInput={(e) => setPassword(e.target.value)} />
             <Button sx={{backgroundColor: "var(--main-green)", marginTop: '1rem'}} className="signup-button" id="signup-button" type="submit">
               Log in
             </Button>
           </form>
-          <p>
-            No account? Sign up <a href="./signup">here</a>
+          <p className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>
+            No account? Sign up <a className={pageTheme === "dark" ? 'white-text link-text' : 'dark-text link-text'} href="./signup">here</a>
           </p>
 
           {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}

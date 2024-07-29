@@ -161,7 +161,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
           </Toolbar>
           <img className="logo" src={logo} alt="logo" />
           <div className="input-container">
-            <TextField className="search-bar" placeholder="Search..." sx={{backgroundColor: theme.palette.mode === "dark" ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, border:'none'}} />
+            <TextField className="search-bar" placeholder="Search..." sx={{backgroundColor: theme.palette.mode === "dark" ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText}} />
           </div>
           {userData && <DropdownMenu user={userData} />}
         </AppBar>

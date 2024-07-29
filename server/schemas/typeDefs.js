@@ -10,6 +10,7 @@ const typeDefs = `
     password: String!
     initials: String!
     workspaceName: String
+    avatarColour: String
     createdOn: Date
     projects: [Project]
     tasks: [Task]
@@ -71,6 +72,7 @@ const typeDefs = `
   type Query {
     users: [User]
     me: User
+    meAccount: User
     user(_id: String!): User
     proj(_id: String!): Project
     projectTasks(projectId: String!): [Task] 
