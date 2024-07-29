@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { QUERY_ME, QUERY_PROJECT } from "./queries";
 import { useQuery } from "@apollo/client";
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
@@ -31,8 +31,12 @@ const SignupPage = () => {
   const handleSignup = async (event) => {
     event.preventDefault();
     try {
+      const search = window.location.search;
       const { data } = await addUser();
-      Auth.login(data.addUser.token);
+      Auth.login(data.addUser.token, search);
+
+
+
     } catch (e) {
       console.error(e);
     }

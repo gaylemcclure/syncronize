@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { useUserContext } from "../src/utils/contexts";
 import { OpenProvider, useOpenContext } from "./utils/openContext";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../src/utils/contexts";
@@ -8,7 +7,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import HomeNav from "./components/nav/homeNav";
 import WelcomeNav from "./components/nav/welcomeNav";
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect, createContext} from "react";
+import { ColorModeContext } from "./utils/themeContext";
 
 // Construct main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -34,39 +34,50 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+// const ColorModeContext = createContext({ toggleColorMode: () => {} });
+
 function App() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: light)");
   const pathname = window.location.pathname;
   const [path, setPath] = useState("welcome");
-  // const {userData} = useUserContext();
-
-
-
-
-
-  const theme = createTheme({
-    palette: {
-      mode: prefersDarkMode ? "dark" : "light",
-      primary: {
-        main: "#f3f4f9",
-        contrastText: "#000",
-        light: "#06866e",
+  const [mode, setMode] = useState('dark');
+  
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
       },
-      secondary: {
-        main: "#101010",
-        contrastText: "#fff",
-      },
-      light: {
-        main: "#f3f4f9",
-      },
-    },
-    typography: {
-      fontFamily: "Figtree, sans-serif",
-    },
-  });
+    }),
+    [],
+  );
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          primary: {
+            main: "#f3f4f9",
+            contrastText: "#000",
+            light: "#06866e",
+          },
+          secondary: {
+            main: "#101010",
+            contrastText: "#fff",
+          },
+          light: {
+            main: "#f3f4f9",
+          },
+        },
+        typography: {
+          fontFamily: "Figtree, sans-serif",
+        },
+      }),
+    [mode],
+  );
 
   return (
     <ApolloProvider client={client}>
+    <ColorModeContext.Provider value={colorMode}>
       <UserProvider>
         <OpenProvider>
         <ThemeProvider theme={theme}>
@@ -81,6 +92,7 @@ function App() {
         </ThemeProvider>
         </OpenProvider>
       </UserProvider>
+      </ColorModeContext.Provider>
     </ApolloProvider>
   );
 }

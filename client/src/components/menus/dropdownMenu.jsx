@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState, useContext } from 'react';
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import MenuList from "@mui/material/MenuList";
@@ -14,8 +14,19 @@ import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
+import Switch from '@mui/material/Switch';
+import { ColorModeContext } from '../../utils/themeContext';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import IconButton from '@mui/material/IconButton';
+
+
 
 const DropdownMenu = (user) => {
+
+
+const mode =  useContext(ColorModeContext)
+console.log(mode)
 
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,6 +39,10 @@ const DropdownMenu = (user) => {
   };
 
   const theme = useTheme();
+  const pageTheme = theme.palette.mode;
+
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
 
   return (
     <>
@@ -58,7 +73,7 @@ const DropdownMenu = (user) => {
               <ListItemIcon>
                 <EditIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Account details</ListItemText>
+              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Account details</ListItemText>
             </MenuItem>
           </Link>
           <Link href="/home/account">
@@ -66,23 +81,25 @@ const DropdownMenu = (user) => {
               <ListItemIcon>
                 <SettingsIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Settings</ListItemText>
+              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Settings</ListItemText>
             </MenuItem>
           </Link>
-          <Link href="/home/account">
+          {/* <Link href="/home/account"> */}
             <MenuItem>
               <ListItemIcon>
                 <ColorLensIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Themes</ListItemText>
-            </MenuItem>
-          </Link>
+              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, textTransform: 'capitalize'}}>{pageTheme} mode  </ListItemText>
+              <IconButton sx={{ ml: 1 }} onClick={mode.toggleColorMode} color="inherit">
+        {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+      </IconButton>            </MenuItem>
+          {/* </Link> */}
           <Link href="/home/account">
             <MenuItem>
               <ListItemIcon>
                 <GroupIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Manage users</ListItemText>
+              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Manage users</ListItemText>
             </MenuItem>
           </Link>
           <Divider />
@@ -91,7 +108,7 @@ const DropdownMenu = (user) => {
               <ListItemIcon>
                 <LogoutIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: theme.palette.mode === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, paddingTop: '0.5rem'}}>Log out</ListItemText>
+              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, paddingTop: '0.5rem'}}>Log out</ListItemText>
             </MenuItem>
           </Link>
         </MenuList>

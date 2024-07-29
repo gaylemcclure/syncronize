@@ -20,7 +20,8 @@ const Success = () => {
   return (
     <div className="sr-root">
       <div className="sr-main">
-        <header className="sr-header">
+        <h1>Payment successful</h1>
+        {/* <header className="sr-header">
           <div className="sr-header__logo"></div>
         </header>
         <div className="sr-payment-summary completed-view">
@@ -60,7 +61,7 @@ const Success = () => {
             width="140"
             height="160"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -25,16 +25,6 @@ const Success = () => {
     fetchSession();
   }, [sessionId]);
 
-  useEffect(() => {
-    const getUser = () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const first = user.fName.charAt(0);
-      const last = user.lName.charAt(0);
-      setUser(first + last);
-    };
-
-    getUser();
-  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,25 +34,6 @@ const Success = () => {
 
   return (
     <div className="sr-root">
-      <PriceNav>
-        <ul className="nav-links flex-row">
-          <Link to="/">
-            <img className="logo" src={logo} alt="logo" />
-          </Link>
-          <div className="link-wrapper flex-row">
-            <Link to="/product" className="nav-link roboto-medium">
-              Product
-            </Link>
-            <Link to="/solutions" className="nav-link roboto-medium">
-              Solutions
-            </Link>
-            <Link to="/pricing" className="nav-link roboto-medium">
-              Pricing
-            </Link>
-          </div>
-        </ul>
-        <UserIcon>{user}</UserIcon>
-      </PriceNav>
       <PaymentText>
       <h1>Your payment was successful.</h1>
     <h2>Redirecting to your new Syncronize workspace...</h2>

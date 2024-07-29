@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ import PricingPage from "./pages/pricingPage";
 import HomePage from "./pages/homePage";
 import ProjectPage from './pages/projectPage';
 import ErrorPage from "./pages/errorPage.jsx";
-import Checkout from "./pages/checkout";
+import Checkout from "./pages/checkout.jsx";
 import Success from "./pages/successPage.jsx";
 import Cancelled from './pages/cancelledPage.jsx';
 import LoginPage from './pages/loginPage.jsx';

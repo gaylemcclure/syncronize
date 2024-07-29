@@ -17,24 +17,8 @@ export const recurringData = [
         name: "2 Plan Members",
       },
       {
-        id: "c",
-        name: "Collaborative Docs",
-      },
-      {
-        id: "d",
-        name: "Whiteboards",
-      },
-      {
         id: "e",
         name: "Everything View",
-      },
-      {
-        id: "f",
-        name: "Kanban Boards",
-      },
-      {
-        id: "g",
-        name: "Sprint Management",
       },
       {
         id: "h",
@@ -43,10 +27,6 @@ export const recurringData = [
       {
         id: "i",
         name: "Project milestones",
-      },
-      {
-        id: "j",
-        name: "Progress tracking",
       },
     ],
   },
@@ -65,16 +45,13 @@ export const recurringData = [
       },
       {
         id: "b",
-        name: "2 Plan Members",
+        name: "3 Plan Members",
       },
       {
         id: "c",
         name: "Collaborative Docs",
       },
-      {
-        id: "d",
-        name: "Whiteboards",
-      },
+
       {
         id: "e",
         name: "Everything View",
@@ -84,20 +61,12 @@ export const recurringData = [
         name: "Kanban Boards",
       },
       {
-        id: "g",
-        name: "Sprint Management",
-      },
-      {
         id: "h",
         name: "Calendar View",
       },
       {
         id: "i",
         name: "Project milestones",
-      },
-      {
-        id: "j",
-        name: "Progress tracking",
       },
     ],
   },
@@ -123,10 +92,6 @@ export const recurringData = [
         name: "Collaborative Docs",
       },
       {
-        id: "d",
-        name: "Whiteboards",
-      },
-      {
         id: "e",
         name: "Everything View",
       },
@@ -145,10 +110,6 @@ export const recurringData = [
       {
         id: "i",
         name: "Project milestones",
-      },
-      {
-        id: "j",
-        name: "Progress tracking",
       },
     ],
   },

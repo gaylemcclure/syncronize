@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import icon from "../assets/images/sync-icon.png";
 import text from "../assets/images/sync-text.png";
 import eg from "../assets/images/welcome-eg.png";
@@ -7,37 +7,9 @@ import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
-import Auth from "../utils/auth";
-import { QUERY_ME } from "../utils/queries";
-import { useQuery } from "@apollo/client";
 
 const WelcomePage = () => {
-  const [userData, setUserData] = useState({});
-  const { data } = useQuery(QUERY_ME);
-  const user = data?.me;
 
-  // Determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
-
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-
-        if (user) {
-          setUserData(user);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getUserData();
-  }, [user]);
 
   return (
     <WelcomeContainer className="welcome-bg">

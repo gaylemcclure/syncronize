@@ -3,6 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const routes = require("./routes/api/stripeRoutes");
 
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
@@ -11,7 +12,7 @@ const { authMiddleware } = require("./utils/auth");
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 const app = express();
 
 //Create custom Date scalar
@@ -50,6 +51,8 @@ const startApolloServer = async () => {
   app.use(cors());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+
+  app.use("/api/stripe", routes)
 
   app.use(
     "/graphql",

@@ -76,6 +76,7 @@ const SideNav = ({ open, setOpen, user }) => {
   const theme = useTheme();
   const [isLoaded, setIsLoaded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [initials, setInitials] = useState("");
   const moreOpen = Boolean(anchorEl);
   const [deleteProject] = useMutation(DELETE_PROJECT);
   
@@ -90,10 +91,15 @@ const SideNav = ({ open, setOpen, user }) => {
   useEffect(() => {
     if (user.projects) {
       setIsLoaded(true);
+        const firstInitial = user.workspaceName.charAt(0);
+        const ints = `${firstInitial}`;
+        const upper = ints.toUpperCase();
+        setInitials(upper);
     } else {
       setIsLoaded(false);
     }
   }, [user]);
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -149,7 +155,7 @@ const SideNav = ({ open, setOpen, user }) => {
       <Divider />
       <div className={open ? "flex-col sidenav-main" : "flex-col sidenav-main-closed"}>
         <div className="flex-row workspace-main">
-          <div className={open ? "workspace-icon space" : "workspace-icon"}>{user.initials}</div>
+          <div className={open ? "workspace-icon space" : "workspace-icon"}>{initials}</div>
           <h4 className={theme.palette.mode === "dark" ? "workspace-name white-text" : "workspace-name black-text"}>{open ? user.workspaceName : ""}</h4>
 
           {open && <WorkspaceMenu user={user} />}

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../assets/images/sync.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import styled from "styled-components";
 import { singleData, recurringData } from "../assets/data/pricingData";
@@ -39,7 +37,9 @@ const Checkout = () => {
   useEffect(() => {
     if (planType !== "") {
       const getConfig = async () => {
-        const testURL = `http://localhost:5001/api/stripe/config?plan=${planType}`;
+        console.log(singleData)
+        console.log(recurringData)
+        const testURL = `http://localhost:3001/api/stripe/config?plan=${planType}`
         await fetch(testURL)
           .then(function (response) {
             if (!response.ok) {
@@ -57,44 +57,14 @@ const Checkout = () => {
 
       getConfig();
     }
-  }, [planType]);
-
-  useEffect(() => {
-    const getUser = () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const first = user.fName.charAt(0);
-      const last = user.lName.charAt(0);
-      setUser(first + last);
-    };
-
-    getUser();
-  }, []);
+  }, [planType])
 
   const features = recurringData.filter((data) => data.value === planType);
-  const action = `http://localhost:5001/api/stripe/create-checkout-session?=${planType}`
-  const recurringAction = `http://localhost:5001/api/stripe/create-checkout-session-recurring?=${planType}`
+  const action = `http://localhost:3001/api/stripe/create-checkout-session?=${planType}`
+  const recurringAction = `http://localhost:3001/api/stripe/create-checkout-session-recurring?=${planType}`
 
   return (
     <>
-      <PriceNav>
-        <ul className="nav-links flex-row">
-          <Link to="/">
-            <img className="logo" src={logo} alt="logo" />
-          </Link>
-          <div className="link-wrapper flex-row">
-            <Link to="/product" className="nav-link roboto-medium">
-              Product
-            </Link>
-            <Link to="/solutions" className="nav-link roboto-medium">
-              Solutions
-            </Link>
-            <Link to="/pricing" className="nav-link roboto-medium">
-              Pricing
-            </Link>
-          </div>
-        </ul>
-        <UserIcon>{user}</UserIcon>
-      </PriceNav>
       <CheckoutContainer>
         <div className="sr-root">
           <div className="sr-main">

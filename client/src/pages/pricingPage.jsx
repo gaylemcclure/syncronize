@@ -2,99 +2,119 @@
 import WelcomeNav from "../components/nav/welcomeNav";
 import styled from "styled-components";
 import WelcomeFooter from "../components/nav/welcomeFooter";
-// import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 import { singleData, recurringData } from "../assets/data/pricingData";
-import Auth from "../utils/auth";
-import { QUERY_ME } from "../utils/queries";
-import { useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const PricingPage = () => {
-  // const [userData, setUserData] = useState({});
-  // const { data } = useQuery(QUERY_ME);
-  // const user = data?.me;
+  const [value, setValue] = useState(0);
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
-  //       if (!token) {
-  //         return false;
-  //       }
-  //       if (user) {
-  //         setUserData(user);
-  //       }
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const CustomTabPanel = (props) => {
+    const { children, value, index, ...other } = props;
 
-  //   getUserData();
-  // }, [user]);
+    return (
+      <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
+        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      </div>
+    );
+  };
 
-  // const handlePlan = (e) => {
-  //   const planType = e.target.value;
-  //   window.location.href = `/signup?=${planType}`;
-  // };
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
 
-  // const PriceCard = ({ title, description, text, price, features, value }) => {
-  //   const formLink = "http://localhost:5001/create-checkout-session-recurring";
-  //   return (
-  //     <PriceBox>
-  //       <h3 style={{ color: `${text}` }}>{title}</h3>
-  //       <h4>{description}</h4>
-  //       <h5 style={{ color: `${text}` }}>{price}</h5>
-  //       {/* <form action={`${formLink}?=${value}`} method="POST">
-  //         <button role="link" id="submit" value={value} type="submit">
-  //           Get started
-  //         </button>
-  //       </form> */}
-  //       <PriceButton value={value} onClick={(e) => handlePlan(e)}>
-  //         Get started
-  //       </PriceButton>
-  //       <div>
-  //         <p>Key features</p>
-  //         <ul>
-  //           {features.map((feat) => {
-  //             return (
-  //               <li key={feat.id}>
-  //                 <span className="material-symbols-outlined">check</span>
-  //                 {feat.name}
-  //               </li>
-  //             );
-  //           })}
-  //         </ul>
-  //       </div>
-  //     </PriceBox>
-  //   );
-  // };
+  const a11yProps = (index) => {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  };
+
+  const handlePlan = (e) => {
+    const planType = e.target.value;
+    window.location.href = `/signup?=${planType}`;
+  };
+
+  const PriceCard = ({ title, description, text, price, features, value }) => {
+    const formLink = "http://localhost:5173/create-checkout-session-recurring";
+    return (
+      <PriceBox>
+        <h3 style={{ color: `${text}` }}>{title}</h3>
+        <h4>{description}</h4>
+        <h5 style={{ color: `${text}` }}>{price}</h5>
+        <form action={`${formLink}?=${value}`} method="POST">
+          <button role="link" id="submit" value={value} type="submit">
+            Get started
+          </button>
+        </form>
+        <PriceButton value={value} onClick={(e) => handlePlan(e)}>
+          Get started
+        </PriceButton>
+        <div>
+          <p>Key features</p>
+          <ul>
+            {features.map((feat) => {
+              return (
+                <li key={feat.id}>
+                  <span className="material-symbols-outlined">check</span>
+                  {feat.name}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </PriceBox>
+    );
+  };
 
   return (
     <PricingContainer>
-      {/* <WelcomeNav user={userData} />
       <PricingWrapper>
         <h1>
           Start <span className="green-text">syncronizing </span>your work today!
         </h1>
         <p>Options for recurring subscription or get lifetime access for one single payment</p>
-        <Tabs variant="enclosed">
+
+        <Box sx={{ width: "100%", display: 'flex', flexDirection: "column", alignItems:  'center'}}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="Recurring" {...a11yProps(0)} />
+              <Tab label="Lifetime" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+          <div className="recurring">
+                {recurringData.map((rec, i) => {
+                  return <PriceCard key={i} text={rec.text} title={rec.title} price={rec.cost} description={rec.description} features={rec.features} value={rec.value} />;
+                })}
+              </div>
+
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+          {<PriceCard text={singleData.text} title={singleData.title} price={singleData.cost} description={singleData.description} value={singleData.value} features={singleData.features} />}
+          </CustomTabPanel>
+        </Box>
+        {/* <Tabs variant="enclosed">
           <TabList>
             <Tab>Recurring</Tab>
             <Tab>Lifetime</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <div className="recurring">
-                {recurringData.map((rec, i) => {
-                  return <PriceCard key={i} text={rec.text} title={rec.title} price={rec.cost} description={rec.description} features={rec.features} value={rec.value} />;
-                })}
-              </div>
             </TabPanel>
-            <TabPanel className="lifetime">{<PriceCard text={singleData.text} title={singleData.title} price={singleData.cost} description={singleData.description} value={singleData.value} features={singleData.features} />}</TabPanel>
+            <TabPanel className="lifetime"></TabPanel>
           </TabPanels>
-        </Tabs>
+        </Tabs> */}
       </PricingWrapper>
-      <WelcomeFooter /> */}
+      <WelcomeFooter />
     </PricingContainer>
   );
 };
