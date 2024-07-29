@@ -1,6 +1,6 @@
 # Dependency directories
-/node_modules
-/.pnp
+node_modules/
+.pnp/
 .pnp.js
 
 # dotenv environment variable files
@@ -14,7 +14,7 @@
 /coverage
 
 # production
-/build
+b/uild
 
 # misc
 .DS_Store

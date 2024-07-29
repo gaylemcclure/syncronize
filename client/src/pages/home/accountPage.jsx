@@ -51,6 +51,7 @@ const AccountPage = () => {
       setLastName(account.last);
       setEmail(account.email);
       setColour(account.colour)
+      setInitials(account.initials)
     }
   }, [account]);
 
@@ -81,7 +82,7 @@ const AccountPage = () => {
         )}
         {nameEdit && (
           <div className="flex-row">
-            <Avatar sx={{backgroundColor: colour }}></Avatar>
+            <Avatar sx={{backgroundColor: `#${colour}` }}>{initials}</Avatar>
             <div className="flex-col">
             <TextField
               margin="normal"
