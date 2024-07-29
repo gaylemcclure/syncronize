@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import { UPDATE_WORKSPACE } from "../../utils/mutations";
 import { useMutation } from "@apollo/client";
 import { useUserContext } from '../../utils/contexts';
+import { useTheme } from '@mui/material';
 
 
 const style = {
@@ -28,6 +29,9 @@ const RenameWorkspace = () => {
     const [open, setOpen] = useState(false);
     const [wsName, setWsName] = useState("")
     const { userData } = useUserContext();
+
+    const theme = useTheme();
+    const pageTheme = theme.palette.mode;
 
     const handleOpen = () => {
       setOpen(true);
@@ -56,7 +60,9 @@ console.log(userData)
   
     return (
       <>
-        <Button sx={{border: '2px solid var(--main-green)', color: 'var(--main-green)', height: '40px'}} onClick={handleOpen}>Rename workspace</Button>
+        <Button  sx={{textTransform: "capitalize", fontSize: '1rem', color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}} onClick={handleOpen}>
+          <div>Rename workspace</div>
+          </Button>
         <Modal
           open={open}
           onClose={handleClose}

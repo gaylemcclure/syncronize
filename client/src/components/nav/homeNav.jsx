@@ -1,20 +1,3 @@
-// import { useState, useEffect } from "react";
-// import { styled } from "@mui/material/styles";
-// import Box from "@mui/material/Box";
-// import MuiAppBar from "@mui/material/AppBar";
-// import Toolbar from "@mui/material/Toolbar";
-// import CssBaseline from "@mui/material/CssBaseline";
-// import IconButton from "@mui/material/IconButton";
-// import MenuIcon from "@mui/icons-material/Menu";
-// import logo from "../assets/images/sync-icon.png";
-// import DropdownMenu from "../components/menus/dropdownMenu";
-// import { useUserContext } from "../utils/contexts";
-// import SideNav from "../components/nav/sideNav";
-// import { useNavigate } from "react-router";
-// import "../assets/styles/homepage.css";
-// import Auth from "../utils/auth";
-// import TextField from "@mui/material/TextField";
-
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -32,17 +15,14 @@ import "../../assets/styles/homepage.css";
 import Auth from "../../utils/auth";
 import TextField from "@mui/material/TextField";
 import { useOpenContext } from "../../utils/openContext";
-
-// //Set the width of the sideNav
-// const drawerWidth = 350;
-
-
+import { useTheme } from "@mui/material/styles";
 
 
 const HomeNav = ({ setPath }) => {
   const { userData, setUserData } = useUserContext();
   const [loggedIn, setLoggedIn] = useState(false);
   const { open, setOpen, drawerWidth } = useOpenContext();
+  const theme = useTheme();
 
   const pathName = window.location.pathname;
   useEffect(() => {
@@ -148,7 +128,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
           setLoggedIn(false);
           setTimeout(() => {
             navigate("/login");
-          }, 5000);
+          }, 2000);
         } else {
           setLoggedIn(true);
         }
@@ -163,14 +143,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
   return (
     <>
-    {/* {!loggedIn && <h1>You are not logged in. Redirecting to login page ...</h1>}
-    {loggedIn && ( */}
       <StyledBox sx={{ display: "flex", flexDirection: "row" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
           <Toolbar>
             <IconButton
-              // color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
@@ -184,7 +161,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
           </Toolbar>
           <img className="logo" src={logo} alt="logo" />
           <div className="input-container">
-            <TextField className="search-bar" placeholder="Search..." />
+            <TextField className="search-bar" placeholder="Search..." sx={{backgroundColor: theme.palette.mode === "dark" ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText, border:'none'}} />
           </div>
           {userData && <DropdownMenu user={userData} />}
         </AppBar>
@@ -193,7 +170,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
           <DrawerHeader />
         </Box>
       </StyledBox>
-    {/* )} */}
 </>
   );
 };

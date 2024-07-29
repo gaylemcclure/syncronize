@@ -23,12 +23,7 @@ import IconButton from '@mui/material/IconButton';
 
 
 const DropdownMenu = (user) => {
-
-
-const mode =  useContext(ColorModeContext)
-console.log(mode)
-
-
+  const mode =  useContext(ColorModeContext)
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,7 +42,7 @@ console.log(mode)
   return (
     <>
       <Button id="basic-button" aria-controls={open ? "basic-menu" : undefined} aria-haspopup="true" aria-expanded={open ? "true" : undefined} onClick={handleClick}>
-        <Avatar sx={{ bgcolor: "var(--main-green)" }}>{user.user.initials}</Avatar>
+        <Avatar sx={{ bgcolor: "var(--main-green)", fontWeight: '700' }}>{user.user.initials}</Avatar>
       </Button>
 
       <Menu
@@ -76,24 +71,24 @@ console.log(mode)
               <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Account details</ListItemText>
             </MenuItem>
           </Link>
-          <Link href="/home/account">
+          {/* <Link href="/home/account">
             <MenuItem>
               <ListItemIcon>
                 <SettingsIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
               <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText}}>Settings</ListItemText>
             </MenuItem>
-          </Link>
+          </Link> */}
           {/* <Link href="/home/account"> */}
-            <MenuItem>
-              <ListItemIcon>
+            <MenuItem sx={{display: "flex", alignItems: 'center'}}>
+              <ListItemIcon sx={{display: "flex!important", alignItems: 'center'}}>
                 <ColorLensIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
               <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, textTransform: 'capitalize'}}>{pageTheme} mode  </ListItemText>
               <IconButton sx={{ ml: 1 }} onClick={mode.toggleColorMode} color="inherit">
         {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-      </IconButton>            </MenuItem>
-          {/* </Link> */}
+      </IconButton>            
+      </MenuItem>
           <Link href="/home/account">
             <MenuItem>
               <ListItemIcon>

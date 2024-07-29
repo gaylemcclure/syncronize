@@ -1,7 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = "mongodb+srv://gaylekdennison:vtbUeBEZESXUebGU@sycronize-db.ot1tsko.mongodb.net/?retryWrites=true&w=majority&appName=sycronize-db";
-const client = new MongoClient(uri, {
+const client = new MongoClient(process.env.ATLAS_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,

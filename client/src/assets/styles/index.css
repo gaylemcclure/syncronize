@@ -56,6 +56,10 @@ height: 80px;
 min-height: 60px;
 }
 
+a {
+  text-decoration: none;
+}
+
 
 
 /*-----------------GENERAL--------------------*/
@@ -310,7 +314,7 @@ input.full-input, textarea.full-input {
 
 .MuiFormControl-root {
   .Mui-focused.MuiInputLabel-outlined {
-    color: blue;
+    color: rgb(117, 117, 234);
   }
 }
 
@@ -382,4 +386,26 @@ input.full-input, textarea.full-input {
 .MuiDataGrid-cell.MuiDataGrid-cell--textLeft[data-field="modal"] {
   display: flex;
   justify-content: center;
+}
+
+li .MuiListItemIcon-root {
+  display: flex;
+  align-items: center;
+    button > div {
+      padding-left: 0.7rem;
+
+  }
+}
+
+a.MuiTypography-root {
+  text-decoration: none;
+}
+
+.search-bar {
+  border-radius: 4px;
+  .MuiInputBase-root fieldset {
+    border: none;
+    border-radius: 8px;
+  }
+
 }

@@ -87,12 +87,13 @@ const HomeTabs = ({ one, two, allTasks }) => {
             <>
           <div className="flex flex-row gap-2">
             {/*Creating the first project column */}
-            <Card sx={{ minWidth: 275, width: "30%" }}>
+            <Card sx={{ minWidth: 275, width: "30%", minHeight: '10rem' }}>
               <CardContent>
                 <Typography sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 600 }} color="text.secondary" gutterBottom>
                   Projects
                 </Typography>
                 <ul className="overview-project-title">
+                {userData.projects.length === 0 && <p>No projects yet</p>}
                   {userData.projects.map((proj) => (
                     <div key={proj._id} className="flex flex-row align">
                       <AccountTreeIcon />
@@ -104,7 +105,7 @@ const HomeTabs = ({ one, two, allTasks }) => {
             </Card>
 
             {/*Creating the uue date column */}
-            <Card sx={{ minWidth: 275, width: "30%" }}>
+            <Card sx={{ minWidth: 275, width: "30%", minHeight: '10rem' }}>
               <CardContent>
                 <Typography sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 600 }} color="text.secondary" gutterBottom>
                   Due date
@@ -122,7 +123,7 @@ const HomeTabs = ({ one, two, allTasks }) => {
               </CardContent>
             </Card>
             {/*Creating the countdown column */}
-            <Card sx={{ minWidth: 275, width: "30%" }}>
+            <Card sx={{ minWidth: 275, width: "30%", minHeight: '10rem' }}>
               <CardContent>
                 <Typography sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 600 }} color="text.secondary" gutterBottom>
                   Countdown
@@ -143,7 +144,7 @@ const HomeTabs = ({ one, two, allTasks }) => {
             </Card>
 
             {/*Creating the progress column */}
-            <Card sx={{ minWidth: 275, width: "5%" }}>
+            <Card sx={{ minWidth: 275, width: "5%", minHeight: '10rem' }}>
               <CardContent>
                 <Typography sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 600 }} color="text.secondary" gutterBottom>
                   Progress
@@ -181,7 +182,7 @@ const HomeTabs = ({ one, two, allTasks }) => {
           </div>
 
           {/*Display all current task by due date */}
-          <Card sx={{ minWidth: 275 }}>
+          <Card sx={{ minWidth: 275, marginTop: '2rem' }}>
             <CardContent>
               <Typography sx={{ fontSize: 16, textTransform: "uppercase", fontWeight: 600 }} color="text.secondary" gutterBottom>
                 Upcoming tasks

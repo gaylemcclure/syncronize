@@ -70,6 +70,7 @@ function App() {
         },
         typography: {
           fontFamily: "Figtree, sans-serif",
+          textDecoration: 'none'
         },
       }),
     [mode],
