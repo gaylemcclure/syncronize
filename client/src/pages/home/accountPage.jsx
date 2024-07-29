@@ -7,13 +7,13 @@ import CancelIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useOpenContext } from "../../utils/openContext";
+import Avatar  from "@mui/material/Avatar";
 
 const AccountPage = () => {
   const [nameEdit, setNameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [passwordEdit, setPasswordEdit] = useState(false);
   const [colourEdit, setColourEdit] = useState(false);
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
@@ -35,6 +35,7 @@ const AccountPage = () => {
       marginLeft: open ? `${drawerWidth}px` : "65px",
     }}
   >
+    <div className="flex-row"></div>
       {!nameEdit && (
         <div className="flex-row status ">
           <p className="  project-title">{name}</p>
