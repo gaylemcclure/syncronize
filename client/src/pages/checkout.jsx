@@ -124,7 +124,7 @@ const Checkout = () => {
 };
 
 const CheckoutContainer = styled.div`
-  margin-top: 7rem;
+height: 84.5%;
   display: flex;
   justify-content: center;
   h1 {

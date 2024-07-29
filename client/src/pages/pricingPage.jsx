@@ -7,7 +7,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { singleData, recurringData } from "../assets/data/pricingData";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const PricingPage = () => {
   const [value, setValue] = useState(0);
@@ -51,9 +51,6 @@ const PricingPage = () => {
         <h4>{description}</h4>
         <h5 style={{ color: `${text}` }}>{price}</h5>
         <form action={`${formLink}?=${value}`} method="POST">
-          <button role="link" id="submit" value={value} type="submit">
-            Get started
-          </button>
         </form>
         <PriceButton value={value} onClick={(e) => handlePlan(e)}>
           Get started
@@ -168,9 +165,7 @@ const PricingWrapper = styled.div`
     font-weight: 800;
     margin-bottom: 0;
   }
-  .green-text {
-    color: var(--main-green);
-  }
+
 `;
 
 const PriceBox = styled.div`

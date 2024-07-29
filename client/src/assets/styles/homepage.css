@@ -129,6 +129,10 @@
   }
   
   .overview-date {
+    min-height: 75px;
+  }
+
+  .overview-project-title .overview-date {
     min-height: 55px;
   }
 
@@ -213,4 +217,29 @@
 
 .comment-name {
   margin: 0 0 0 1rem;
+}
+
+.accounts {
+  padding: 2rem 5rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.account-inner {
+  width: 44rem;
+
+}
+
+.acc-input {
+  min-height: 63px;
+  display: flex;
+  align-items: center;
+}
+
+.av-colour {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid black;
+  border-radius: 4px;
+  margin: 0.5rem;
 }

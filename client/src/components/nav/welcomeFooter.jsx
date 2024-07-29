@@ -18,6 +18,7 @@ const WelcomeFooter = () => {
 
 const FooterContainer = styled.div`
     height: 10rem;
+    width: 100%;
     background-color: var(--black);
     display: flex;
     justify-content: center;

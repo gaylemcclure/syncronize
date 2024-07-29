@@ -15,7 +15,7 @@ const subtaskSchema = new Schema({
   },
   createdOn: {
     type: Date,
-    default: new Date(),
+    default: Date.now()
   },
   dueDate: {
     type: Date,

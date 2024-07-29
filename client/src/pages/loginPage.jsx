@@ -21,8 +21,9 @@ const SignupPage = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
+      const search = window.location.search;
       const { data } = await login();
-      Auth.login(data.login.token);
+      Auth.login(data.login.token, search);
     } catch (e) {
       console.error(e);
     }

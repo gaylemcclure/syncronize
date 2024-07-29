@@ -38,3 +38,7 @@
     color: #ffbcfc;
     transition: 0.4s;
   }
+
+  .green-text {
+    color: var(--main-green);
+  }

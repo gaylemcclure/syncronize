@@ -9,6 +9,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useUserContext } from "../utils/contexts";
 import { styled, useTheme } from "@mui/material/styles";
 import ProjectTable from "../components/projectTable";
+import { QUERY_PROJECT } from "../utils/queries";
+import { useMutation, useLazyQuery } from "@apollo/client";
 
 const ProjectTabs = ({ one, two, currentProject, tasks }) => {
   const [value, setValue] = useState(0);
@@ -17,6 +19,9 @@ const ProjectTabs = ({ one, two, currentProject, tasks }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const theme = useTheme();
   const [currProject, setCurrProject] = useState('');
+  const [callUpdate, setCallUpdate] = useState(false);
+
+  const [queryProject] = useLazyQuery(QUERY_PROJECT);
 
   useEffect(() => {
     if (userData.projects) {
@@ -27,6 +32,17 @@ const ProjectTabs = ({ one, two, currentProject, tasks }) => {
       setIsLoaded(false)
     }
   }, [userData]);
+
+useEffect(() => {
+  if (callUpdate) {
+    const updateData = async () => {
+      const { data } = await queryProject({variables: {_id: currentProject._id}})
+    }
+    updateData();
+    setCallUpdate(false)
+  }
+
+}, [callUpdate])
 
   const CustomTabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -62,7 +78,7 @@ const ProjectTabs = ({ one, two, currentProject, tasks }) => {
               <Tab label={one} {...tabProps(0)} />
               <Tab label={two} {...tabProps(1)} />
             </Tabs>
-            <AddTaskModal projectData={currProject} /> 
+            <AddTaskModal projectData={currProject} callUpdate={callUpdate} setCallUpdate={setCallUpdate} /> 
           </Box>
           <CustomTabPanel value={value} index={0}>
             <ProjectTable projectData={currProject} />

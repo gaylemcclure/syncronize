@@ -135,9 +135,7 @@ const resolvers = {
         });
         const taskId = task._id.toString();
         const proj = await Project.findOneAndUpdate({ _id: projectId }, { $addToSet: { tasks: task._id } }, { new: true });
-        console.log(proj)
         const user = await User.findOneAndUpdate({ _id: curUser }, { $addToSet: { tasks: taskId } }, { new: true });
-        console.log(user)
 
         return user;
       }
@@ -173,11 +171,11 @@ const resolvers = {
     },
 
     //UPDATE MUTATIONS
-    updateUser: async (parent, { _id, first, last, email, password, initials }, context) => {
+    updateUser: async (parent, { _id, first, last, email, initials, avatarColour }, context) => {
       if (context.user) {
         const user = await User.findOneAndUpdate(
           { _id: _id },
-          { $set: { first: first, last: last, email: email, password: password, initials: initials } },
+          { $set: { first: first, last: last, email: email, initials: initials, avatarColour: avatarColour } },
           { new: true }
         );
         const token = signToken(user);

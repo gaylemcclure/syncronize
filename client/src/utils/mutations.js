@@ -14,15 +14,16 @@ export const LOGIN_USER = gql`
 
 // CREATE MUTATIONS
 export const ADD_USER = gql`
-  mutation addUser($first: String!, $last: String!, $email: String!, $password: String!, $initials: String!) {
-    addUser(first: $first, last: $last, email: $email, password: $password, initials: $initials) {
+  mutation addUser($first: String!, $last: String!, $email: String!, $password: String!, $initials: String!, $avatarColour: String) {
+    addUser(first: $first, last: $last, email: $email, password: $password, initials: $initials, avatarColour: $avatarColour) {
       token
       user {
         _id
         first
         last
         email
-        initials
+        initials,
+        avatarColour
       }
     }
   }
@@ -37,7 +38,15 @@ export const ADD_PROJECT = gql`
 `;
 export const ADD_TASK = gql`
   mutation addTask($title: String!, $description: String, $status: String, $projectId: String, $priority: String, $dueDate: Date, $assignedTo: ID) {
-    addTask( title: $title, description: $description, status: $status, projectId: $projectId, priority: $priority, dueDate: $dueDate, assignedTo: $assignedTo) {
+    addTask(
+      title: $title
+      description: $description
+      status: $status
+      projectId: $projectId
+      priority: $priority
+      dueDate: $dueDate
+      assignedTo: $assignedTo
+    ) {
       _id
     }
   }
@@ -72,9 +81,10 @@ export const ADD_SUBTASK = gql`
 
 // UPDATE MUTATIONS
 export const UPDATE_USER = gql`
-  mutation updateUser($_id: ID!, $first: String!, $last: String!, $email: String!, $password: String!, $initials: String!) {
-    updateProject(_id: $_id, first: $first, last: $last, email: $email, password: $password, initials: $initials) {
+  mutation updateUser($_id: ID!, $first: String!, $last: String!, $email: String!, $initials: String!, $avatarColour: String) {
+    updateUser(_id: $_id, first: $first, last: $last, email: $email, initials: $initials, avatarColour: $avatarColour) {
       _id
+      avatarColour
     }
   }
 `;

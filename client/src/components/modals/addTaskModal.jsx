@@ -23,7 +23,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Avatar } from "@mui/material";
 
-const AddTaskModal = ({ projectData }) => {
+const AddTaskModal = ({ projectData, callUpdate, setCallUpdate }) => {
   //Set state for the task fields
   const [title, setTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -33,7 +33,7 @@ const AddTaskModal = ({ projectData }) => {
   const [assignedTo, setAssignedTo] = useState("66a5c8cfb26ac60be343cbf0");
   const [assignedId, setAssignedId] = useState("");
   const [assignedInitials, setAssignedInitials] = useState("");
-  const { userData } = useUserContext();
+  const { userData, setUserData } = useUserContext();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [projData, setProjData] = useState({})
@@ -51,7 +51,6 @@ const AddTaskModal = ({ projectData }) => {
     };
     getProjectData();
   }, [projectData]);
-
 
   //Functions to open and close the modal
   const handleOpen = () => setOpen(true);
@@ -95,8 +94,14 @@ const AddTaskModal = ({ projectData }) => {
       console.error(err);
     }
 
+    setCallUpdate(true);
+    setTitle("")
+    setTaskDescription("")
+    setStatus("")
+    setPriority("")
+    setAssignedTo("")
     setOpen(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleAvatarChange = (e) => {
@@ -107,7 +112,7 @@ const AddTaskModal = ({ projectData }) => {
 
   const handleUserSelect = (e) => {
     const initials = users.filter((user) => user._id === e.target.value)
-    setAssignedTo("66a5c8cfb26ac60be343cbf0")
+    setAssignedTo(e.target.value)
     setAssignedInitials(initials[0].initials)
   }
 

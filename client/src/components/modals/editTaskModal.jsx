@@ -40,7 +40,6 @@ import SubtaskModal from "./addSubtaskModal";
 import Checkbox from "@mui/material/Checkbox";
 import TitleIcon from "@mui/icons-material/Title";
 import DescriptionIcon from "@mui/icons-material/Description";
-import mongoose from "mongoose";
 
 const EditTaskModal = ({ id }) => {
   //Set state for the task fields
@@ -70,7 +69,7 @@ const EditTaskModal = ({ id }) => {
 
   const [checked, setChecked] = useState([1]);
   dayjs.extend(relativeTime);
-console.log(task)
+
   const theme = useTheme();
   const { userData } = useUserContext();
   const [updateTask] = useMutation(UPDATE_TASK);
@@ -558,7 +557,10 @@ console.log(task)
                 <Divider />
                 {commentArr.length > 0
                   ? commentArr.map((comment) => {
-                      const diff = dayjs(comment.createdOn).fromNow();
+                    const dateData = dayjs(comment.createdOn)
+                      const diff = dayjs(dateData).fromNow();
+                      console.log(diff)
+
                       return (
                         <div key={comment._id} className="flex-col m-top-1">
                           <div className="flex-row align">

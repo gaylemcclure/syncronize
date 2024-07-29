@@ -8,6 +8,7 @@ import Auth from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material";
+import Checkbox  from "@mui/material/Checkbox";
 
 const SignupPage = () => {
   const [first, setFirst] = useState("");
