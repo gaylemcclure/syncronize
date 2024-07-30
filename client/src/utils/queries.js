@@ -71,6 +71,12 @@ export const QUERY_ME = gql`
         status
         priority
         description
+        assignedTo {
+          _id
+                      initials
+            first
+            last
+        }
       }
     }
   }

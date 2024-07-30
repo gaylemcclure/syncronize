@@ -17,6 +17,7 @@ import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import dayjs from "dayjs";
 import TaskIcon from "@mui/icons-material/Task";
+import HomeTable from "./homeTable";
 
 const HomeTabs = ({ one, two, allTasks }) => {
   const [value, setValue] = useState(0);
@@ -258,7 +259,7 @@ const HomeTabs = ({ one, two, allTasks }) => {
         </>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <TableView />
+                <HomeTable projectData={allTasks} />
           </CustomTabPanel>
           {/* <CustomTabPanel value={value} index={2}>
             <ListView />

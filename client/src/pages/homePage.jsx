@@ -20,8 +20,6 @@ const HomePage = () => {
   const [allTasks, setAllTasks] = useState([])
   const navigate = useNavigate();
 
-  console.log(userData)
-
   //Check if user is logged in, otherwise redirect to signin page
   useEffect(() => {
     const isLoggedIn = async () => {

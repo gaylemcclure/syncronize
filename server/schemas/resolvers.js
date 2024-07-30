@@ -15,6 +15,7 @@ const resolvers = {
           .populate({ path: "projects", populate: { path: "tasks", model: "Task"} })
           .populate({ path: "projects", populate: { path: "tasks", populate: { path: 'assignedTo', model: "User"}} })
           .populate('tasks')
+          .populate({ path: "tasks", populate: { path: 'assignedTo', model: "User"}})
       }
       throw AuthenticationError;
     },
