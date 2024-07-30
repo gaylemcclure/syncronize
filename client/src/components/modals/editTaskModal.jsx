@@ -557,8 +557,9 @@ const EditTaskModal = ({ id }) => {
                 <Divider />
                 {commentArr.length > 0
                   ? commentArr.map((comment) => {
-                    const dateData = dayjs(comment.createdOn)
-                      const diff = dayjs(dateData).fromNow();
+                    const dateData = new Date()
+                    console.log(dateData)
+                      const diff = dayjs(dateData).fromNow(dayjs());
                       console.log(diff)
 
                       return (

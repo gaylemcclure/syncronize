@@ -258,3 +258,11 @@
   border-radius: 4px;
 
 }
+
+.user-list {
+  width: 600px;
+  justify-content: space-between;
+  p {
+    padding: 0.4rem 1rem;
+  }
+}

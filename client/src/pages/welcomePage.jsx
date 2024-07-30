@@ -7,6 +7,9 @@ import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
+import img1 from '../assets/images/4.png';
+import img2 from '../assets/images/2.png';
+import img3 from '../assets/images/1.png';
 
 const WelcomePage = () => {
 
@@ -23,7 +26,7 @@ const WelcomePage = () => {
                 <h1 className="slogan roboto-bold">Where every project finds its perfect rhythm</h1>
               </div>
               <div className="right">
-                <img src={eg} alt="syncronize eg homepage" />
+                <img src={img2} alt="syncronize eg homepage" />
               </div>
             </div>
             <div className="welcome-icons flex-row">
@@ -72,7 +75,7 @@ const WelcomePage = () => {
         <PageWrapper>
           <div className="flex-row">
             <div className="left-alt">
-              <img src={teamEg} alt="syncronize eg homepage" className="slide-in-blurred-left" />
+              <img src={img1} alt="syncronize eg homepage" className="slide-in-blurred-left" />
             </div>
             <div className="right-alt flex-col">
               <h2 className="team-text roboto-medium">Experience the synergy of seamless project management with Syncronize. Our intuitive platform synchronizes every aspect of your projects, from planning to execution, keeping your team in perfect harmony.</h2>
@@ -102,7 +105,7 @@ const WelcomePage = () => {
               </div>
             </div>
             <div className="right no-padding">
-              <img src={docEg} className="doc-img" alt="syncronize eg homepage" />
+              <img src={img3} className="doc-img" alt="syncronize eg homepage" />
             </div>
           </div>
         </PageWrapper>
@@ -208,6 +211,7 @@ const PageWrapper = styled.div`
     img {
       border-radius: 12px;
       overflow: hidden;
+      width: 90%;
     }
   }
   .right.no-padding {

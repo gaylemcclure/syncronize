@@ -45,6 +45,7 @@ export const QUERY_ME = gql`
           initials
           first
           last
+          email
         }
         createdBy {
           initials

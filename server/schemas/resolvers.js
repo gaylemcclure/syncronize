@@ -261,6 +261,8 @@ const resolvers = {
     //DELETE MUTATIONS
     deleteUser: async (parent, { _id }, context) => {
       if (context.user) {
+        const findUser = await User.findOne({_id: _id})
+        const projs = findUser.projects.map(async (proj) => await Project.findOneAndUpdate({_id: proj._id}, {$pull: {users: _id}}, {new: true}))
         const user = await User.findOneAndDelete({ _id: _id });
         return user;
       }
