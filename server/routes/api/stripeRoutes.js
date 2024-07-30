@@ -89,8 +89,8 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
       },
     ],
     // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-    success_url: `${domainURL}/success=?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${domainURL}/canceled`,
+    success_url: `${domainURL}/${process.env.VITE_PORT}/success=?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${domainURL}/${process.env.VITE_PORT}/canceled`,
     // automatic_tax: {enabled: true},
   });
 
