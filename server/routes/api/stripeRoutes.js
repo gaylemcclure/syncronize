@@ -70,7 +70,7 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
       break;
   }
 
-  const domainURL = process.env.DOMAIN;
+  const domainURL = process.env.VITE_PORT_URL;
 
 
   // Create new Checkout Session for the order
