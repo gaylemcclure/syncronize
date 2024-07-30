@@ -7,9 +7,9 @@
 Syncronize is here to solve all your project management needs! Its an application that you can signup to in order to keep tabs on all your projects, tasks and users. 
 [Click here](https://syncronize.onrender.com) to signup to Syncronize today.
 
-![alt text](assets/1.png)
-![alt text](assets/2.png)
-![alt text](assets/3.png)
+![alt text](/client/src/assets/images/2.png)
+![alt text](/client/src/assets/images/4.png)
+![alt text](/client/src/assets/images/1.png)
 
 
   ## TABLE OF CONTENTS
