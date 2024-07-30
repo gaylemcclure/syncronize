@@ -11,7 +11,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import ProjectTable from "../components/projectTable";
 import { QUERY_PROJECT } from "../utils/queries";
 import { useMutation, useLazyQuery } from "@apollo/client";
-
+import Whiteboard from "./whiteboard/whiteboard";
 const ProjectTabs = ({ one, two, currentProject, tasks }) => {
   const [value, setValue] = useState(0);
   const { open } = useOpenContext();
@@ -84,7 +84,7 @@ useEffect(() => {
             <ProjectTable projectData={currProject} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-
+        <Whiteboard />
           </CustomTabPanel>
         </>
       )}

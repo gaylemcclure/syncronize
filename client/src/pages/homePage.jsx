@@ -32,7 +32,7 @@ const HomePage = () => {
           setLoggedIn(false);
           setTimeout(() => {
             navigate("/login");
-          }, 3000);
+          }, 1000);
         } else {
           setLoggedIn(true);
         }

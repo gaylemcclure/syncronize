@@ -243,3 +243,18 @@
   border-radius: 4px;
   margin: 0.5rem;
 }
+
+.kanban-wrapper {
+  width: 100%;
+  min-height: 500px;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.kanban-column {
+  background-color: var(--gray-border);
+  gap: 2rem;
+  width: 100%;
+  border-radius: 4px;
+
+}

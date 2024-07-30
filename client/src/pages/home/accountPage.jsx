@@ -246,10 +246,9 @@ const AccountPage = () => {
                     className="av-colour"
                     id={colour.id}
                     key={colour.id}
-                    style={{ backgroundColor: `#${colour.colour}` }}
+                    sx={{ backgroundColor: `#${colour.colour}`, height: '3rem', width: '3rem', margin: '0.5rem' }}
                     value={colour.colour}
                   >
-                    <CheckIcon id={colour.id} />
                   </Button>
                 ))}
               </div>

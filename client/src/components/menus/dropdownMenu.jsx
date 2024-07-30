@@ -19,6 +19,7 @@ import { ColorModeContext } from '../../utils/themeContext';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import IconButton from '@mui/material/IconButton';
+import Auth from '../../utils/auth';
 
 
 
@@ -33,13 +34,14 @@ const DropdownMenu = (user) => {
     setAnchorEl(null);
   };
 
-  console.log(user)
   const theme = useTheme();
   const pageTheme = theme.palette.mode;
 
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-
+const handleLogout = () => {
+  Auth.logout()
+}
   return (
     <>
       <Button id="basic-button" aria-controls={open ? "basic-menu" : undefined} aria-haspopup="true" aria-expanded={open ? "true" : undefined} onClick={handleClick}>
@@ -99,14 +101,13 @@ const DropdownMenu = (user) => {
             </MenuItem>
           </Link>
           <Divider />
-          <Link href="/home/account">
             <MenuItem>
+            
               <ListItemIcon>
                 <LogoutIcon sx={{ fontSize: "16px" }} />
               </ListItemIcon>
-              <ListItemText sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, paddingTop: '0.5rem'}}>Log out</ListItemText>
+              <ListItemText onClick={() => handleLogout()} sx={{color: pageTheme === "dark" ? theme.palette.secondary.contrastText : theme.palette.primary.contrastText, paddingTop: '0.5rem'}}>Log out</ListItemText>
             </MenuItem>
-          </Link>
         </MenuList>
       </Menu>
     </>

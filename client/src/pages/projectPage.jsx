@@ -36,7 +36,7 @@ const ProjectPage = () => {
           setLoggedIn(false);
           setTimeout(() => {
             navigate("/login");
-          }, 5000);
+          }, 1000);
         } else {
           setLoggedIn(true);
         }
@@ -101,7 +101,7 @@ const ProjectPage = () => {
             <ProjectTitleIcon projectData={currentProject} />
           </div>
           <p className="project-description">{currentProject.description}</p>
-          <ProjectTabs one="Table" two="List" three="Board" currentProject={currentProject} tasks={allTasks} allTasksArr={allTasksArr} />
+          <ProjectTabs one="Table" two="Whiteboard" currentProject={currentProject} tasks={allTasks} allTasksArr={allTasksArr} />
         </Box>
       )}
     </>

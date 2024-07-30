@@ -128,7 +128,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
           setLoggedIn(false);
           setTimeout(() => {
             navigate("/login");
-          }, 2000);
+          }, 1000);
         } else {
           setLoggedIn(true);
         }

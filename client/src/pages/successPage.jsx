@@ -29,7 +29,7 @@ const Success = () => {
   useEffect(() => {
     setTimeout(() => {
       navigate("/home")
-    }, 5000)
+    }, 1000)
   }, [])
 
   return (
