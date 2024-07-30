@@ -3,12 +3,12 @@ import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
 import { useMutation } from "@apollo/client";
-import { ADD_USER } from "../utils/mutations";
+import { ADD_USER, ADD_USER_TO_PROJECT } from "../utils/mutations";
 import Auth from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material";
-import Checkbox  from "@mui/material/Checkbox";
+import Checkbox from "@mui/material/Checkbox";
 
 const SignupPage = () => {
   const [first, setFirst] = useState("");
@@ -16,10 +16,14 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
+  const [projectId, setProjectId] = useState("")
+  const [showIdField, setShowIdField] = useState(false)
   const theme = useTheme();
   const pageTheme = theme.palette.mode;
 
   const [addUser, { error }] = useMutation(ADD_USER, { variables: { first, last, email, password, initials } });
+  const [addUserToProject] = useMutation(ADD_USER_TO_PROJECT, { variables: { first, last, email, password, initials, projectId } });
+  
 
   //Set the users initials when first & last name are entered
   useEffect(() => {
@@ -36,9 +40,15 @@ const SignupPage = () => {
     event.preventDefault();
     try {
       const search = window.location.search;
-      const { data } = await addUser();
-      Auth.login(data.addUser.token, search);
-
+      if (projectId === "") {
+        console.log("add project")
+        const { data } = await addUser();
+        Auth.login(data.addUser.token, search);
+      } else {
+        console.log("add user to proj")
+        const { data } = await addUserToProject();
+        Auth.login(data.addUserToProject.token, search);
+      }
 
 
     } catch (e) {
@@ -46,12 +56,16 @@ const SignupPage = () => {
     }
   };
 
+  const handleProjectId = (e) => {
+    setShowIdField(e.target.checked)
+  }
+
   return (
     <div className="flex-row full-height">
       <>
-        <InputContainer className={pageTheme === "dark" ? 'dark-bg' : 'light-bg'}>
+        <InputContainer className={pageTheme === "dark" ? "dark-bg" : "light-bg"}>
           <Icon src={icon} alt="syncronize icon" />
-          <h2 className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>Welcome to Sycronize</h2>
+          <h2 className={pageTheme === "dark" ? "white-text" : "dark-text"}>Welcome to Sycronize</h2>
 
           <form className="flex-col form" onSubmit={handleSignup}>
             <TextField size="small" label="First name" id="first-name" value={first} onInput={(e) => setFirst(e.target.value)} />
@@ -75,13 +89,27 @@ const SignupPage = () => {
               value={password}
               onInput={(e) => setPassword(e.target.value)}
             />
+            {showIdField && (<TextField
+              sx={{ marginTop: "1rem" }}
+              label="Project id"
+              size="small"
+              id="project-id"
+              value={projectId}
+              onInput={(e) => setProjectId(e.target.value)}
+            /> )}
             <Button sx={{ backgroundColor: "var(--main-green)", marginTop: "1rem" }} className="signup-button" id="signup-button" type="submit">
               Sign up
             </Button>
           </form>
 
-          <p className={pageTheme === "dark" ? 'white-text' : 'dark-text'}>
-            Already have an account? Log in <a className={pageTheme === "dark" ? 'white-text link-text' : 'dark-text link-text'} href="./login">here</a>
+          <p className={pageTheme === "dark" ? "white-text" : "dark-text"}>
+            Already have an account? Log in{" "}
+            <a className={pageTheme === "dark" ? "white-text link-text" : "dark-text link-text"} href="./login">
+              here
+            </a>
+          </p>
+          <p className={pageTheme === "dark" ? "white-text" : "dark-text"}>
+            Joining a project? <Checkbox checked={showIdField} onChange={handleProjectId} inputProps={{'aria-label': 'controlled'}} />
           </p>
 
           {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}

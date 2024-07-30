@@ -55,6 +55,9 @@ const HomeNav = ({ setPath }) => {
         case "/home/account":
           setPath("home");
           break;
+          case "/home/manage-users":
+            setPath("home");
+            break;
         default:
      }
     };

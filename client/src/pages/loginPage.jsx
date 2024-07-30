@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";

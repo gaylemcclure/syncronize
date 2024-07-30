@@ -78,6 +78,24 @@ export const ADD_SUBTASK = gql`
     }
   }
 `;
+export const ADD_USER_TO_PROJECT = gql`
+  mutation addUserToProject($first: String!, $last: String!, $email: String!, $password: String!, $initials: String!, $projectId: String) {
+    addUserToProject(first: $first, last: $last, email: $email, password: $password, initials: $initials, projectId: $projectId) {
+      token
+      user {
+        _id
+        first
+        last
+        email
+        initials,
+        avatarColour
+        projects{
+          _id
+        }
+      }
+    }
+  }
+`;
 
 // UPDATE MUTATIONS
 export const UPDATE_USER = gql`

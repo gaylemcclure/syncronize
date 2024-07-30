@@ -8,6 +8,7 @@ export const QUERY_USERS = gql`
       last
       email
       initials
+      avatarColour
     }
   }
 `;
@@ -19,6 +20,7 @@ export const QUERY_USER = gql`
       first
       last
       initials
+      avatarColour
     }
   }
 `;
@@ -61,6 +63,7 @@ export const QUERY_ME = gql`
             initials
             first
             last
+            avatarColour
           }
         }
       }
@@ -73,9 +76,10 @@ export const QUERY_ME = gql`
         description
         assignedTo {
           _id
-                      initials
-            first
-            last
+          initials
+          first
+          last
+          avatarColour
         }
       }
     }

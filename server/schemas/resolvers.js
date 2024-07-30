@@ -171,6 +171,20 @@ const resolvers = {
       throw AuthenticationError("You need to be logged in!");
     },
 
+    addUserToProject: async (parent, { first, last, email, password, initials, projectId }) => {
+      const projectTasks = await Project.findOne({_id: projectId})
+      console.log(projectTasks)
+      const user = await User.create({ first, last, email, password, initials, projects: [projectId], tasks: projectTasks.tasks });
+      const token = signToken(user);
+      const findProject = await Project.findOneAndUpdate(
+        {_id: projectId},
+        { $addToSet: { users: user._id } }, 
+        { new: true }
+      )
+
+      return { token, user };
+    },
+
     //UPDATE MUTATIONS
     updateUser: async (parent, { _id, first, last, email, initials, avatarColour }, context) => {
       if (context.user) {

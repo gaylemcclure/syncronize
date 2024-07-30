@@ -103,6 +103,7 @@ const typeDefs = `
     addTask(title: String!, description: String, status: String, projectId: String, dueDate: Date, priority: String, assignedTo: ID) : Task
     addComment(taskId: String!, commentText: String, createdBy: String, createdInitials: String) : Task
     addSubtask(taskId: String!, taskTitle: String!, taskStatus: Boolean, dueDate: Date) : Task
+    addUserToProject(first: String!, last: String!, email: String!, password: String!, initials: String!, projectId: String): Auth
 
     updateUser(_id: ID!, first: String!, last: String!, email: String!, initials: String!, avatarColour: String) : User
     updateProject(_id: ID!, projectName: String!, description: String, dueDate: Date): Project

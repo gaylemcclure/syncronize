@@ -24,36 +24,19 @@ import Button from "@mui/material/Button";
 import { styled, useTheme } from "@mui/material/styles";
 import { useUserContext } from "../utils/contexts";
 
-//Create the open task button within title cell
-const RenderTaskButton = (props) => {
-  return (
-    <div className="flex-row justify align">
-      <div>{props.value}</div>
-      <EditTaskModal id={props.id} />
-    </div>
-  );
-};
 
 const HomeTable = ({ projectData, projectId }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [age, setAge] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [isFilter, setIsFilter] = useState(false);
   const [nonFilterRows, setNonFilterRows] = useState([]);
-  const { userData, setUserData } = useUserContext();
-
-  console.log(projectData)
-
+  const { userData } = useUserContext();
 
   const theme = useTheme();
   let taskId = "";
-
   const [updateTask] = useMutation(UPDATE_TASK);
-  const [deleteTask] = useMutation(DELETE_TASK);
-  const [queryFilters] = useLazyQuery(QUERY_FILTERS);
-
 
   //Get the tasks from db and save into rows state
   useEffect(() => {
@@ -87,43 +70,6 @@ const HomeTable = ({ projectData, projectId }) => {
     }
   };
 
-  //Start inline edit
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  //Save updates the row
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
-  //Delete a task
-  const handleDeleteClick = (id) => async () => {
-    setRows(rows.filter((row) => row.id !== id));
-    try {
-      const { data } = await deleteTask({
-        variables: {
-          _id: id,
-        },
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  //Cancel saving the changes
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
-
   //Process to update the row & save to db
   const processRowUpdate = async (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -154,28 +100,15 @@ const HomeTable = ({ projectData, projectId }) => {
     setRowModesModel(newRowModesModel);
   };
 
-  //Generate an array of users for the assignedTo field dropdown edit
-//   const userOptions = () => {
-//     const options = [];
-//     projectData[0].users.map((user) => {
-//       options.push({ code: user.initials, name: user.first + " " + user.last });
-//     });
-//     return options;
-//   };
-
   //Create the columns
   const columns = [
-    // { field: "modal", headerName: "", flex: 0.2, editable: false, renderCell: (e) => RenderTaskButton(e) },
     { field: "title", headerName: "Title", flex: 1, editable: true },
     {
       field: "assignee",
       headerName: "Assigned to",
       flex: 0.5,
       editable: true,
-    //   getOptionValue: (value) => value.code,
-    //   getOptionLabel: (value) => value.name,
       type: "singleSelect",
-    //   valueOptions: () => userOptions(),
       renderCell: (params) => {
         return <Avatar sx={{ width: 30, height: 30, fontSize: 14, marginRight: 2, backgroundColor: "var(--main-green)" }}>{params.value}</Avatar>;
       },
@@ -200,28 +133,6 @@ const HomeTable = ({ projectData, projectId }) => {
     },
     { field: "priority", headerName: "Priority", flex: 0.5, editable: true, type: "singleSelect", valueOptions: ["-", "Low", "Medium", "High"] },
     { field: "description", headerName: "Description", flex: 2, editable: true },
-    // {
-    //   field: "actions",
-    //   type: "actions",
-    //   headerName: "Actions",
-    //   width: 100,
-    //   cellClassName: "actions",
-    //   getActions: ({ id }) => {
-    //     const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-    //     //If already editing, change buttons to save/cancel
-    //     if (isInEditMode) {
-    //       return [
-    //         <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={handleSaveClick(id)} />,
-    //         <GridActionsCellItem icon={<CancelIcon />} label="Cancel" className="textPrimary" onClick={handleCancelClick(id)} color="inherit" />,
-    //       ];
-    //     }
-    //     //Edit and delete buttons show
-    //     return [
-    //       <GridActionsCellItem icon={<EditIcon />} label="Edit" className="textPrimary" onClick={handleEditClick(id)} color="inherit" />,
-    //       <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={handleDeleteClick(id)} color="inherit" />,
-    //     ];
-    //   },
-    // },
   ];
 
 
@@ -239,7 +150,6 @@ const HomeTable = ({ projectData, projectId }) => {
     } else if (statusFilter !== "" && priorityFilter !== "") {
       newFilter = tasksList.filter((task) => task.priority === priorityFilter && task.status === statusFilter);
     } 
-    console.log(newFilter)
     newFilter.map((tas) => {
         
       arr.push({
@@ -249,7 +159,7 @@ const HomeTable = ({ projectData, projectId }) => {
           dueDate: tas.dueDate,
           status: tas.status,
           priority: tas.priority,
-          assignee: tas.assignedTo.initials,
+          assignee: tas.assignedTo._id,
       })
     });
 

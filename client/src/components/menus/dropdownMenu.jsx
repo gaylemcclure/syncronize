@@ -92,7 +92,7 @@ const handleLogout = () => {
         {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
       </IconButton>            
       </MenuItem>
-          <Link href="/home/account">
+          <Link href="/home/manage-users">
             <MenuItem>
               <ListItemIcon>
                 <GroupIcon sx={{ fontSize: "16px" }} />
