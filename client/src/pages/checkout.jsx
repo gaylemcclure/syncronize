@@ -3,6 +3,7 @@ import WelcomeFooter from "../components/nav/welcomeFooter";
 import styled from "styled-components";
 import { singleData, recurringData } from "../assets/data/pricingData";
 
+
 const formatPrice = (amount, currency) => {
   const numberFormat = new Intl.NumberFormat("en-AU", {
     style: "currency",
@@ -27,6 +28,7 @@ const Checkout = () => {
   const [productData, setProductData] = useState({});
   const [user, setUser] = useState("");
 
+
   let planType = "";
   const paramString = window.location.href;
   const searchParams = new URLSearchParams(paramString);
@@ -35,11 +37,11 @@ const Checkout = () => {
   });
 
   useEffect(() => {
+
     if (planType !== "") {
       const getConfig = async () => {
-        console.log(singleData)
-        console.log(recurringData)
-        const testURL = `http://localhost:3001/api/stripe/config?plan=${planType}`
+        const testURL = `http://localhost:${process.env.VITE_PORT}/api/stripe/config?plan=${planType}`
+        console.log(testURL)
         await fetch(testURL)
           .then(function (response) {
             if (!response.ok) {
@@ -60,8 +62,8 @@ const Checkout = () => {
   }, [planType])
 
   const features = recurringData.filter((data) => data.value === planType);
-  const action = `http://localhost:3001/api/stripe/create-checkout-session?=${planType}`
-  const recurringAction = `http://localhost:3001/api/stripe/create-checkout-session-recurring?=${planType}`
+  const action = `http://localhost:${process.env.VITE_PORT}/api/stripe/create-checkout-session?=${planType}`
+  const recurringAction = `http://localhost:${process.env.VITE_PORT}/api/stripe/create-checkout-session-recurring?=${planType}`
 
   return (
     <>

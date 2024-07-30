@@ -175,7 +175,7 @@ const HomeTable = ({ projectData, projectId }) => {
 
 
   return (
-    <div style={{ width: "100%", height: "800px" }}>
+    <div style={{ width: "100%", height: "900px" }}>
       <Box sx={{ minWidth: 120, display: "flex", flexDirection: "row", paddingBottom: '1rem' }}>
         <div className="flex-row">
           <FormControl fullWidth sx={{ display: "flex", flexDirection: "row" }}>

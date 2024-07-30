@@ -24,6 +24,7 @@
     "@stripe/react-stripe-js": "^2.7.2",
     "@stripe/stripe-js": "^4.0.0",
     "dayjs": "^1.11.12",
+    "dotenv": "^16.4.5",
     "graphql": "^16.6.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.30.1",

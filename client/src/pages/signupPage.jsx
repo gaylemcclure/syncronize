@@ -41,11 +41,9 @@ const SignupPage = () => {
     try {
       const search = window.location.search;
       if (projectId === "") {
-        console.log("add project")
         const { data } = await addUser();
         Auth.login(data.addUser.token, search);
       } else {
-        console.log("add user to proj")
         const { data } = await addUserToProject();
         Auth.login(data.addUserToProject.token, search);
       }

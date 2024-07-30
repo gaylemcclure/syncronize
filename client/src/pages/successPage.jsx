@@ -28,7 +28,7 @@ const Success = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigate("/home")
+      navigate(`${process.env.VITE_DOMAIN}/home`)
     }, 1000)
   }, [])
 
