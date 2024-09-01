@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const domainURL = "http://localhost:5173"
-
 router.get("/config", async (req, res) => {
   let prodEnv = null;
   switch (req.query.plan) {
@@ -43,6 +41,7 @@ router.get("/checkout-session", async (req, res) => {
   res.send(session);
 });
 
+//POST route for a recurring payment
 router.post("/create-checkout-session-recurring", async (req, res) => {
   let planType = "";
   const paramString = req.url;
@@ -70,16 +69,7 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
       break;
   }
 
-
-
-
   // Create new Checkout Session for the order
-  // Other optional params include:
-  // [billing_address_collection] - to display billing address details on the page
-  // [customer] - if you have an existing Stripe Customer ID
-  // [customer_email] - lets you prefill the email input in the Checkout page
-  // [automatic_tax] - to automatically calculate sales tax, VAT and GST in the checkout page
-  // For full details see https://stripe.com/docs/api/checkout/sessions/create
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     line_items: [
@@ -88,42 +78,12 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
         quantity: 1,
       },
     ],
-    // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
     success_url: `${process.env.DOMAIN}/success=?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.DOMAIN}/canceled`,
-    // automatic_tax: {enabled: true},
   });
 
   return res.redirect(303, session.url);
 });
 
-// router.post('/create-checkout-session', async (req, res) => {
-//   const domainURL = process.env.DOMAIN;
-
-//   const { quantity } = 1;
-
-//   // Create new Checkout Session for the order
-//   // Other optional params include:
-//   // [billing_address_collection] - to display billing address details on the page
-//   // [customer] - if you have an existing Stripe Customer ID
-//   // [customer_email] - lets you prefill the email input in the Checkout page
-//   // [automatic_tax] - to automatically calculate sales tax, VAT and GST in the checkout page
-//   // For full details see https://stripe.com/docs/api/checkout/sessions/create
-//   const session = await stripe.checkout.sessions.create({
-//     mode: 'payment',
-//     line_items: [
-//       {
-//         price: process.env.PRICE,
-//         quantity: quantity
-//       },
-//     ],
-//     // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-//     success_url: `${domainURL}/success=?session_id={CHECKOUT_SESSION_ID}`,
-//     cancel_url: `${domainURL}/canceled`,
-//     // automatic_tax: {enabled: true},
-//   });
-
-//   return res.redirect(303, session.url);
-// });
 
 module.exports = router;

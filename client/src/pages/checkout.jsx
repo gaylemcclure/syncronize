@@ -39,7 +39,7 @@ const Checkout = () => {
 
     if (planType !== "") {
       const getConfig = async () => {
-        const testURL = `http://localhost:${process.env.PORT}/api/stripe/config?plan=${planType}`
+        const testURL = `${process.env.DOMAIN}/api/stripe/config?plan=${planType}`
         await fetch(testURL)
           .then(function (response) {
             if (!response.ok) {
@@ -60,8 +60,8 @@ const Checkout = () => {
   }, [planType])
 
   const features = recurringData.filter((data) => data.value === planType);
-  const action = `http://localhost:${process.env.PORT}/api/stripe/create-checkout-session?=${planType}`
-  const recurringAction = `http://localhost:${process.env.PORT}/api/stripe/create-checkout-session-recurring?=${planType}`
+  const action = `${process.env.DOMAIN}/api/stripe/create-checkout-session?=${planType}`
+  const recurringAction = `${process.env.DOMAIN}/api/stripe/create-checkout-session-recurring?=${planType}`
 
   return (
     <>
