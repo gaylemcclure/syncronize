@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const YOUR_DOMAIN = "http://localhost:3000";
+const domainURL = "http://localhost:5173"
 
 router.get("/config", async (req, res) => {
   let prodEnv = null;
@@ -70,7 +70,7 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
       break;
   }
 
-  const domainURL = process.env.VITE_DOMAIN;
+
 
 
   // Create new Checkout Session for the order
@@ -89,8 +89,8 @@ router.post("/create-checkout-session-recurring", async (req, res) => {
       },
     ],
     // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-    success_url: `${domainURL}/${process.env.VITE_PORT}/success=?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${domainURL}/${process.env.VITE_PORT}/canceled`,
+    success_url: `${process.env.DOMAIN}/success=?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.DOMAIN}/canceled`,
     // automatic_tax: {enabled: true},
   });
 

@@ -1,13 +1,12 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { OpenProvider, useOpenContext } from "./utils/openContext";
+import { OpenProvider} from "./utils/openContext";
 import { Outlet } from "react-router-dom";
 import { UserProvider } from "../src/utils/contexts";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import HomeNav from "./components/nav/homeNav";
 import WelcomeNav from "./components/nav/welcomeNav";
-import { useState, useMemo, useEffect, createContext} from "react";
+import { useState, useMemo} from "react";
 import { ColorModeContext } from "./utils/themeContext";
 
 // Construct main GraphQL API endpoint
@@ -34,10 +33,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function App() {
-  const pathname = window.location.pathname;
   const [path, setPath] = useState("welcome");
   const [mode, setMode] = useState('light');
   
@@ -88,7 +85,6 @@ function App() {
             <div className="container">
               <Outlet />
             </div>
-            {/* <Footer /> */}
           </div>
         </ThemeProvider>
         </OpenProvider>
