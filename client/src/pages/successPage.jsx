@@ -27,10 +27,10 @@ const Success = () => {
 
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   console.log("sending home")
-    //   navigate(`${process.env.VITE_DOMAIN}/home`)
-    // }, 1000)
+    setTimeout(() => {
+      console.log("sending home")
+      navigate(`${process.env.DOMAIN}/home`)
+    }, 1000)
   }, [])
 
   return (
