@@ -3,7 +3,7 @@ import WelcomeFooter from "../components/nav/welcomeFooter";
 import styled from "styled-components";
 import { singleData, recurringData } from "../assets/data/pricingData";
 
-
+//Format the price into AUD
 const formatPrice = (amount, currency) => {
   const numberFormat = new Intl.NumberFormat("en-AU", {
     style: "currency",
@@ -27,7 +27,7 @@ const Checkout = () => {
   const [currency, setCurrency] = useState("AUD");
   const [productData, setProductData] = useState({});
 
-
+  //Get the plan type from the url
   let planType = "";
   const paramString = window.location.href;
   const searchParams = new URLSearchParams(paramString);
@@ -35,12 +35,15 @@ const Checkout = () => {
     planType = value;
   });
 
+  //Get Stripe prices and config
   useEffect(() => {
-
     if (planType !== "") {
       const getConfig = async () => {
-        const testURL = `${process.env.DOMAIN}/api/stripe/config?plan=${planType}`
-        await fetch(testURL)
+        const configUrl =
+          process.env.NODE_ENV === "production"
+            ? `${process.env.DOMAIN}/api/stripe/config?plan=${planType}`
+            : `${process.env.STRIPE_DOMAIN}/api/stripe/config?plan=${planType}`;
+        await fetch(configUrl)
           .then(function (response) {
             if (!response.ok) {
               alert("Error message");
@@ -57,11 +60,18 @@ const Checkout = () => {
 
       getConfig();
     }
-  }, [planType])
+  }, [planType]);
 
+  //API request urls. 
   const features = recurringData.filter((data) => data.value === planType);
-  const action = `${process.env.DOMAIN}/api/stripe/create-checkout-session?=${planType}`
-  const recurringAction = `${process.env.DOMAIN}/api/stripe/create-checkout-session-recurring?=${planType}`
+  const action =
+    process.env.NODE_ENV === "production"
+      ? `${process.env.DOMAIN}/api/stripe/create-checkout-session?=${planType}`
+      : `${process.env.STRIPE_DOMAIN}/api/stripe/create-checkout-session?=${planType}`;
+  const recurringAction =
+    process.env.NODE_ENV === "production"
+      ? `${process.env.DOMAIN}/api/stripe/create-checkout-session-recurring?=${planType}`
+      : `${process.env.STRIPE_DOMAIN}/api/stripe/create-checkout-session-recurring?=${planType}`;
 
   return (
     <>
@@ -124,7 +134,7 @@ const Checkout = () => {
 };
 
 const CheckoutContainer = styled.div`
-height: 84.5%;
+  height: 84.5%;
   display: flex;
   justify-content: center;
   h1 {

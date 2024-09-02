@@ -12,7 +12,6 @@ const Success = () => {
   const sessionId = location.search.replace('?session_id=', '');
   const [user, setUser] = useState("");
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchSession() {
@@ -28,8 +27,7 @@ const Success = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log("sending home")
-      navigate(`${process.env.DOMAIN}/home`)
+      window.location.href = `${process.env.DOMAIN}/home`
     }, 1000)
   }, [])
 
