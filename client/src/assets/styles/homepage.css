@@ -266,3 +266,31 @@
     padding: 0.4rem 1rem;
   }
 }
+
+.project-icon {
+  max-height: 38px;
+  background-color: rgb(192, 238, 220);
+  padding: 0.3rem 0.5rem;
+  display: flex;
+  width:fit-content;
+  border-radius: 8px;
+  margin: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.project-wrapper {
+
+}
+.manage-users .MuiDataGrid-cell[data-field="projects"] {
+  line-height:unset!important;
+  padding: 0.3rem!important;
+}
+
+.user-table {
+  margin-top: 1rem;
+}
+
+label.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl#project-select-label {
+  padding-top: 0.6rem;
+}

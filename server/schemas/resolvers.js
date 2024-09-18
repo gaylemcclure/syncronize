@@ -1,37 +1,43 @@
 const { User, Project, Task } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
+const nodemailer = require("nodemailer");
+const { newUserEmail, existingUserEmail } = require("../utils/emailHelper");
 
 const resolvers = {
   Query: {
     users: async () => {
       return User.find();
     },
+    usersEmail: async (parent, args, context) => {
+      return User.find({ email: args.email });
+    },
 
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id })
-          .populate({ path: "projects", populate: { path: "createdBy", model: "User"} })
-          .populate({ path: "projects", populate: { path: "users", model: "User"} })
-          .populate({ path: "projects", populate: { path: "tasks", model: "Task"} })
-          .populate({ path: "projects", populate: { path: "tasks", populate: { path: 'assignedTo', model: "User"}} })
-          .populate('tasks')
-          .populate({ path: "tasks", populate: { path: 'assignedTo', model: "User"}})
+          .populate({ path: "projects", populate: { path: "createdBy", model: "User" } })
+          .populate({ path: "projects", populate: { path: "users", model: "User" } })
+          .populate({ path: "projects", populate: { path: "tasks", model: "Task" } })
+          .populate({ path: "projects", populate: { path: "tasks", populate: { path: "assignedTo", model: "User" } } })
+          .populate("tasks")
+          .populate({ path: "tasks", populate: { path: "assignedTo", model: "User" } });
       }
       throw AuthenticationError;
     },
     meAccount: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id })
+        return User.findOne({ _id: context.user._id });
       }
 
       throw AuthenticationError;
     },
     user: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        return User.findOne({ _id: context.user._id }).populate({ path: "projects", populate: { path: "createdBy", model: "User" } });
       }
       throw AuthenticationError;
     },
+
     proj: async (parent, args, context) => {
       if (context.user) {
         return Project.findOne({ _id: args._id }).populate("users").populate("tasks").populate("createdBy");
@@ -59,35 +65,30 @@ const resolvers = {
     queryFilters: async (parent, { projectId, status, priority }, context) => {
       if (context.user) {
         if (status === "" && priority !== "") {
-          console.log("priority only")
+          console.log("priority only");
           return Task.find({
             $and: [{ projectId: projectId }, { priority: priority }],
           });
         } else if (priority === "" && status !== "") {
-          console.log("status only")
+          console.log("status only");
           return Task.find({
             $and: [{ projectId: projectId }, { status: status }],
           });
         } else if (status !== "" && priority !== "") {
-          console.log("both")
+          console.log("both");
           return Task.find({
-
-            $and: [{ projectId: projectId }, { status: status}, { priority: priority}],
+            $and: [{ projectId: projectId }, { status: status }, { priority: priority }],
           });
         } else {
-                      console.log("none")
-          return Task.find({ projectId: projectId })
-          }
+          console.log("none");
+          return Task.find({ projectId: projectId });
         }
-      },
-      allTasks: async () => {
-        return Task.find();
-      },
-    
+      }
+    },
+    allTasks: async () => {
+      return Task.find();
+    },
   },
-
-
-
 
   Mutation: {
     login: async (parent, { email, password }) => {
@@ -103,7 +104,6 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-
     //CREATE MUTATIONS
     addUser: async (parent, { first, last, email, password, initials }) => {
       const user = await User.create({ first, last, email, password, initials, projects: [], tasks: [] });
@@ -171,17 +171,20 @@ const resolvers = {
       throw AuthenticationError("You need to be logged in!");
     },
 
-    addUserToProject: async (parent, { first, last, email, password, initials, projectId }) => {
-      const projectTasks = await Project.findOne({_id: projectId})
-      console.log(projectTasks)
+    addNewUserToProject: async (parent, { first, last, email, password, initials, projectId }) => {
+      const projectTasks = await Project.findOne({ _id: projectId });
       const user = await User.create({ first, last, email, password, initials, projects: [projectId], tasks: projectTasks.tasks });
       const token = signToken(user);
-      const findProject = await Project.findOneAndUpdate(
-        {_id: projectId},
-        { $addToSet: { users: user._id } }, 
-        { new: true }
-      )
+      const findProject = await Project.findOneAndUpdate({ _id: projectId }, { $addToSet: { users: user._id } }, { new: true });
 
+      return { token, user };
+    },
+    addExistingUserToProject: async (parent, { email, projectId, userToken }) => {
+      const projectTasks = await Project.findOne({ _id: projectId });
+      const updateUser = await User.findOneAndUpdate({ _id: userToken }, { $addToSet: { projects: projectId, tasks: projectTasks.tasks }}, { new: true });
+      const updateProject = await Project.findOneAndUpdate({ _id: projectId }, { $addToSet: { users: updateUser._id } }, { new: true });
+      const user = await User.findOne({_id: userToken});
+      const token = signToken(user);
       return { token, user };
     },
 
@@ -261,8 +264,10 @@ const resolvers = {
     //DELETE MUTATIONS
     deleteUser: async (parent, { _id }, context) => {
       if (context.user) {
-        const findUser = await User.findOne({_id: _id})
-        const projs = findUser.projects.map(async (proj) => await Project.findOneAndUpdate({_id: proj._id}, {$pull: {users: _id}}, {new: true}))
+        const findUser = await User.findOne({ _id: _id });
+        const projs = findUser.projects.map(
+          async (proj) => await Project.findOneAndUpdate({ _id: proj._id }, { $pull: { users: _id } }, { new: true })
+        );
         const user = await User.findOneAndDelete({ _id: _id });
         return user;
       }
@@ -301,6 +306,16 @@ const resolvers = {
         return task;
       }
       throw AuthenticationError("You need to be logged in!");
+    },
+
+    //Email mutations
+    sendNewUserEmail: async (parent, { email, senderEmail, projectId, projectName, first, last }) => {
+      const emailResponseMessage = await newUserEmail(email, senderEmail, projectId, projectName, first, last);
+      return emailResponseMessage;
+    },
+    sendExistingUserEmail: async (parent, { email, senderEmail, projectId, projectName, first, last, userToken }) => {
+      const emailResponseMessage = await existingUserEmail(email, senderEmail, projectId, projectName, first, last, userToken);
+      return emailResponseMessage;
     },
   },
 };

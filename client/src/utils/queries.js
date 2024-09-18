@@ -20,10 +20,26 @@ export const QUERY_USER = gql`
       first
       last
       initials
-      avatarColour
+      avatarColour,
+      email,
+      projects {
+        _id
+        projectName
+      }
     }
   }
 `;
+
+
+
+export const QUERY_USERS_EMAIL = gql`
+  query usersEmail($email: String!) {
+    usersEmail(email: $email) {
+      _id
+      email
+    }
+  }
+`
 
 export const QUERY_ME = gql`
   query me {

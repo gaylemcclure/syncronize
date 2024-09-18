@@ -7,9 +7,10 @@ import teamEg from "../assets/images/team-eg.png";
 import docEg from "../assets/images/doc-eg.png";
 import WelcomeFooter from "../components/nav/welcomeFooter";
 import AccordionComponent from "../components/accordion";
-import img1 from '../assets/images/4.png';
-import img2 from '../assets/images/2.png';
-import img3 from '../assets/images/1.png';
+import img1 from "../assets/images/4.png";
+import img2 from "../assets/images/2.png";
+import img3 from "../assets/images/1.png";
+
 
 const WelcomePage = () => {
 
@@ -78,7 +79,10 @@ const WelcomePage = () => {
               <img src={img1} alt="syncronize eg homepage" className="slide-in-blurred-left" />
             </div>
             <div className="right-alt flex-col">
-              <h2 className="team-text roboto-medium">Experience the synergy of seamless project management with Syncronize. Our intuitive platform synchronizes every aspect of your projects, from planning to execution, keeping your team in perfect harmony.</h2>
+              <h2 className="team-text roboto-medium">
+                Experience the synergy of seamless project management with Syncronize. Our intuitive platform synchronizes every aspect of your
+                projects, from planning to execution, keeping your team in perfect harmony.
+              </h2>
               <div className="flex-row feature-container top">
                 <FeatureIcon>Comments</FeatureIcon>
                 <FeatureIcon>Docs</FeatureIcon>
@@ -92,7 +96,10 @@ const WelcomePage = () => {
         <PageWrapper>
           <div className="flex-row padding-top">
             <div className="left flex-start flex-col">
-              <h2 className="task-text roboto-medium">With real-time updates, effortless collaboration, and streamlined workflows, Syncronize ensures that every project moves forward with precision and purpose.</h2>
+              <h2 className="task-text roboto-medium">
+                With real-time updates, effortless collaboration, and streamlined workflows, Syncronize ensures that every project moves forward with
+                precision and purpose.
+              </h2>
               <div className="flex-col task-text">
                 <div className="flex-row feature-container">
                   <FeatureIcon className="feature-alt">Tasks</FeatureIcon>
@@ -112,7 +119,7 @@ const WelcomePage = () => {
       </WelcomeBGAlt>
       <WelcomeBGLast>
         <PageWrapper>
-          <AccordionComponent  />
+          <AccordionComponent />
         </PageWrapper>
       </WelcomeBGLast>
       <WelcomeFooter />

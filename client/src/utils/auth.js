@@ -29,10 +29,10 @@ class AuthService {
 
   login(idToken, search) {
     localStorage.setItem('id_token', idToken);
-    if (search === "") {
+    if (search === "product=") {
     window.location.assign('/home');
     } else {
-      window.location.assign(`/checkout${search}`);
+      window.location.assign('/home');
     }
 
   }

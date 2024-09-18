@@ -69,8 +69,13 @@ const typeDefs = `
     user: User
   }
 
+  type EmailResponse {
+    responseMsg: String
+  }
+
   type Query {
     users: [User]
+    usersEmail(email: String): [User]
     me: User
     meAccount: User
     user(_id: String!): User
@@ -103,7 +108,8 @@ const typeDefs = `
     addTask(title: String!, description: String, status: String, projectId: String, dueDate: Date, priority: String, assignedTo: ID) : Task
     addComment(taskId: String!, commentText: String, createdBy: String, createdInitials: String) : Task
     addSubtask(taskId: String!, taskTitle: String!, taskStatus: Boolean, dueDate: Date) : Task
-    addUserToProject(first: String!, last: String!, email: String!, password: String!, initials: String!, projectId: String): Auth
+    addNewUserToProject(first: String!, last: String!, email: String!, password: String!, initials: String!, projectId: String): Auth
+    addExistingUserToProject(email: String!, projectId: ID, userToken: ID): Auth
 
     updateUser(_id: ID!, first: String!, last: String!, email: String!, initials: String!, avatarColour: String) : User
     updateProject(_id: ID!, projectName: String!, description: String, dueDate: Date): Project
@@ -119,6 +125,9 @@ const typeDefs = `
     deleteTask(_id: ID!) : Task
     deleteComment(taskId: String, _id: ID!) : Task
     deleteSubtask(taskId: String) : Task
+
+    sendNewUserEmail(email : String!, senderEmail: String, projectId: ID, projectName: String, first: String, last: String) : EmailResponse
+    sendExistingUserEmail(email : String!, senderEmail: String, projectId: ID, projectName: String, first: String, last: String, userToken: ID) : EmailResponse
   }
 `;
 

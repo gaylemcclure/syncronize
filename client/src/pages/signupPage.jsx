@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import icon from "../assets/images/sync-icon.png";
 import pageImg from "../assets/images/management.png";
@@ -8,7 +8,6 @@ import Auth from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
 
 const SignupPage = () => {
   const [first, setFirst] = useState("");
@@ -16,14 +15,34 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [initials, setInitials] = useState("");
-  const [projectId, setProjectId] = useState("")
-  const [showIdField, setShowIdField] = useState(false)
+  const [projectId, setProjectId] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState("");
   const theme = useTheme();
   const pageTheme = theme.palette.mode;
 
   const [addUser, { error }] = useMutation(ADD_USER, { variables: { first, last, email, password, initials } });
-  const [addUserToProject] = useMutation(ADD_USER_TO_PROJECT, { variables: { first, last, email, password, initials, projectId } });
-  
+  const [addNewUserToProject] = useMutation(ADD_USER_TO_PROJECT, { variables: { first, last, email, password, initials, projectId } });
+
+  //Get the parameters from URL
+  useEffect(() => {
+    const queryUrl = window.location.search;
+    const urlParams = new URLSearchParams(queryUrl);
+    const refer = urlParams.get("refer");
+    const product = urlParams.get("product");
+    const project = urlParams.get("project");
+    const referEmail = urlParams.get("email");
+    if (refer === "new") {
+      if (referEmail) {
+        setEmail(referEmail);
+      }
+      if (product) {
+        setSelectedProduct(product);
+      }
+      if (projectId) {
+        setProjectId(project);
+      }
+    }
+  }, []);
 
   //Set the users initials when first & last name are entered
   useEffect(() => {
@@ -36,31 +55,25 @@ const SignupPage = () => {
     }
   }, [first, last]);
 
+  //Sign up user
   const handleSignup = async (event) => {
     event.preventDefault();
     try {
-      const search = window.location.search;
+      const search = `product=${selectedProduct}`;
       if (projectId === "") {
         const { data } = await addUser();
         Auth.login(data.addUser.token, search);
       } else {
-        const { data } = await addUserToProject();
-        Auth.login(data.addUserToProject.token, search);
+        const { data } = await addNewUserToProject();
+        Auth.login(data.addNewUserToProject.token, search);
       }
-
-
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleProjectId = (e) => {
-    setShowIdField(e.target.checked)
-  }
-
   return (
     <div className="flex-row full-height">
-      <>
         <InputContainer className={pageTheme === "dark" ? "dark-bg" : "light-bg"}>
           <Icon src={icon} alt="syncronize icon" />
           <h2 className={pageTheme === "dark" ? "white-text" : "dark-text"}>Welcome to Sycronize</h2>
@@ -87,14 +100,6 @@ const SignupPage = () => {
               value={password}
               onInput={(e) => setPassword(e.target.value)}
             />
-            {showIdField && (<TextField
-              sx={{ marginTop: "1rem" }}
-              label="Project id"
-              size="small"
-              id="project-id"
-              value={projectId}
-              onInput={(e) => setProjectId(e.target.value)}
-            /> )}
             <Button sx={{ backgroundColor: "var(--main-green)", marginTop: "1rem" }} className="signup-button" id="signup-button" type="submit">
               Sign up
             </Button>
@@ -106,16 +111,12 @@ const SignupPage = () => {
               here
             </a>
           </p>
-          <p className={pageTheme === "dark" ? "white-text" : "dark-text"}>
-            Joining a project? <Checkbox checked={showIdField} onChange={handleProjectId} inputProps={{'aria-label': 'controlled'}} />
-          </p>
 
           {error && <div className="my-3 p-3 bg-danger text-white">{error.message}</div>}
         </InputContainer>
         <ImageContainer>
           <img src={pageImg} alt="drawing of many hands working on written and computer tasks" />
         </ImageContainer>
-      </>
     </div>
   );
 };

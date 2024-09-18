@@ -22,7 +22,7 @@ export const ADD_USER = gql`
         first
         last
         email
-        initials,
+        initials
         avatarColour
       }
     }
@@ -79,8 +79,27 @@ export const ADD_SUBTASK = gql`
   }
 `;
 export const ADD_USER_TO_PROJECT = gql`
-  mutation addUserToProject($first: String!, $last: String!, $email: String!, $password: String!, $initials: String!, $projectId: String) {
-    addUserToProject(first: $first, last: $last, email: $email, password: $password, initials: $initials, projectId: $projectId) {
+  mutation addNewUserToProject($first: String!, $last: String!, $email: String!, $password: String!, $initials: String!, $projectId: String) {
+    addNewUserToProject(first: $first, last: $last, email: $email, password: $password, initials: $initials, projectId: $projectId) {
+      token
+      user {
+        _id
+        first
+        last
+        email
+        initials
+        avatarColour
+        projects {
+          _id
+        }
+      }
+    }
+  }
+`;
+
+export const ADD_EXISTING_USER_TO_PROJECT = gql`
+  mutation addExistingUserToProject($email: String!, $projectId: ID, $userToken: ID) {
+    addExistingUserToProject(email: $email, projectId: $projectId, userToken: $userToken) {
       token
       user {
         _id
@@ -216,6 +235,37 @@ export const DELETE_SUBTASK = gql`
   mutation deleteSubtask($_id: ID!, $taskId: String!) {
     deleteSubtask(_id: $_id, taskId: $taskId) {
       _id
+    }
+  }
+`;
+
+export const SEND_NEW_EMAIL = gql`
+  mutation sendNewUserEmail($email: String!, $senderEmail: String, $projectId: ID, $projectName: String, $first: String, $last: String) {
+    sendNewUserEmail(email: $email, senderEmail: $senderEmail, projectId: $projectId, projectName: $projectName, first: $first, last: $last) {
+      responseMsg
+    }
+  }
+`;
+export const SEND_EXISTING_EMAIL = gql`
+  mutation sendExistingUserEmail(
+    $email: String!
+    $senderEmail: String
+    $projectId: ID
+    $projectName: String
+    $first: String
+    $last: String
+    $userToken: ID
+  ) {
+    sendExistingUserEmail(
+      email: $email
+      senderEmail: $senderEmail
+      projectId: $projectId
+      projectName: $projectName
+      first: $first
+      last: $last
+      userToken: $userToken
+    ) {
+      responseMsg
     }
   }
 `;
